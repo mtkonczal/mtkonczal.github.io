@@ -12,6 +12,8 @@ website:
       - the_book.qmd
       - writings.qmd
       - resume.qmd
+      - href: "https://mikekonczal.substack.com/"
+        text: My Substack
 
 format:
   html:
