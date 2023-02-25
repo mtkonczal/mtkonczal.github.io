@@ -1,7 +1,30 @@
 ---
 title: "Writings"
+execute:
+  echo: false
 ---
 
 ![](images/image-230407671.png)
 
 About this site: it's me, Mike Konczal. Hello world!
+
+```{ojs}
+urate = {const data = await FileAttachment("data/unrate.csv").csv({ typed: true } );}
+```
+
+```{r}
+#| output: false
+library(readr)
+library(dplyr)
+library(lubridate)
+
+co2 = read_csv("data/unrate.csv") %>% filter(year > 2000) %>% mutate(double_year = year*2) %>%
+  mutate(hello_world = "Hello my name is Mike Konczal what does this long text look like?")
+ojs_define(co2data = co2)
+```
+
+```{ojs}
+Inputs.table(transpose(co2data))
+```
+
+Trying this?
