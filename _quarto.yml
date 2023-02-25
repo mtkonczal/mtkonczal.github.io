@@ -5,16 +5,20 @@ project:
 website:
   title: "Mike Konczal"
   navbar:
-    left:
+    right:
       - href: index.qmd
         text: Home
       - about.qmd
+      - the_book.qmd
+      - writings.qmd
+      - resume.qmd
 
 format:
   html:
-    theme: cosmo
+    theme: sandstone
     css: styles.css
-    toc: true
+    toc: false
+    page-layout: full
 
 
 
