@@ -8,9 +8,6 @@ execute:
 
 About this site: it's me, Mike Konczal. Hello world!
 
-```{ojs}
-urate = {const data = await FileAttachment("data/unrate.csv").csv({ typed: true } );}
-```
 
 ```{r}
 #| output: false
