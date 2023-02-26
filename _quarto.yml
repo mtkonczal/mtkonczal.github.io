@@ -23,8 +23,6 @@ website:
         text: Media Appearances
       - href: resume.qmd
         text: Resume
-      - href: "https://mikekonczal.substack.com/"
-        text: My Substack
 
   search: 
     location: navbar

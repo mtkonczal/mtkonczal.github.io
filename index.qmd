@@ -4,6 +4,9 @@ image: images/mkonczal_index.jpg
 about:
   template: trestles
   links:
+    - text: Substack
+      icon: bookmark-dash-fill
+      url: "https://mikekonczal.substack.com/"
     - text: Twitter
       icon: twitter
       url: "https://twitter.com/mtkonczal"

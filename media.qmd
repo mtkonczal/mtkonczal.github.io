@@ -1,11 +1,11 @@
 ---
-title: "Writings"
+title: "Media Appearances"
 execute:
   echo: false
 ---
 
 ::: column-screen-inset
-![](images/mkonczal%20cspan.png){fig-align="center" width="40%"}
+![](images/mkonczal%20cspan.png){fig-align="center"}
 
 About this site: it's me, Mike Konczal. Hello world!
 
