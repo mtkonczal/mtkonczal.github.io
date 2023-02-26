@@ -18,13 +18,20 @@ library(readr)
 library(dplyr)
 library(lubridate)
 
-co2 = read_csv("data/unrate.csv") %>% filter(year > 2000) %>% mutate(double_year = year*2) %>%
-  mutate(hello_world = "Hello my name is Mike Konczal what does this long text look like?")
+co2 = read_csv("data/unrate.csv") %>% filter(year < 1970) %>% mutate(tyear = year*3) %>%
+  mutate(attempt_linkSTART = paste("<a href=\"", links, "\">",attempt,"</a>",sep="")) %>%
+  mutate(attempt_link = paste(links, ">",attempt,sep=""))
 ojs_define(co2data = co2)
 ```
 
 ```{ojs}
-Inputs.table(transpose(co2data))
+Inputs.table(transpose(co2data), {
+  format: {
+    links: (x) =>
+      htl.html`<a href=${x} target=_blank>Link</a>`
+      }
+  }
+  )
 ```
 
 Trying this?
