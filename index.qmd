@@ -1,6 +1,6 @@
 ---
 title: "Mike Konczal"
-image: images/mkonczal.jpg
+image: images/mkonczal_index.jpg
 about:
   template: trestles
   links:
@@ -10,6 +10,9 @@ about:
     - text: GitHub
       icon: github
       url: "https://github.com/mtkonczal"
+    - icon: envelope
+      text: Contact me
+      href: mailto:konczal@gmail.com
 ---
 
 Mike Konczal is director of Macroeconomic Analysis at the Roosevelt Institute, where he focuses on full employment, inequality, and the role of public power in a democracy. He is the author of the recent Freedom from the Market: America's Fight to Liberate Itself from the Grip of the Invisible Hand, and a co-author, with Joseph Stiglitz, of Rewriting the Rules of the American Economy. A former financial engineer, his writing has been featured in the New York Times, Washington Post, Rolling Stone, Vox, and more. A sought-after commentator on the U.S. economy, he has also appeared on CNN, MSNBC, Fox Business, All Things Considered, Planet Money, Lovett or Leave It, and elsewhere.

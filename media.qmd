@@ -1,0 +1,34 @@
+---
+title: "Writings"
+execute:
+  echo: false
+---
+
+![](images/mkonczal cspan.png)
+
+About this site: it's me, Mike Konczal. Hello world!
+
+```{r}
+#| output: false
+library(readr)
+library(dplyr)
+library(lubridate)
+
+mywork = read_csv("data/mywork.csv") %>%
+  mutate(Date = as.Date(Date, "%m/%d/%y")) %>%
+  select(-Excerpt)
+
+ojs_define(mywork_data = mywork)
+```
+
+```{ojs}
+Inputs.table(transpose(mywork_data), {
+  format: {
+    Link: (x) =>
+      htl.html`<a href=${x} target=_blank>Link</a>`
+      }
+  }
+  )
+```
+
+Trying this?

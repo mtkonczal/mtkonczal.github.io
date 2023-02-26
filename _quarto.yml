@@ -4,23 +4,35 @@ project:
 
 website:
   title: "Mike Konczal"
+  
+  page-footer:
+    right: |
+      <span class="container">Made with [Quarto](https://quarto.org/){target="_blank"} ([This Site's Repo](https://github.com/mtkonczal/mtkonczal.github.io){target="_blank"})</span>
+    
   navbar:
-    right:
+    left:
       - href: index.qmd
         text: Home
-      - about.qmd
-      - the_book.qmd
-      - writings.qmd
-      - resume.qmd
+      - href: about.qmd
+        text: About
+      - href: the_book.qmd
+        text: The Book
+      - href: writings.qmd
+        text: Writings
+      - href: media.qmd
+        text: Media Appearances
+      - href: resume.qmd
+        text: Resume
       - href: "https://mikekonczal.substack.com/"
         text: My Substack
 
+  search: 
+    location: navbar
+    type: overlay
+    
 format:
   html:
     theme: sandstone
     css: styles.css
     toc: false
     page-layout: full
-
-
-

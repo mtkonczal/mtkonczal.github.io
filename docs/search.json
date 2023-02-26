@@ -21,6 +21,13 @@
     "text": "Praise for Freedom From the Market:\n“The Roosevelt Institute’s Konczal is one of the warriors in this fight, arguing fiercely for the need to set much narrower limits on what is left to markets than has been the case in recent decades. A powerful polemic.”\n—Martin Wolf, Financial Times\n“By identifying an alternative grammar, one that is grounded in the American past, Freedom from the Market provides a way out of the political cul-de-sac created by the failure of the market to deliver on its promises of ‘freedom.’”\n—Molly Michelmore, Democracy: A Journal of Ideas\n“Freedom from the Market is an impressive book, easily one of the best I’ve read in the past several years. I cannot recommend it highly enough.”\n—Matt Mazewski, Commonweal\n“terrific book.”\n- Jamelle Bouie, New York Times\n“Freedom from the Market has the potential to be a very important book, focusing attention on the contested, messy but crucially important intersection between social movements and the state. It provides a set of ideas that people on both sides of that divide can learn from, and a lively alternative foundation to the deracinated technocratic notions of politics, in which good policy would somehow, magically, be politically self supporting, that has prevailed up until quite recently. Strongly recommended.”\n—Henry Farrell, Crooked Timber"
   },
   {
+    "objectID": "media.html",
+    "href": "media.html",
+    "title": "Writings",
+    "section": "",
+    "text": "About this site: it’s me, Mike Konczal. Hello world!\n\n\n\n\nInputs.table(transpose(mywork_data), {\n  format: {\n    Link: (x) =>\n      htl.html`<a href=${x} target=_blank>Link</a>`\n      }\n  }\n  )\n\n\n\n\n\n\nTrying this?"
+  },
+  {
     "objectID": "about.html",
     "href": "about.html",
     "title": "About",
