@@ -39,6 +39,6 @@
     "href": "writings.html",
     "title": "Writings",
     "section": "",
-    "text": "About this site: it’s me, Mike Konczal. Hello world!\n\nurate = {const data = await FileAttachment(\"data/unrate.csv\").csv({ typed: true } );}\n\n\n\n\n\n\n\n\n\n\nInputs.table(transpose(co2data), {\n  format: {\n    links: (x) =>\n      htl.html`<a href=${x} target=_blank>Link</a>`\n      }\n  }\n  )\n\n\n\n\n\n\nTrying this?"
+    "text": "About this site: it’s me, Mike Konczal. Hello world!\n\nurate = {const data = await FileAttachment(\"data/unrate.csv\").csv({ typed: true } );}\n\n\n\n\n\n\n\n\n\n\nInputs.table(transpose(mywork_data), {\n  format: {\n    Link: (x) =>\n      htl.html`<a href=${x} target=_blank>Link</a>`\n      }\n  }\n  )\n\n\n\n\n\n\nTrying this?"
   }
 ]
