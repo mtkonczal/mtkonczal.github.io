@@ -4,7 +4,8 @@ execute:
   echo: false
 ---
 
-![](images/mkonczal cspan.png)
+::: column-screen-inset
+![](images/mkonczal%20cspan.png){fig-align="center" width="40%"}
 
 About this site: it's me, Mike Konczal. Hello world!
 
@@ -32,3 +33,4 @@ Inputs.table(transpose(mywork_data), {
 ```
 
 Trying this?
+:::

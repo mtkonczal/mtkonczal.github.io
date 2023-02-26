@@ -1,55 +1,62 @@
 ---
-title: "The Book"
+title: ""
 ---
+::: column-screen-inset
+::: {.column width="33%"}
+![](images/image-803426826.png){fig-align="center"}
+:::
 
-## Latest Updates
+::: {.column width="33%"}
+## Coverage for Freedom From the Market
 
-**Reviews**
+### Reviews
 
-\- Matt Mazewski [at Commonweal](https://www.commonwealmagazine.org/polanyi-ish) (7/21/21).
+-   Matt Mazewski at [Commonweal](https://www.commonwealmagazine.org/polanyi-ish).
 
-\- Adrian Rutt [at Liberal Currents](https://www.liberalcurrents.com/freedom-and-the-common-good-mike-konczals-emfreedom-from-the-market-em/) (7/8/21).
+-   Adrian Rutt at [Liberal Currents](https://www.liberalcurrents.com/freedom-and-the-common-good-mike-konczals-emfreedom-from-the-market-em/).
 
-\- Molly Michelmore [at Democracy Journal](https://democracyjournal.org/magazine/61/freedoms-just-another-word/) (6/25/21).
+-   Molly Michelmore at [Democracy Journal](https://democracyjournal.org/magazine/61/freedoms-just-another-word/).
 
-\- Martin Wolf [at the Financial Times](https://www.ft.com/content/239f31cb-57a3-43d3-ab3d-d18d068f4994) (6/21/21).
+-   Martin Wolf at [the Financial Times](https://www.ft.com/content/239f31cb-57a3-43d3-ab3d-d18d068f4994).
 
-\- Binyamin Appelbaum [at Foreign Affairs](https://www.foreignaffairs.com/reviews/review-essay/2021-02-16/market-value) (2/16/21).
+-   Binyamin Appelbaum at [Foreign Affairs](https://www.foreignaffairs.com/reviews/review-essay/2021-02-16/market-value).
 
-\- Bryce Covert [at Foreign Policy](https://foreignpolicy.com/2021/02/06/social-welfare-is-as-american-as-apple-pie/) (2/6/21).
+-   Bryce Covert at [Foreign Policy](https://foreignpolicy.com/2021/02/06/social-welfare-is-as-american-as-apple-pie/).
 
-\- Justin H. Vassallo [at the Los Angeles Review of Books](https://lareviewofbooks.org/article/resisting-market-rule/) (2/4/21).
+-   Justin H. Vassallo at [the Los Angeles Review of Books](https://lareviewofbooks.org/article/resisting-market-rule/).
 
-\- Barton Swaim [at the Wall Street Journal](https://www.wsj.com/articles/politics-of-markets-and-morals-11611961820) (1/29/21).
+-   Barton Swaim at [the Wall Street Journal](https://www.wsj.com/articles/politics-of-markets-and-morals-11611961820).
 
-​- Ryan Cooper [at The Week](https://theweek.com/articles/963196/america-forgotten-how-free) (1/27/21).
+-   Ryan Cooper at [The Week](https://theweek.com/articles/963196/america-forgotten-how-free).
 
-\- Henry Farrell [at Crooked Timber](https://crookedtimber.org/2021/01/26/freedom-from-the-market/) (1/26/21).
+-   Henry Farrell at [Crooked Timber](https://crookedtimber.org/2021/01/26/freedom-from-the-market/).
 
-\- An author [at the Karl Polyani Project](https://karlpolanyiproject.blogspot.com/2021/01/polanyi-goes-to-america.html) (1/18/21).
+-   An author at [the Karl Polyani Project](https://karlpolanyiproject.blogspot.com/2021/01/polanyi-goes-to-america.html).
 
-- Stephen Eide [at National Review](https://www.nationalreview.com/2021/01/americas-supposedly-socialist-history/) (1/15/21).
+-   Stephen Eide at [National Review](https://www.nationalreview.com/2021/01/americas-supposedly-socialist-history/).
+:::
 
-​
+::: {.column width="33%"}
+##
 
-**Media Appearances**​
+### Media Appearances
 
-**​**
+-   I was on The Majority Report with Sam Seder [podcast](https://majorityreportradio.com/2021/01/27/1-27-americas-fight-to-liberate-itself-from-the-grip-of-the-market-w-mike-konczal) ([YouTube](https://www.youtube.com/watch?v=6i9XRNUNx8c)) to discuss the book.
 
-\- I was on The Majority Report with Sam Seder [podcast](https://majorityreportradio.com/2021/01/27/1-27-americas-fight-to-liberate-itself-from-the-grip-of-the-market-w-mike-konczal) ([YouTube](https://www.youtube.com/watch?v=6i9XRNUNx8c)) to discuss the book (1/27/21).
+-   I was on the [Left Anchor podcast](https://leftanchor.podbean.com/e/episode-175-americas-tradition-of-egalitarian-freedom-with-mike-konczal/) to discuss the book.
 
-\- I was on the [Left Anchor podcast](https://leftanchor.podbean.com/e/episode-175-americas-tradition-of-egalitarian-freedom-with-mike-konczal/) to discuss the book (1/30/21).
+-   I was on [Vox's The Weeds podcast](https://www.stitcher.com/show/voxs-the-weeds/episode/freedom-from-markets-81017167) with Matthew Yglesias to discuss the book.
 
-\- I was on [Vox's The Weeds podcast](https://www.stitcher.com/show/voxs-the-weeds/episode/freedom-from-markets-81017167) with Matthew Yglesias to discuss the book (1/22/21).
+-   I was on the [Gin and Tacos podcast Mass for Shut-Ins](https://massforshutins.libsyn.com/030-mike-konczal-freedom-from-the-market-2021) with Ed Burmila to discuss the book.
 
-\- I was on the [Gin and Tacos podcast Mass for Shut-Ins](https://massforshutins.libsyn.com/030-mike-konczal-freedom-from-the-market-2021) with Ed Burmila to discuss the book (1/20/21).
+-   I was on the [Lawyers, Guns and Money podcast](https://www.lawyersgunsmoneyblog.com/2021/01/lgm-podcast-market) with Erik Loomis to discuss the book.
 
-\- I was on the [Lawyers, Guns and Money podcast](https://www.lawyersgunsmoneyblog.com/2021/01/lgm-podcast-market) with Erik Loomis to discuss the book (1/12/21).
+### Excerpts and other Resources
 
-**Excerpts and other Resources**
+- There was an adapted excerpt of the book, [covering Medicare and desegregation](https://www.thenation.com/article/politics/health-care-freedom-medicare/), at The Nation.
 
-\- There was an adapted excerpt of the book, [covering Medicare and desegregation](https://www.thenation.com/article/politics/health-care-freedom-medicare/), at The Nation (1/19/21).
+- There was an adapted excerpt of the book, [covering the eight-hour workday](http://bostonreview.net/class-inequality-law-justice/mike-konczal-time-universal-measure-freedom), at Boston Review.
 
-\- There was an adapted excerpt of the book, [covering the eight-hour workday](http://bostonreview.net/class-inequality-law-justice/mike-konczal-time-universal-measure-freedom), at Boston Review (1/11/21).
-
-\- I was [interviewed at Dissent Magazine](https://www.dissentmagazine.org/online_articles/life-beyond-markets-mike-konczal) by historian Tim Barker about the book (12/28/20).
+- I was [interviewed at Dissent Magazine](https://www.dissentmagazine.org/online_articles/life-beyond-markets-mike-konczal) by historian Tim Barker about the book.
+:::
+:::

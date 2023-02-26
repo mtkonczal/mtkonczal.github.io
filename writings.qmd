@@ -4,10 +4,10 @@ execute:
   echo: false
 ---
 
+::: column-screen-inset
 ![](images/image-230407671.png)
 
 About this site: it's me, Mike Konczal. Hello world!
-
 
 ```{r}
 #| output: false
@@ -33,3 +33,4 @@ Inputs.table(transpose(mywork_data), {
 ```
 
 Trying this?
+:::
