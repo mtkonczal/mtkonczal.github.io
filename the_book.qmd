@@ -1,14 +1,15 @@
 ---
 title: ""
+image: images/image-803426826.png
+about:
+  template: trestles
 ---
-::: column-screen-inset
-::: {.column width="33%"}
-![](images/image-803426826.png){fig-align="center"}
-:::
 
-::: {.column width="33%"}
-## Coverage for Freedom From the Market
+## Coverage of Freedom From the Market
 
+[Book Jacket](https://thenewpress.com/books/freedom-from-market): "*Freedom from the Market* blends passionate political argument and a bold new take on American history to reveal that, from the earliest days of the republic, Americans have defined freedom as what we keep free from the control of the market. With chapters on the history of the Homestead Act and land ownership, the eight-hour work day and free time, social insurance and Social Security, World War II day cares, Medicare and desegregation, free public colleges, intellectual property, and the public corporation, Konczal shows how citizens have fought to ensure that everyone has access to the conditions that make us free."
+
+::: {.column width="49%"}
 ### Reviews
 
 -   Matt Mazewski at [Commonweal](https://www.commonwealmagazine.org/polanyi-ish).
@@ -36,9 +37,7 @@ title: ""
 -   Stephen Eide at [National Review](https://www.nationalreview.com/2021/01/americas-supposedly-socialist-history/).
 :::
 
-::: {.column width="33%"}
-##
-
+::: {.column width="49%"}
 ### Media Appearances
 
 -   I was on The Majority Report with Sam Seder [podcast](https://majorityreportradio.com/2021/01/27/1-27-americas-fight-to-liberate-itself-from-the-grip-of-the-market-w-mike-konczal) ([YouTube](https://www.youtube.com/watch?v=6i9XRNUNx8c)) to discuss the book.
@@ -53,10 +52,11 @@ title: ""
 
 ### Excerpts and other Resources
 
-- There was an adapted excerpt of the book, [covering Medicare and desegregation](https://www.thenation.com/article/politics/health-care-freedom-medicare/), at The Nation.
+-   There was an adapted excerpt of the book, [covering Medicare and desegregation](https://www.thenation.com/article/politics/health-care-freedom-medicare/), at The Nation.
 
-- There was an adapted excerpt of the book, [covering the eight-hour workday](http://bostonreview.net/class-inequality-law-justice/mike-konczal-time-universal-measure-freedom), at Boston Review.
+-   There was an adapted excerpt of the book, [covering the eight-hour workday](http://bostonreview.net/class-inequality-law-justice/mike-konczal-time-universal-measure-freedom), at Boston Review.
 
-- I was [interviewed at Dissent Magazine](https://www.dissentmagazine.org/online_articles/life-beyond-markets-mike-konczal) by historian Tim Barker about the book.
+-   I was [interviewed at Dissent Magazine](https://www.dissentmagazine.org/online_articles/life-beyond-markets-mike-konczal) by historian Tim Barker about the book.
 :::
+
 :::
