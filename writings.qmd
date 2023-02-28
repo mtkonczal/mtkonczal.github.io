@@ -17,7 +17,9 @@ library(lubridate)
 
 mywork = read_csv("data/mywork.csv") %>%
   mutate(Date = as.Date(Date, "%m/%d/%y")) %>%
-  select(-Excerpt)
+  select(-Excerpt, -Author) %>%
+  filter(Format %in% c("Article", "White Paper")) %>%
+  arrange(desc(Date))
 
 ojs_define(mywork_data = mywork)
 ```

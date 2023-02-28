@@ -4,7 +4,6 @@ execute:
   echo: false
 ---
 
-::: column-screen-inset
 ![](images/mkonczal%20cspan.png){fig-align="center"}
 
 About this site: it's me, Mike Konczal. Hello world!
@@ -15,15 +14,22 @@ library(readr)
 library(dplyr)
 library(lubridate)
 
-mywork = read_csv("data/mywork.csv") %>%
+my_media = read_csv("data/mywork.csv") %>%
   mutate(Date = as.Date(Date, "%m/%d/%y")) %>%
-  select(-Excerpt)
+  select(-Excerpt, -Author) %>%
+  filter(Format %in% c("TV","Radio","Podcast","Panel"))
 
-ojs_define(mywork_data = mywork)
+my_quotes = read_csv("data/mywork.csv") %>%
+  mutate(Date = as.Date(Date, "%m/%d/%y")) %>%
+  select(-Excerpt, -Author) %>%
+  filter(Format %in% c("Quote"))
+
+ojs_define(my_media_data = my_media)
+ojs_define(my_quotes_data = my_quotes)
 ```
 
 ```{ojs}
-Inputs.table(transpose(mywork_data), {
+Inputs.table(transpose(my_quotes_data), {
   format: {
     Link: (x) =>
       htl.html`<a href=${x} target=_blank>Link</a>`
@@ -32,5 +38,13 @@ Inputs.table(transpose(mywork_data), {
   )
 ```
 
-Trying this?
-:::
+Trying this? But also this!
+```{ojs}
+Inputs.table(transpose(my_media_data), {
+  format: {
+    Link: (x) =>
+      htl.html`<a href=${x} target=_blank>Link</a>`
+      }
+  }
+  )
+```

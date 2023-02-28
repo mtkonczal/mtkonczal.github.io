@@ -29,13 +29,121 @@ Here are some of the monthly graphics he's currently watching, along with the R 
 #| code-summary: "Show the code"
 #| code-overflow: wrap
 #| label: onion_graphic_margin_label
-#| fig-cap: "Fed officials have argued goods (dis)inflation is likely transitory, housing is reported with a lag, but non-housing services are a cleaner indicator of demand, as well as being more persistent and determined by wage pressures."
+#| fig-cap: "Fed officials have argued goods (dis)inflation is likely transitory, housing is reported with a lag, but non-housing services are a cleaner indicator of demand, as well as being more persistent and determined by wage pressures. Here those are, broken out for PCE inflation."
 #| cap-location: top
+
+# Graphic - Three Onion Layer
+# Hard code in weights
 library(tidyverse)
 library(janitor)
 library(scales)
 library(hrbrthemes)
 library(ggrepel)
+library(bea.R)
+get_NIPA_data <- function(beaKey, TableName, Frequency, Year, data_set_name = 'NIPA'){
+  NIPA_request <- list(
+    'UserID' = beaKey ,
+    'Method' = 'GetData',
+    'datasetname' = data_set_name,
+    'TableName' = TableName,
+    'Frequency' = Frequency,
+    'Year' = Year,
+    'ResultFormat' = 'json'
+  );
+  NIPA_data <- beaGet(NIPA_request, asWide = FALSE)
+  return(NIPA_data)
+}
+
+BEA_date_monthly <- function(x){
+  x <- x %>%
+    mutate(year = substr(TimePeriod, 1, 4)) %>%
+    mutate(month = substr(TimePeriod, 6,7))
+  x$date <- paste(x$month, "01", x$year, sep="/")
+  x$date <- as.Date(x$date, "%m/%d/%Y")
+  x <- x %>% select(-month, -year)
+  return(x)
+}
+
+beaKey <- read_csv("/Users/mkonczal/Documents/data_folder/BEA_key/BEA_key.csv")
+beaKey <- as.character(beaKey)
+# Table IDs
+# https://www.bea.gov/system/files/2021-07/TablesRegisterPreview.txt
+
+########### THE BIG ONE
+PCE_Weight <- get_NIPA_data(beaKey, 'U20405', 'M', '2018,2019,2020,2021,2022,2023', data_set_name = 'NIUnderlyingDetail')
+PCE_Weight <- BEA_date_monthly(PCE_Weight)
+
+PCE_Weight <- PCE_Weight %>% filter(SeriesCode == "DPCERC") %>%
+  select(date, TotalGDP = DataValue) %>%
+  left_join(PCE_Weight, by="date") %>%
+  # The weight is approximated as nominal consumption shares as a percent of the total.
+  mutate(PCEweight = DataValue/TotalGDP) %>%
+  select(date, LineDescription, PCEweight)
+
+pce <- get_NIPA_data(beaKey, 'U20404', 'M', '2018,2019,2020,2021,2022,2023', data_set_name = 'NIUnderlyingDetail')
+pce <- BEA_date_monthly(pce)
+
+pce <- pce %>%
+  left_join(PCE_Weight, by=c('date' = 'date','LineDescription' = 'LineDescription'))
+
+pce <- pce %>%
+  group_by(SeriesCode) %>%
+  mutate(DataValue_P1 = (DataValue - lag(DataValue,1))/lag(DataValue,1)) %>%
+  # Use the lagged weight for weighted share
+  mutate(WDataValue_P1 = DataValue_P1*lag(PCEweight,1)) %>%
+  mutate(WDataValue_P1a = (1+WDataValue_P1)^12-1) %>%
+  ungroup()
+
+# With data in place, move to creating the onion chart
+core_goods_fields <- c("Goods","Gasoline and other energy goods","Food and beverages purchased for off-premises consumption","Services","Electricity and gas","Housing")
+
+core_analysis <- pce %>% filter(LineDescription %in% core_goods_fields) %>%
+  filter(date >= "2018-01-01") %>%
+  select(date, LineDescription, WDataValue_P1) %>%
+  pivot_wider(names_from=LineDescription, values_from = WDataValue_P1) %>%
+  clean_names() %>%
+  mutate(core_goods = goods - food_and_beverages_purchased_for_off_premises_consumption - gasoline_and_other_energy_goods) %>%
+  mutate(core_services = services - electricity_and_gas - housing) %>%
+  mutate(core_inflation = core_goods + core_services) %>%
+  pivot_longer(-date, names_to = "item_name", values_to = "WDataValue_P1") %>%
+  filter(item_name %in% c("core_goods","core_services","housing")) %>%
+  mutate(item_nameF = factor(item_name, levels = c("core_goods", "housing", "core_services"))) %>%
+  mutate(WDataValue_P1a = (WDataValue_P1+1)^12-1) %>%
+  filter(WDataValue_P1a > -0.02)
+
+levels(core_analysis$item_nameF)[levels(core_analysis$item_nameF) == "core_goods"] <-"Core Goods"
+levels(core_analysis$item_nameF)[levels(core_analysis$item_nameF) == "core_services"] <-"Non-Housing Services"
+levels(core_analysis$item_nameF)[levels(core_analysis$item_nameF) == "housing"] <-"Housing"
+
+onion_datebreaks <- unique(sort(core_analysis$date,decreasing = TRUE))
+onion_datebreaks <- onion_datebreaks[seq(1,length(onion_datebreaks),24)]
+
+ggplot(core_analysis, aes(x = date, y = WDataValue_P1a, fill=item_nameF)) +
+  geom_bar(stat = 'identity', size=0) +
+  theme_modern_rc() +
+  theme(legend.position = "none", legend.title = element_blank()) + 
+  facet_grid(~item_nameF) +
+  labs(y = NULL,
+       x = NULL,
+       title = "The PCE inflation onion layers",
+       subtitle = "Monthly contribution to inflation",
+       caption ="BEA, NIPA Tables 2.4.4 and 2.4.5. Weights approximated as nominal consumption shares as a percent of the total.\nApril 2020 Core Services ex Housing value excluded as large negative outlier.") +
+  scale_fill_brewer(palette="RdPu", name = "item_name") +
+  scale_y_continuous(labels = percent) +
+  scale_x_date(date_labels = "%b\n%Y", breaks = onion_datebreaks) +
+  theme(axis.text.x = element_text(size=14), axis.text.y = element_text(size=14),
+  strip.text = element_text(face = "bold", color="white", hjust = 0.5, size = 10),
+  strip.background = element_blank(),
+  plot.title.position = "plot")
+```
+
+```{r supercore_graphic}
+#| code-fold: true
+#| code-summary: "Show the code"
+#| code-overflow: wrap
+#| label: supercore_inflation
+#| fig-cap: "Core inflation excludes prices that are volatile and set globally (food and energy). But by also going to supercore, which excludes used autos (because of complicated supply-side issues) and housing (because of data-measurement and reporting issues), we can get closer to measuring underlying demand pressure of CPI inflation here."
+#| cap-location: top
 
 # Download data
 cpi_data <- read_delim(file = "https://download.bls.gov/pub/time.series/cu/cu.data.0.Current")
@@ -53,68 +161,17 @@ items <- read_delim(file = "https://download.bls.gov/pub/time.series/cu/cu.item"
 series <- inner_join(series, items, by = c("item_code"))
 cpi_data <- inner_join(cpi_data, series, by = c("series_id"))
 
-# Graphic - Three Onion Layer
-# Hard code in weights
-item_name <- c("Services less energy services", "Shelter", "Commodities less food and energy commodities")
-weight <- c(58.187, 34.413,24.006)
-weights <- as_tibble(cbind(item_name,weight))
-weights$weight <- as.numeric(weights$weight)
 
-onion_graph <- cpi_data %>%
-  filter(seasonal == "S", date > "2017-12-01", item_name %in% weights$item_name) %>%
-  left_join(weights, by=c("item_name")) %>%
-  mutate(item_name = str_replace_all(item_name, "Commodities less food and energy commodities","Core_goods")) %>%
-  group_by(item_name) %>%
-  arrange(date) %>%
-  mutate(Pchange1 = (value/lag(value)-1)) %>%
-  mutate(Wchange1 = (Pchange1*weight)/100) %>%
-  mutate(Wchange1a = (1 + Wchange1)^12 - 1) %>%
-  select(date, item_name, Wchange1a) %>%
-  pivot_wider(names_from = item_name, values_from = Wchange1a) %>%
-  mutate(`Rest of core services` = `Services less energy services` - `Shelter`) %>%
-  select(-`Services less energy services`) %>%
-  pivot_longer(c(Shelter, `Rest of core services`,Core_goods), names_to = "item_name", values_to = "Wchange1a") %>%
-  mutate(item_name = str_replace_all(item_name, "Core_goods","Core goods")) %>%
-  mutate(item_name = factor(item_name, levels = c("Core goods", "Shelter", "Rest of core services")))
-
-onion_datebreaks <- unique(sort(onion_graph$date,decreasing = TRUE))
-onion_datebreaks <- onion_datebreaks[seq(1,length(onion_datebreaks),24)]
-
-ggplot(onion_graph, aes(x = date, y = Wchange1a, fill=item_name)) +
-  geom_bar(stat = 'identity', size=0) +
-  theme_modern_rc() +
-  theme(legend.position = "none", legend.title = element_blank()) + 
-  facet_grid(~item_name) +
-  labs(y = NULL,
-       x = NULL,
-       title = "The CPI inflation onion layers",
-       subtitle = "Monthly Contribution to Inflation",
-       caption ="Note: 2023 weights applied across years.") +
-  scale_fill_brewer(palette="RdPu", name = "item_name") +
-  scale_y_continuous(labels = percent) +
-  scale_x_date(date_labels = "%b\n%Y", breaks = onion_datebreaks) +
-  theme(axis.text.x = element_text(size=14), axis.text.y = element_text(size=14),
-  strip.text = element_text(face = "bold", color="white", hjust = 0.5, size = 10),
-  strip.background = element_blank(),
-  plot.title.position = "plot")
-```
-
-```{r supercore_graphic}
-#| code-fold: true
-#| code-summary: "Show the code"
-#| code-overflow: wrap
-#| label: supercore_inflation
-#| fig-cap: "Core inflation excludes prices that are volatile and set globally (food and energy). But by also going to supercore, which excludes used autos (because of complicated supply-side issues) and housing (because of data-measurement and reporting issues), we can get closer to measuring underlying demand pressure."
-#| cap-location: top
 # Graphic - Supercore
+
 supercore <- cpi_data %>% filter(seasonal == "S") %>%
-  filter(date > "2014-12-01") %>%
   filter(item_name == "All items less food, shelter, energy, and used cars and trucks") %>%
   select(item_name, date, value) %>%
-  mutate(pre_value = value[date=="2019-01-01"]/value[date=="2017-01-01"]) %>%
+  mutate(pre_value = value[date=="2020-01-01"]/value[date=="2018-01-01"]) %>%
   mutate(pre_value = pre_value^(12/24)-1) %>%
   mutate(ThreeMonth = (value/lag(value,3))^4-1) %>%
   mutate(SixMonth = (value/lag(value,6))^2-1) %>%
+  filter(date >= "2018-01-01") %>%
   pivot_longer(ThreeMonth:SixMonth, names_to = "time_length", values_to = "change") %>%
   mutate(time_length = str_replace_all(time_length,"SixMonth", "6-Month Change")) %>%
   mutate(time_length = str_replace_all(time_length,"ThreeMonth", "3-Month Change")) %>%
@@ -130,11 +187,11 @@ ggplot(supercore, aes(date, change, color=time_length, label=label_percent(accur
   geom_line(aes(date,pre_value), linetype="dashed", color="#2D779C") +
   labs(x="", y="",
        title="Supercore CPI: All items less food, shelter, energy, used cars",
-       subtitle = "Annualized values, trendline is value from 2017 to 2019.",
+       subtitle = "Monthly percent change, annualized; trendline is value from Jan 2017 to Jan 2020.",
        caption = "") +
   scale_y_continuous(labels = percent) +
   scale_x_date(date_labels = "%b\n%Y", breaks = supercore_datebreaks) +
-  theme(legend.position = c(0.35,0.85), legend.title = element_blank()) +
+  theme(legend.position = c(0.30,0.85), legend.title = element_blank()) +
   theme(axis.text.x = element_text(size=14), axis.text.y = element_text(size=14),
         legend.text = element_text(size=11)) +
   scale_color_manual(values=c("#2D779C", "#A4CCCC")) +
@@ -187,13 +244,13 @@ merged <- eci_wages %>% filter(series_id == "CIS2020000000000I") %>% mutate(valu
   filter(!is.na(ECI_growth)) %>%
   mutate(Is_2021_to_2022 = (date >= "2021-01-01"))
 
-merged_prior <- merged %>% filter(date < "2021-01-01") %>% lm(ECI_growth ~ quitsR, data=.)
+regression_prior <- merged %>% filter(date < "2021-01-01") %>% lm(ECI_growth ~ quitsR, data=.)
 
 merged %>%
   mutate(values_last = if_else(date >= "2022-01-01", date, as.Date(NA))) %>% mutate(values_last2 = as.character(format(values_last, "%b\n%Y"))) %>%
   mutate(Is_2021_to_2022_v = if_else(date >= "2022-01-01",ECI_growth,as.numeric(NA))) %>%
   ggplot(aes(quitsR, ECI_growth, color=Is_2021_to_2022, label=values_last2)) + geom_point() + theme_modern_rc() +
-  geom_abline(intercept = merged_prior$coefficients[1], slope=merged_prior$coefficients[2], color="#2D779C") +
+  geom_abline(intercept = regression_prior$coefficients[1], slope=regression_prior$coefficients[2], color="#2D779C") +
   geom_text_repel(size=3) +
   geom_path(aes(quitsR,Is_2021_to_2022_v)) +
   labs(x = "Quit Rate",
@@ -225,3 +282,6 @@ merged %>%
 
 "terrific book."\
 - Jamelle Bouie, [*New York Times*](https://twitter.com/jbouie/status/1450470921001750528)
+
+"Freedom from the Market has the potential to be a very important book, focusing attention on the contested, messy but crucially important intersection between social movements and the state. It provides a set of ideas that people on both sides of that divide can learn from, and a lively alternative foundation to the deracinated technocratic notions of politics, in which good policy would somehow, magically, be politically self supporting, that has prevailed up until quite recently. Strongly recommended."\
+---Henry Farrell, [*Crooked Timber*](https://crookedtimber.org/2021/01/26/freedom-from-the-market/)
