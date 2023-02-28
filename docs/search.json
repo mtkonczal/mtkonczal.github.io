@@ -25,7 +25,7 @@
     "href": "media.html",
     "title": "Media Appearances",
     "section": "",
-    "text": "About this site: it’s me, Mike Konczal. Hello world!\n\n\n\n\nInputs.table(transpose(my_quotes_data), {\n  format: {\n    Link: (x) =>\n      htl.html`<a href=${x} target=_blank>Link</a>`\n      }\n  }\n  )\n\n\n\n\n\n\nTrying this? But also this!\n\nInputs.table(transpose(my_media_data), {\n  format: {\n    Link: (x) =>\n      htl.html`<a href=${x} target=_blank>Link</a>`\n      }\n  }\n  )"
+    "text": "I talk to reporters, writers, the public, and other interested people about the economy and politics all the time. Here is a partial list; feel free to contact me if you’d like to chat.\n\n\n\nHere’s an incomplete list of times me or my work has been quoted or referenced in the media:\n\nInputs.table(transpose(my_quotes_data), {\n  format: {\n    Link: (x) =>\n      htl.html`<a href=${x} target=_blank>Link</a>`\n      }\n  }\n  )\n\n\n\n\n\n\nAnd here’s a list of TV, radio, podcasts, and panels I’ve done in my career:\n\nInputs.table(transpose(my_media_data), {\n  format: {\n    Link: (x) =>\n      htl.html`<a href=${x} target=_blank>Link</a>`\n      }\n  }\n  )"
   },
   {
     "objectID": "about.html",
@@ -46,6 +46,6 @@
     "href": "writings.html",
     "title": "Writings",
     "section": "",
-    "text": "About this site: it’s me, Mike Konczal. Hello world!\n\n\n\n\nInputs.table(transpose(mywork_data), {\n  format: {\n    Link: (x) =>\n      htl.html`<a href=${x} target=_blank>Link</a>`\n      }\n  }\n  )\n\n\n\n\n\n\nTrying this?"
+    "text": "I write for a variety of publications, both popular and academic. Below is a list of columns and op-eds, policy and research papers, and book reviews. Feel free to contact me if you’d like me to write for you.\n\n\n\n\nInputs.table(transpose(mywork_data), {\n  format: {\n    Link: (x) =>\n      htl.html`<a href=${x} target=_blank>Link</a>`\n      }\n  }\n  )"
   }
 ]

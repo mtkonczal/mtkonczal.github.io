@@ -4,10 +4,9 @@ execute:
   echo: false
 ---
 
-::: column-screen-inset
-![](images/image-230407671.png)
+![](images/image-230407671.png){fig-align="center"}
 
-About this site: it's me, Mike Konczal. Hello world!
+I write for a variety of publications, both popular and academic. Below is a list of columns and op-eds, policy and research papers, and book reviews. Feel free to contact me if you'd like me to write for you.
 
 ```{r}
 #| output: false
@@ -34,5 +33,3 @@ Inputs.table(transpose(mywork_data), {
   )
 ```
 
-Trying this?
-:::

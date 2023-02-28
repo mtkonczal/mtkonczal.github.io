@@ -4,9 +4,9 @@ execute:
   echo: false
 ---
 
-![](images/mkonczal%20cspan.png){fig-align="center"}
+![](images/mkonczal%20cspan.png){fig-align="center" width="650"}
 
-About this site: it's me, Mike Konczal. Hello world!
+I talk to reporters, writers, the public, and other interested people about the economy and politics all the time. Here is a partial list; feel free to contact me if you'd like to chat.
 
 ```{r}
 #| output: false
@@ -17,16 +17,20 @@ library(lubridate)
 my_media = read_csv("data/mywork.csv") %>%
   mutate(Date = as.Date(Date, "%m/%d/%y")) %>%
   select(-Excerpt, -Author) %>%
-  filter(Format %in% c("TV","Radio","Podcast","Panel"))
+  filter(Format %in% c("TV","Radio","Podcast","Panel")) %>%
+  arrange(desc(Date))
 
 my_quotes = read_csv("data/mywork.csv") %>%
   mutate(Date = as.Date(Date, "%m/%d/%y")) %>%
   select(-Excerpt, -Author) %>%
-  filter(Format %in% c("Quote"))
+  filter(Format %in% c("Quote")) %>%
+  arrange(desc(Date))
 
 ojs_define(my_media_data = my_media)
 ojs_define(my_quotes_data = my_quotes)
 ```
+
+Here's an incomplete list of times me or my work has been quoted or referenced in the media:
 
 ```{ojs}
 Inputs.table(transpose(my_quotes_data), {
@@ -38,7 +42,8 @@ Inputs.table(transpose(my_quotes_data), {
   )
 ```
 
-Trying this? But also this!
+And here's a list of TV, radio, podcasts, and panels I've done in my career:
+
 ```{ojs}
 Inputs.table(transpose(my_media_data), {
   format: {

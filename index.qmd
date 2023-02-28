@@ -69,7 +69,6 @@ beaKey <- as.character(beaKey)
 # Table IDs
 # https://www.bea.gov/system/files/2021-07/TablesRegisterPreview.txt
 
-########### THE BIG ONE
 PCE_Weight <- get_NIPA_data(beaKey, 'U20405', 'M', '2018,2019,2020,2021,2022,2023', data_set_name = 'NIUnderlyingDetail')
 PCE_Weight <- BEA_date_monthly(PCE_Weight)
 
@@ -163,7 +162,6 @@ cpi_data <- inner_join(cpi_data, series, by = c("series_id"))
 
 
 # Graphic - Supercore
-
 supercore <- cpi_data %>% filter(seasonal == "S") %>%
   filter(item_name == "All items less food, shelter, energy, and used cars and trucks") %>%
   select(item_name, date, value) %>%
@@ -176,7 +174,7 @@ supercore <- cpi_data %>% filter(seasonal == "S") %>%
   mutate(time_length = str_replace_all(time_length,"SixMonth", "6-Month Change")) %>%
   mutate(time_length = str_replace_all(time_length,"ThreeMonth", "3-Month Change")) %>%
   mutate(last_value = ifelse(date==max(date),change,NA)) %>%
-  mutate(last_value_pre = ifelse(date==max(date),pre_value,NA))
+  mutate(last_value_pre = ifelse(date==max(date) & time_length=="3-Month Change",pre_value,NA))
 
 supercore_datebreaks <- unique(sort(supercore$date,decreasing = TRUE))
 supercore_datebreaks <- supercore_datebreaks[seq(1,length(supercore_datebreaks),12)]
@@ -196,6 +194,7 @@ ggplot(supercore, aes(date, change, color=time_length, label=label_percent(accur
         legend.text = element_text(size=11)) +
   scale_color_manual(values=c("#2D779C", "#A4CCCC")) +
   geom_text(show.legend=FALSE, nudge_x = 155) +
+  geom_text(aes(date,last_value_pre, label=label_percent(accuracy=0.1)(pre_value)), show.legend=FALSE, nudge_x = 155) +
   theme(plot.title.position = "plot")
 ```
 
