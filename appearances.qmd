@@ -33,5 +33,5 @@ my_data$Month[1] <- first_month
 
 options(knitr.kable.NA = '')
 kbl(my_data, escape = FALSE) %>%
-    kable_styling(fixed_thead = T)
+    kable_styling()
 ```
