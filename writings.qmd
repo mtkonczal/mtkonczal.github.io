@@ -9,27 +9,30 @@ execute:
 I write for a variety of publications, both popular and academic. Below is a list of columns and op-eds, policy and research papers, and book reviews. Feel free to contact me if you'd like me to write for you.
 
 ```{r}
-#| output: false
-library(readr)
-library(dplyr)
+#| warning = FALSE, message = FALSE
+library(knitr)
+library(tidyverse)
+library(kableExtra)
 library(lubridate)
-
-mywork = read_csv("data/mywork.csv") %>%
+my_data <- read_csv("data/mywork.csv") %>%
+  mutate(title = cell_spec(`Original Title`, "html", link = Link)) %>%
   mutate(Date = as.Date(Date, "%m/%d/%y")) %>%
-  select(-Excerpt, -Author) %>%
   filter(Format %in% c("Article", "White Paper")) %>%
-  arrange(desc(Date))
+  arrange(desc(Date)) %>%
+  mutate(Year = year(Date), Month = month(Date,label = TRUE, abbr = FALSE)) %>%
+  select(Year, Month, Outlet, Title = title)
 
-ojs_define(mywork_data = mywork)
-```
+first_year <- my_data$Year[1]
+my_data$Year = if_else(my_data$Year != lag(my_data$Year,1),my_data$Year,as.numeric("NA"))
+my_data$Year[1] <- first_year
 
-```{ojs}
-Inputs.table(transpose(mywork_data), {
-  format: {
-    Link: (x) =>
-      htl.html`<a href=${x} target=_blank>Link</a>`
-      }
-  }
-  )
+my_data$Month <- as.character(my_data$Month)
+first_month <- my_data$Month[1]
+my_data$Month = if_else(my_data$Month != lag(my_data$Month,1),my_data$Month,as.character(NA))
+my_data$Month[1] <- first_month
+
+options(knitr.kable.NA = '')
+kbl(my_data, escape = FALSE) %>%
+    kable_styling(fixed_thead = T)
 ```
 

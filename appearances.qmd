@@ -1,12 +1,12 @@
 ---
-title: "Media Quotes and Citations"
+title: "Media Appearances"
 execute:
   echo: false
 ---
 
-![](images/cc_panel.jpg){fig-align="center"}
+![](images/mkonczal%20cspan.png){fig-align="center"}
 
-I talk to reporters, writers, the public, and other interested people about the economy and politics all the time. Here is a partial list; feel free to contact me if you'd like to chat.
+I appear on TV, radio, podcasts, and on panels. Here is a partial list; feel free to contact me if you'd like to join your show.
 
 ```{r}
 #| warning = FALSE, message = FALSE
@@ -17,10 +17,10 @@ library(lubridate)
 my_data <- read_csv("data/mywork.csv") %>%
   mutate(title = cell_spec(`Original Title`, "html", link = Link)) %>%
   mutate(Date = as.Date(Date, "%m/%d/%y")) %>%
-  filter(Format == "Quote") %>%
+  filter(Format %in% c("TV","Radio","Podcast","Panel")) %>%
   arrange(desc(Date)) %>%
   mutate(Year = year(Date), Month = month(Date,label = TRUE, abbr = FALSE)) %>%
-  select(Year, Month, Outlet, Title = title)
+  select(Year, Month, Outlet, Type = Format, Title = title)
 
 first_year <- my_data$Year[1]
 my_data$Year = if_else(my_data$Year != lag(my_data$Year,1),my_data$Year,as.numeric("NA"))

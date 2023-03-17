@@ -1,12 +1,12 @@
 ---
-title: "Media Quotes and Citations"
+title: "Writings"
 execute:
   echo: false
 ---
 
-![](images/cc_panel.jpg){fig-align="center"}
+![](images/image-230407671.png){fig-align="center"}
 
-I talk to reporters, writers, the public, and other interested people about the economy and politics all the time. Here is a partial list; feel free to contact me if you'd like to chat.
+Hello testing! I write for a variety of publications, both popular and academic. Below is a list of columns and op-eds, policy and research papers, and book reviews. Feel free to contact me if you'd like me to write for you.
 
 ```{r}
 #| warning = FALSE, message = FALSE
@@ -17,7 +17,7 @@ library(lubridate)
 my_data <- read_csv("data/mywork.csv") %>%
   mutate(title = cell_spec(`Original Title`, "html", link = Link)) %>%
   mutate(Date = as.Date(Date, "%m/%d/%y")) %>%
-  filter(Format == "Quote") %>%
+  filter(Format %in% c("Article", "White Paper")) %>%
   arrange(desc(Date)) %>%
   mutate(Year = year(Date), Month = month(Date,label = TRUE, abbr = FALSE)) %>%
   select(Year, Month, Outlet, Title = title)

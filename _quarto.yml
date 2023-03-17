@@ -19,8 +19,10 @@ website:
         text: The Book
       - href: writings.qmd
         text: Writings
+      - href: appearances.qmd
+        text: Media Hits
       - href: media.qmd
-        text: Media Appearances
+        text: Media Quotes
       - href: resume.qmd
         text: Resume
 
@@ -30,7 +32,7 @@ website:
     
 format:
   html:
-    theme: sandstone
+    theme: spacelab
     css: styles.css
     toc: false
     page-layout: full
