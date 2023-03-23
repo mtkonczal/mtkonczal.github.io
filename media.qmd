@@ -6,7 +6,7 @@ execute:
 
 ![](images/cc_panel.jpg){fig-align="center"}
 
-I talk to reporters, writers, the public, and other interested people about the economy and politics all the time. Here is a partial list; feel free to contact me if you'd like to chat.
+I talk to reporters, writers, the public, and other interested people about the economy and politics all the time. Here is a partial list of that and times my work has been referenced; feel free to contact me if you'd like to chat.
 
 ```{r}
 #| warning = FALSE, message = FALSE
@@ -14,13 +14,16 @@ library(knitr)
 library(tidyverse)
 library(kableExtra)
 library(lubridate)
+library(DT)
+
 my_data <- read_csv("data/mywork.csv") %>%
   mutate(title = cell_spec(`Original Title`, "html", link = Link)) %>%
   mutate(Date = as.Date(Date, "%m/%d/%y")) %>%
   filter(Format == "Quote") %>%
   arrange(desc(Date)) %>%
   mutate(Year = year(Date), Month = month(Date,label = TRUE, abbr = FALSE)) %>%
-  select(Year, Month, Outlet, Title = title)
+  mutate(title = paste(title, " (", Outlet, ")", sep="")) %>%
+  select(Year, Month, Title = title)
 
 first_year <- my_data$Year[1]
 my_data$Year = if_else(my_data$Year != lag(my_data$Year,1),my_data$Year,as.numeric("NA"))
@@ -31,7 +34,11 @@ first_month <- my_data$Month[1]
 my_data$Month = if_else(my_data$Month != lag(my_data$Month,1),my_data$Month,as.character(NA))
 my_data$Month[1] <- first_month
 
-options(knitr.kable.NA = '')
-kbl(my_data, escape = FALSE) %>%
-    kable_styling(fixed_thead = T)
+#options(knitr.kable.NA = '')
+#kbl(my_data, escape = FALSE) %>%
+#    kable_styling(fixed_thead = T)
+my_data$Title <- str_remove(my_data$Title,"\xd5")
+my_data$Title <- str_remove(my_data$Title,"\xd4")
+
+datatable(my_data, escape = F, rownames = FALSE, options = list(iDisplayLength = 50))
 ```

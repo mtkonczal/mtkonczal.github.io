@@ -59,8 +59,15 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
-<script src="site_libs/kePrint-0.0.1/kePrint.js"></script>
-<link href="site_libs/lightable-0.0.1/lightable.css" rel="stylesheet">
+<script src="site_libs/htmlwidgets-1.6.1/htmlwidgets.js"></script>
+<link href="site_libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet">
+<script src="site_libs/datatables-binding-0.27/datatables.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<link href="site_libs/dt-core-1.12.1/css/jquery.dataTables.min.css" rel="stylesheet">
+<link href="site_libs/dt-core-1.12.1/css/jquery.dataTables.extra.css" rel="stylesheet">
+<script src="site_libs/dt-core-1.12.1/js/jquery.dataTables.min.js"></script>
+<link href="site_libs/crosstalk-1.2.0/css/crosstalk.min.css" rel="stylesheet">
+<script src="site_libs/crosstalk-1.2.0/js/crosstalk.min.js"></script>
 
 
 <link rel="stylesheet" href="styles.css">
@@ -92,19 +99,23 @@ ul.task-list li input[type="checkbox"] {
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="./the_book.html">
- <span class="menu-text">The Book</span></a>
+ <span class="menu-text">Book</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link active" href="./writings.html" aria-current="page">
  <span class="menu-text">Writings</span></a>
   </li>  
   <li class="nav-item">
+    <a class="nav-link" href="./research.html">
+ <span class="menu-text">Research</span></a>
+  </li>  
+  <li class="nav-item">
     <a class="nav-link" href="./appearances.html">
- <span class="menu-text">Media Hits</span></a>
+ <span class="menu-text">Media</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="./media.html">
- <span class="menu-text">Media Quotes</span></a>
+ <span class="menu-text">Quotes</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="./resume.html">
@@ -150,391 +161,8 @@ ul.task-list li input[type="checkbox"] {
 <div class="cell">
 <div class="cell-output-display">
 
-<table class="table" style="margin-left: auto; margin-right: auto;">
- <thead>
-  <tr>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> Year </th>
-   <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"> Month </th>
-   <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"> Outlet </th>
-   <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"> Title </th>
-  </tr>
- </thead>
-<tbody>
-  <tr>
-   <td style="text-align:right;"> 2023 </td>
-   <td style="text-align:left;"> March </td>
-   <td style="text-align:left;"> MSNBC </td>
-   <td style="text-align:left;"> <a href="https://www.msnbc.com/opinion/msnbc-opinion/deregulation-silicon-valley-bank-collapse-rcna75123" style="     ">The Dodd-Frank Act could have at least helped Silicon Valley Bank <d4>fail well<d5></d5></d4></a> </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;">  </td>
-   <td style="text-align:left;"> February </td>
-   <td style="text-align:left;"> Vox </td>
-   <td style="text-align:left;"> <a href="https://www.vox.com/policy/23614066/inflation-soft-landing-economy-recession" style="     ">How the US can stick the landing, beat inflation, and avoid a recession</a> </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;">  </td>
-   <td style="text-align:left;">  </td>
-   <td style="text-align:left;"> The Nation </td>
-   <td style="text-align:left;"> <a href="https://www.thenation.com/article/economy/federal-reserve-inflation-jobs/" style="     ">The Tradeoffs in the Fight Against Inflation</a> </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;"> 2022 </td>
-   <td style="text-align:left;"> December </td>
-   <td style="text-align:left;"> The Nation </td>
-   <td style="text-align:left;"> <a href="https://www.thenation.com/article/economy/ticketmaster-live-nation-pearl-jam-taylor-swift/" style="     ">Before Taylor Swift, Pearl Jam Knew Ticketmaster’s Monopoly Power All Too Well</a> </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;">  </td>
-   <td style="text-align:left;"> September </td>
-   <td style="text-align:left;"> The Nation </td>
-   <td style="text-align:left;"> <a href="https://www.thenation.com/article/economy/inflation-us-europe/" style="     ">Why US Workers Are Better Situated to Confront Economic Turbulence</a> </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;">  </td>
-   <td style="text-align:left;"> June </td>
-   <td style="text-align:left;"> The Nation </td>
-   <td style="text-align:left;"> <a href="https://www.thenation.com/article/economy/inflation-economy-labor-market/" style="     ">We Shouldn<d5>t Destroy What Is Working in Our Economy</d5></a> </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;">  </td>
-   <td style="text-align:left;"> January </td>
-   <td style="text-align:left;"> The Nation </td>
-   <td style="text-align:left;"> <a href="https://www.thenation.com/article/economy/jobs-wages-recovery/" style="     ">The Revolution Against Low-Wage Work</a> </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;"> 2021 </td>
-   <td style="text-align:left;"> October </td>
-   <td style="text-align:left;"> The Nation </td>
-   <td style="text-align:left;"> <a href="https://www.thenation.com/article/economy/inflation-jobs-recovery/" style="     ">Ignore the Naysayers. A Full-Employment Recovery Is Possible.</a> </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;">  </td>
-   <td style="text-align:left;"> August </td>
-   <td style="text-align:left;"> The New Republic </td>
-   <td style="text-align:left;"> <a href="https://newrepublic.com/article/163154/democrats-infrastructure-spending-new-economics" style="     ">The New Economics Is Here</a> </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;">  </td>
-   <td style="text-align:left;"> July </td>
-   <td style="text-align:left;"> The Nation </td>
-   <td style="text-align:left;"> <a href="https://www.thenation.com/article/economy/american-rescue-plan/" style="     ">The Political Brilliance of the American Rescue Plan</a> </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;">  </td>
-   <td style="text-align:left;"> June </td>
-   <td style="text-align:left;"> New York Times </td>
-   <td style="text-align:left;"> <a href="https://www.nytimes.com/2021/06/15/opinion/inflation-economy-infrastructure.html" style="     ">How to Have a Roaring 2020s (Without Wild Inflation)</a> </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;">  </td>
-   <td style="text-align:left;"> April </td>
-   <td style="text-align:left;"> The Nation </td>
-   <td style="text-align:left;"> <a href="https://www.thenation.com/article/society/biden-care-work-american-jobs-plan/" style="     ">Joe Biden Wants to Transform Care Work in America</a> </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;">  </td>
-   <td style="text-align:left;">  </td>
-   <td style="text-align:left;"> The Nation </td>
-   <td style="text-align:left;"> <a href="https://www.thenation.com/article/society/biden-care-work-american-jobs-plan/" style="     ">Joe Biden Wants to Transform Care Work in America</a> </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;">  </td>
-   <td style="text-align:left;"> March </td>
-   <td style="text-align:left;"> The Nation </td>
-   <td style="text-align:left;"> <a href="https://www.thenation.com/article/economy/jobs-stimulus-employment/" style="     ">Biden’s Next Goal Should Be Full Employment</a> </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;">  </td>
-   <td style="text-align:left;"> January </td>
-   <td style="text-align:left;"> The Nation </td>
-   <td style="text-align:left;"> <a href="https://www.thenation.com/article/politics/health-care-freedom-medicare/" style="     ">When Medicare Helped Kill Jim Crow</a> </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;">  </td>
-   <td style="text-align:left;">  </td>
-   <td style="text-align:left;"> Boston Review </td>
-   <td style="text-align:left;"> <a href="http://bostonreview.net/class-inequality-law-justice/mike-konczal-time-universal-measure-freedom" style="     ">Time Is the Universal Measure of Freedom</a> </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;"> 2020 </td>
-   <td style="text-align:left;"> November </td>
-   <td style="text-align:left;"> The Nation </td>
-   <td style="text-align:left;"> <a href="https://www.thenation.com/article/economy/deficit-spending-budget/" style="     ">Why a Biden Administration Needs to Spend Big</a> </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;">  </td>
-   <td style="text-align:left;"> September </td>
-   <td style="text-align:left;"> Roosevelt Institute </td>
-   <td style="text-align:left;"> <a href="https://rooseveltinstitute.org/publications/a-federal-reserve-reform-agenda-eight-recommendations/" style="     ">A Federal Reserve Reform Agenda: Eight Recommendations</a> </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;">  </td>
-   <td style="text-align:left;"> August </td>
-   <td style="text-align:left;"> The Nation </td>
-   <td style="text-align:left;"> <a href="https://www.thenation.com/article/economy/biden-tax-plan/" style="     ">Can Joe Biden Unrig the Economy?</a> </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;">  </td>
-   <td style="text-align:left;"> May </td>
-   <td style="text-align:left;"> The Nation </td>
-   <td style="text-align:left;"> <a href="https://www.thenation.com/article/economy/cares-act-unemployment/" style="     ">Unemployment Insurance Is a Vital Part of Economic Freedom</a> </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;">  </td>
-   <td style="text-align:left;"> March </td>
-   <td style="text-align:left;"> Boston Review </td>
-   <td style="text-align:left;"> <a href="http://bostonreview.net/class-inequality-politics/mike-konczal-felicia-wong-uniquely-fragile-economy-stimulus-not-enough" style="     ">With a Uniquely Fragile Economy, Stimulus Is Not Enough</a> </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;">  </td>
-   <td style="text-align:left;">  </td>
-   <td style="text-align:left;"> Dissent Magazine </td>
-   <td style="text-align:left;"> <a href="https://www.dissentmagazine.org/online_articles/our-political-system-is-hostile-to-real-reform" style="     ">Our Political System Is Hostile to Real Reform</a> </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;">  </td>
-   <td style="text-align:left;">  </td>
-   <td style="text-align:left;"> Roosevelt Institute </td>
-   <td style="text-align:left;"> <a href="https://rooseveltinstitute.org/publications/mcconnells-response-to-the-coronavirus-recession-fails-key-tests/" style="     ">McConnell’s Response to the Coronavirus Recession Fails Key Tests</a> </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;">  </td>
-   <td style="text-align:left;">  </td>
-   <td style="text-align:left;"> The Nation </td>
-   <td style="text-align:left;"> <a href="https://www.thenation.com/article/economy/coronavirus-stimulus/" style="     ">The Stimulus Plan That We Need Now</a> </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;">  </td>
-   <td style="text-align:left;">  </td>
-   <td style="text-align:left;"> Roosevelt Institute </td>
-   <td style="text-align:left;"> <a href="https://rooseveltinstitute.org/publications/a-forward-thinking-policy-response-to-the-coronavirus-recession/" style="     ">A Forward-Thinking Policy Response to the Coronavirus Recession</a> </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;">  </td>
-   <td style="text-align:left;"> January </td>
-   <td style="text-align:left;"> The Nation </td>
-   <td style="text-align:left;"> <a href="https://www.thenation.com/article/economy/child-tax-credit-allowance/" style="     ">Finally, a Bipartisan Bill That Would Help All Families</a> </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;">  </td>
-   <td style="text-align:left;">  </td>
-   <td style="text-align:left;"> Roosevelt Institute </td>
-   <td style="text-align:left;"> <a href="https://rooseveltinstitute.org/publications/the-empirical-failures-of-neoliberalism/" style="     ">The Empirical Failures of Neoliberalism</a> </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;"> 2018 </td>
-   <td style="text-align:left;"> November </td>
-   <td style="text-align:left;"> Talking Points Memo </td>
-   <td style="text-align:left;"> <a href="https://talkingpointsmemo.com/feature/democrats-must-become-the-party-of-freedom" style="     ">Democrats Must Become The Party Of Freedom</a> </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;">  </td>
-   <td style="text-align:left;"> May </td>
-   <td style="text-align:left;"> Vox </td>
-   <td style="text-align:left;"> <a href="https://www.vox.com/the-big-idea/2018/5/4/17320188/jobs-report-natural-rate-unemployment-inflation-economics-april" style="     ">How low can unemployment go? Economists keep getting the answer wrong.</a> </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;">  </td>
-   <td style="text-align:left;"> March </td>
-   <td style="text-align:left;"> New York Times </td>
-   <td style="text-align:left;"> <a href="https://www.nytimes.com/2018/03/06/opinion/democrats-trump-dodd-frank.html" style="     ">Why are Democrats helping to dismantle Dodd-Frank?</a> </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;">  </td>
-   <td style="text-align:left;"> February </td>
-   <td style="text-align:left;"> Vox </td>
-   <td style="text-align:left;"> <a href="https://www.vox.com/the-big-idea/2017/12/20/16798026/rebuild-left-democratic-party-democratic-socialists-tenant-rights" style="     ">What Democrats can learn from the Democratic Socialists about rebuilding the left</a> </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;">  </td>
-   <td style="text-align:left;"> January </td>
-   <td style="text-align:left;"> Dissent </td>
-   <td style="text-align:left;"> <a href="https://www.dissentmagazine.org/blog/neoliberalism-forum-mike-konczal" style="     ">How Ideology Works</a> </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;"> 2017 </td>
-   <td style="text-align:left;"> November </td>
-   <td style="text-align:left;"> Roosevelt Institute </td>
-   <td style="text-align:left;"> <a href="https://rooseveltinstitute.org/publications/federal-reserve-expanding-monetary-policy-toolkit/" style="     ">A New Direction for the Federal Reserve: Expanding the Monetary Policy Toolkit</a> </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;">  </td>
-   <td style="text-align:left;">  </td>
-   <td style="text-align:left;"> Vox </td>
-   <td style="text-align:left;"> <a href="https://www.vox.com/the-big-idea/2017/11/16/16665604/republicans-tax-reform-labor-capital-wages" style="     ">Republicans are weaponizing the tax code</a> </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;">  </td>
-   <td style="text-align:left;"> January </td>
-   <td style="text-align:left;"> Dissent </td>
-   <td style="text-align:left;"> <a href="https://www.dissentmagazine.org/online_articles/austerity-obama-years" style="     ">The Austerity of the Obama Years</a> </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;"> 2016 </td>
-   <td style="text-align:left;"> September </td>
-   <td style="text-align:left;"> Vox </td>
-   <td style="text-align:left;"> <a href="https://www.vox.com/the-big-idea/2016/9/15/12923528/liberal-economics-great-recession-policy-clinton" style="     ">The "new liberal economics" is the key to understanding Hillary Clinton's policies</a> </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;">  </td>
-   <td style="text-align:left;"> July </td>
-   <td style="text-align:left;"> Roosevelt Institute </td>
-   <td style="text-align:left;"> <a href="https://rooseveltforward.org/2016/07/21/new-paper-demand-side-business-dynamism/" style="     ">Demand-Side Business Dynamism (with Marshall Steinbaum)</a> </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;">  </td>
-   <td style="text-align:left;"> June </td>
-   <td style="text-align:left;"> Roosevelt Institute </td>
-   <td style="text-align:left;"> <a href="https://rooseveltinstitute.org/publications/untamed-corporate-financial-monopoly-power/" style="     ">Untamed: How to Check Corporate, Financial, and Monopoly Power (with Nell Abernathy and Katy Milani)</a> </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;">  </td>
-   <td style="text-align:left;"> May </td>
-   <td style="text-align:left;"> Dissent </td>
-   <td style="text-align:left;"> <a href="https://www.dissentmagazine.org/online_articles/karl-polanyi-explainer-great-transformation-bernie-sanders" style="     ">Karl Polanyi for President</a> </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;"> 2015 </td>
-   <td style="text-align:left;"> December </td>
-   <td style="text-align:left;"> Dissent </td>
-   <td style="text-align:left;"> <a href="https://www.dissentmagazine.org/blog/8-thoughts-on-bernie-sanderss-democratic-socialism-and-the-primary" style="     ">8 Thoughts on Bernie Sanders’s Democratic Socialism and the Primary</a> </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;">  </td>
-   <td style="text-align:left;"> September </td>
-   <td style="text-align:left;"> Dissent </td>
-   <td style="text-align:left;"> <a href="https://www.dissentmagazine.org/article/mike-konczal-generation-debt-free-college-argument" style="     ">Generation Debt</a> </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;">  </td>
-   <td style="text-align:left;"> July </td>
-   <td style="text-align:left;"> Roosevelt Institute </td>
-   <td style="text-align:left;"> <a href="https://rooseveltinstitute.org/publications/defining-financialization/" style="     ">Defining Financialization</a> </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;">  </td>
-   <td style="text-align:left;">  </td>
-   <td style="text-align:left;"> Vox </td>
-   <td style="text-align:left;"> <a href="https://www.vox.com/2015/7/21/9004155/dodd-frank-explainer" style="     ">Dodd-Frank turns 5 today — it's Obama's most underappreciated achievement</a> </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;">  </td>
-   <td style="text-align:left;"> May </td>
-   <td style="text-align:left;"> Rolling Stone </td>
-   <td style="text-align:left;"> <a href="https://www.rollingstone.com/politics/politics-news/whats-left-after-higher-education-is-dismantled-175236/" style="     ">What’s Left After Higher Education Is Dismantled</a> </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;">  </td>
-   <td style="text-align:left;">  </td>
-   <td style="text-align:left;"> Roosevelt Institute </td>
-   <td style="text-align:left;"> <a href="https://rooseveltinstitute.org/publications/rewriting-the-rules-of-the-american-economy/" style="     ">Rewriting the Rules of the American Economy (with Joseph Stiglitz, Nell Abernathy, Adam Hersh, Susan Holmberg)</a> </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;"> 2014 </td>
-   <td style="text-align:left;"> December </td>
-   <td style="text-align:left;"> Washington Monthly </td>
-   <td style="text-align:left;"> <a href="https://washingtonmonthly.com/magazine/novdec-2014/frenzied-financialization/" style="     ">Frenzied Financialization</a> </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;">  </td>
-   <td style="text-align:left;"> March </td>
-   <td style="text-align:left;"> Boston Review </td>
-   <td style="text-align:left;"> <a href="http://bostonreview.net/us/mike-konczal-seven-reasons-raise-minimum-wage" style="     ">7 Bipartisan Reasons to Raise the Minimum Wage</a> </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;">  </td>
-   <td style="text-align:left;">  </td>
-   <td style="text-align:left;"> Democracy Journal </td>
-   <td style="text-align:left;"> <a href="https://democracyjournal.org/magazine/32/the-voluntarism-fantasy/?page=all" style="     ">The Voluntarism Fantasy</a> </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;"> 2013 </td>
-   <td style="text-align:left;"> November </td>
-   <td style="text-align:left;"> Americans for Financial Reform/Roosevelt Institute </td>
-   <td style="text-align:left;"> <a href="https://5000ff5f-c81e-4025-9f29-a8526ec49666.usrfiles.com/ugd/5000ff_d2d1ebec20fc466c94f319d3014ce00a.pdf" style="     ">Capital Requirements: Hitting Six Birds With One Stone</a> </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;"> 2012 </td>
-   <td style="text-align:left;"> December </td>
-   <td style="text-align:left;"> Dissent </td>
-   <td style="text-align:left;"> <a href="https://www.dissentmagazine.org/online_articles/citizen-coupon" style="     ">Citizen Coupon</a> </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;">  </td>
-   <td style="text-align:left;">  </td>
-   <td style="text-align:left;"> New America </td>
-   <td style="text-align:left;"> <a href="https://www.newamerica.org/economic-growth/policy-papers/no-discount-comparing-the-public-option-to-the-coupon-welfare-state/" style="     ">No Discount: Comparing the Public Option to the Coupon Welfare State</a> </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;">  </td>
-   <td style="text-align:left;">  </td>
-   <td style="text-align:left;"> Boston Review </td>
-   <td style="text-align:left;"> <a href="http://bostonreview.net/forum/sweet-forgiveness" style="     ">Sweet Forgiveness</a> </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;">  </td>
-   <td style="text-align:left;"> September </td>
-   <td style="text-align:left;"> Business Insider </td>
-   <td style="text-align:left;"> <a href="https://www.businessinsider.com/bernanke-vs-woodford-in-gif-form-2012-9" style="     ">The Complete Guide To America's Jobs Crisis And The Failure Of Monetary Policy Using Animated Gifs</a> </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;">  </td>
-   <td style="text-align:left;">  </td>
-   <td style="text-align:left;"> Dissent </td>
-   <td style="text-align:left;"> <a href="https://www.dissentmagazine.org/article/from-master-plan-to-no-plan-the-slow-death-of-public-higher-education" style="     ">From Master Plan to No Plan: The Slow Death of Public Higher Education</a> </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;">  </td>
-   <td style="text-align:left;"> June </td>
-   <td style="text-align:left;"> Roosevelt Institute </td>
-   <td style="text-align:left;"> <a href="https://ourfinancialsecurity.org/wp-content/uploads/2012/06/Mike-Konczal-How-Mortgage-Debt-is-Holding-Back-the-Recovery-PAPER.pdf" style="     ">How Mortgage Debt is Holding Back the Recovery</a> </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;">  </td>
-   <td style="text-align:left;"> April </td>
-   <td style="text-align:left;"> Jacobin </td>
-   <td style="text-align:left;"> <a href="https://jacobinmag.com/2012/04/against-law-for-order" style="     ">Against Law, For Order</a> </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;">  </td>
-   <td style="text-align:left;"> March </td>
-   <td style="text-align:left;"> Boston Review </td>
-   <td style="text-align:left;"> <a href="http://bostonreview.net/konczal-democratizing-markets" style="     ">Democratizing Markets</a> </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;">  </td>
-   <td style="text-align:left;"> February </td>
-   <td style="text-align:left;"> Salon </td>
-   <td style="text-align:left;"> <a href="https://www.salon.com/2012/02/05/the_privatization_trap/" style="     ">The Privatization Trap</a> </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;"> 2011 </td>
-   <td style="text-align:left;"> September </td>
-   <td style="text-align:left;"> Good Magazine </td>
-   <td style="text-align:left;"> <a href="https://www.good.is/articles/three-concrete-demands-to-hold-wall-street-accountable" style="     ">Three Concrete Demands to Hold Wall Street Accountable</a> </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;"> 2010 </td>
-   <td style="text-align:left;"> August </td>
-   <td style="text-align:left;"> Roosevelt Institute </td>
-   <td style="text-align:left;"> <a href="https://5000ff5f-c81e-4025-9f29-a8526ec49666.usrfiles.com/ugd/5000ff_83a6305e708944028117fa5cd57134c0.pdf" style="     ">The Boom Not The Slump: The Right Time For Austerity</a> </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;">  </td>
-   <td style="text-align:left;"> April </td>
-   <td style="text-align:left;"> Roosevelt Institute </td>
-   <td style="text-align:left;"> <a href="https://5000ff5f-c81e-4025-9f29-a8526ec49666.usrfiles.com/ugd/5000ff_57e540100301484a9b411bc90c925c8f.pdf" style="     ">Six Critical Elements of Financial Reform</a> </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;">  </td>
-   <td style="text-align:left;"> March </td>
-   <td style="text-align:left;"> Roosevelt Institute </td>
-   <td style="text-align:left;"> <a href="https://5000ff5f-c81e-4025-9f29-a8526ec49666.usrfiles.com/ugd/5000ff_68a7df7400314effb24e0d0319693813.pdf" style="     ">The Current State of Financial Reform</a> </td>
-  </tr>
-</tbody>
-</table>
-
+<div class="datatables html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-078c7da22c48fbcaab84" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-078c7da22c48fbcaab84">{"x":{"filter":"none","vertical":false,"data":[[2023,null,null,2022,null,null,null,2021,null,null,null,null,null,null,null,null,2020,null,null,null,null,null,null,null,null,null,null,2018,null,null,null,null,2017,null,null,2016,null,null,null,2015,null,null,null,null,null,2014,null,null,2013,2012,null,null,null,null,null,null,null,null,2011,2010,null,null],["March","February",null,"December","September","June","January","October","August","July","June","April",null,"March","January",null,"November","September","August","May","March",null,null,null,null,"January",null,"November","May","March","February","January","November",null,"January","September","July","June","May","December","September","July",null,"May",null,"December","March",null,"November","December",null,null,"September",null,"June","April","March","February","September","August","April","March"],["<a  target=_blank href=https://www.msnbc.com/opinion/msnbc-opinion/deregulation-silicon-valley-bank-collapse-rcna75123>The Dodd-Frank Act could have at least helped Silicon Valley Bank fail well<\/a> (MSNBC)","<a  target=_blank href=https://www.vox.com/policy/23614066/inflation-soft-landing-economy-recession>How the US can stick the landing, beat inflation, and avoid a recession<\/a> (Vox)","<a  target=_blank href=https://www.thenation.com/article/economy/federal-reserve-inflation-jobs/>The Tradeoffs in the Fight Against Inflation<\/a> (The Nation)","<a  target=_blank href=https://www.thenation.com/article/economy/ticketmaster-live-nation-pearl-jam-taylor-swift/>Before Taylor Swift, Pearl Jam Knew Ticketmaster’s Monopoly Power All Too Well<\/a> (The Nation)","<a  target=_blank href=https://www.thenation.com/article/economy/inflation-us-europe/>Why US Workers Are Better Situated to Confront Economic Turbulence<\/a> (The Nation)","<a  target=_blank href=https://www.thenation.com/article/economy/inflation-economy-labor-market/>We Shouldnt Destroy What Is Working in Our Economy<\/a> (The Nation)","<a  target=_blank href=https://www.thenation.com/article/economy/jobs-wages-recovery/>The Revolution Against Low-Wage Work<\/a> (The Nation)","<a  target=_blank href=https://www.thenation.com/article/economy/inflation-jobs-recovery/>Ignore the Naysayers. A Full-Employment Recovery Is Possible.<\/a> (The Nation)","<a  target=_blank href=https://newrepublic.com/article/163154/democrats-infrastructure-spending-new-economics>The New Economics Is Here<\/a> (The New Republic)","<a  target=_blank href=https://www.thenation.com/article/economy/american-rescue-plan/>The Political Brilliance of the American Rescue Plan<\/a> (The Nation)","<a  target=_blank href=https://www.nytimes.com/2021/06/15/opinion/inflation-economy-infrastructure.html>How to Have a Roaring 2020s (Without Wild Inflation)<\/a> (New York Times)","<a  target=_blank href=https://www.thenation.com/article/society/biden-care-work-american-jobs-plan/>Joe Biden Wants to Transform Care Work in America<\/a> (The Nation)","<a  target=_blank href=https://www.thenation.com/article/society/biden-care-work-american-jobs-plan/>Joe Biden Wants to Transform Care Work in America<\/a> (The Nation)","<a  target=_blank href=https://www.thenation.com/article/economy/jobs-stimulus-employment/>Biden’s Next Goal Should Be Full Employment<\/a> (The Nation)","<a  target=_blank href=https://www.thenation.com/article/politics/health-care-freedom-medicare/>When Medicare Helped Kill Jim Crow<\/a> (The Nation)","<a  target=_blank href=http://bostonreview.net/class-inequality-law-justice/mike-konczal-time-universal-measure-freedom>Time Is the Universal Measure of Freedom<\/a> (Boston Review)","<a  target=_blank href=https://www.thenation.com/article/economy/deficit-spending-budget/>Why a Biden Administration Needs to Spend Big<\/a> (The Nation)","<a  target=_blank href=https://rooseveltinstitute.org/publications/a-federal-reserve-reform-agenda-eight-recommendations/>A Federal Reserve Reform Agenda: Eight Recommendations<\/a> (Roosevelt Institute)","<a  target=_blank href=https://www.thenation.com/article/economy/biden-tax-plan/>Can Joe Biden Unrig the Economy?<\/a> (The Nation)","<a  target=_blank href=https://www.thenation.com/article/economy/cares-act-unemployment/>Unemployment Insurance Is a Vital Part of Economic Freedom<\/a> (The Nation)","<a  target=_blank href=http://bostonreview.net/class-inequality-politics/mike-konczal-felicia-wong-uniquely-fragile-economy-stimulus-not-enough>With a Uniquely Fragile Economy, Stimulus Is Not Enough<\/a> (Boston Review)","<a  target=_blank href=https://www.dissentmagazine.org/online_articles/our-political-system-is-hostile-to-real-reform>Our Political System Is Hostile to Real Reform<\/a> (Dissent Magazine)","<a  target=_blank href=https://rooseveltinstitute.org/publications/mcconnells-response-to-the-coronavirus-recession-fails-key-tests/>McConnell’s Response to the Coronavirus Recession Fails Key Tests<\/a> (Roosevelt Institute)","<a  target=_blank href=https://www.thenation.com/article/economy/coronavirus-stimulus/>The Stimulus Plan That We Need Now<\/a> (The Nation)","<a  target=_blank href=https://rooseveltinstitute.org/publications/a-forward-thinking-policy-response-to-the-coronavirus-recession/>A Forward-Thinking Policy Response to the Coronavirus Recession<\/a> (Roosevelt Institute)","<a  target=_blank href=https://www.thenation.com/article/economy/child-tax-credit-allowance/>Finally, a Bipartisan Bill That Would Help All Families<\/a> (The Nation)","<a  target=_blank href=https://rooseveltinstitute.org/publications/the-empirical-failures-of-neoliberalism/>The Empirical Failures of Neoliberalism<\/a> (Roosevelt Institute)","<a  target=_blank href=https://talkingpointsmemo.com/feature/democrats-must-become-the-party-of-freedom>Democrats Must Become The Party Of Freedom<\/a> (Talking Points Memo)","<a  target=_blank href=https://www.vox.com/the-big-idea/2018/5/4/17320188/jobs-report-natural-rate-unemployment-inflation-economics-april>How low can unemployment go? Economists keep getting the answer wrong.<\/a> (Vox)","<a  target=_blank href=https://www.nytimes.com/2018/03/06/opinion/democrats-trump-dodd-frank.html>Why are Democrats helping to dismantle Dodd-Frank?<\/a> (New York Times)","<a  target=_blank href=https://www.vox.com/the-big-idea/2017/12/20/16798026/rebuild-left-democratic-party-democratic-socialists-tenant-rights>What Democrats can learn from the Democratic Socialists about rebuilding the left<\/a> (Vox)","<a  target=_blank href=https://www.dissentmagazine.org/blog/neoliberalism-forum-mike-konczal>How Ideology Works<\/a> (Dissent)","<a  target=_blank href=https://rooseveltinstitute.org/publications/federal-reserve-expanding-monetary-policy-toolkit/>A New Direction for the Federal Reserve: Expanding the Monetary Policy Toolkit<\/a> (Roosevelt Institute)","<a  target=_blank href=https://www.vox.com/the-big-idea/2017/11/16/16665604/republicans-tax-reform-labor-capital-wages>Republicans are weaponizing the tax code<\/a> (Vox)","<a  target=_blank href=https://www.dissentmagazine.org/online_articles/austerity-obama-years>The Austerity of the Obama Years<\/a> (Dissent)","<a  target=_blank href=https://www.vox.com/the-big-idea/2016/9/15/12923528/liberal-economics-great-recession-policy-clinton>The \"new liberal economics\" is the key to understanding Hillary Clinton's policies<\/a> (Vox)","<a  target=_blank href=https://rooseveltforward.org/2016/07/21/new-paper-demand-side-business-dynamism/>Demand-Side Business Dynamism (with Marshall Steinbaum)<\/a> (Roosevelt Institute)","<a  target=_blank href=https://rooseveltinstitute.org/publications/untamed-corporate-financial-monopoly-power/>Untamed: How to Check Corporate, Financial, and Monopoly Power (with Nell Abernathy and Katy Milani)<\/a> (Roosevelt Institute)","<a  target=_blank href=https://www.dissentmagazine.org/online_articles/karl-polanyi-explainer-great-transformation-bernie-sanders>Karl Polanyi for President<\/a> (Dissent)","<a  target=_blank href=https://www.dissentmagazine.org/blog/8-thoughts-on-bernie-sanderss-democratic-socialism-and-the-primary>8 Thoughts on Bernie Sanders’s Democratic Socialism and the Primary<\/a> (Dissent)","<a  target=_blank href=https://www.dissentmagazine.org/article/mike-konczal-generation-debt-free-college-argument>Generation Debt<\/a> (Dissent)","<a  target=_blank href=https://rooseveltinstitute.org/publications/defining-financialization/>Defining Financialization<\/a> (Roosevelt Institute)","<a  target=_blank href=https://www.vox.com/2015/7/21/9004155/dodd-frank-explainer>Dodd-Frank turns 5 today — it's Obama's most underappreciated achievement<\/a> (Vox)","<a  target=_blank href=https://www.rollingstone.com/politics/politics-news/whats-left-after-higher-education-is-dismantled-175236/>What’s Left After Higher Education Is Dismantled<\/a> (Rolling Stone)","<a  target=_blank href=https://rooseveltinstitute.org/publications/rewriting-the-rules-of-the-american-economy/>Rewriting the Rules of the American Economy (with Joseph Stiglitz, Nell Abernathy, Adam Hersh, Susan Holmberg)<\/a> (Roosevelt Institute)","<a  target=_blank href=https://washingtonmonthly.com/magazine/novdec-2014/frenzied-financialization/>Frenzied Financialization<\/a> (Washington Monthly)","<a  target=_blank href=http://bostonreview.net/us/mike-konczal-seven-reasons-raise-minimum-wage>7 Bipartisan Reasons to Raise the Minimum Wage<\/a> (Boston Review)","<a  target=_blank href=https://democracyjournal.org/magazine/32/the-voluntarism-fantasy/?page=all>The Voluntarism Fantasy<\/a> (Democracy Journal)","<a  target=_blank href=https://5000ff5f-c81e-4025-9f29-a8526ec49666.usrfiles.com/ugd/5000ff_d2d1ebec20fc466c94f319d3014ce00a.pdf>Capital Requirements: Hitting Six Birds With One Stone<\/a> (Americans for Financial Reform/Roosevelt Institute)","<a  target=_blank href=https://www.dissentmagazine.org/online_articles/citizen-coupon>Citizen Coupon<\/a> (Dissent)","<a  target=_blank href=https://www.newamerica.org/economic-growth/policy-papers/no-discount-comparing-the-public-option-to-the-coupon-welfare-state/>No Discount: Comparing the Public Option to the Coupon Welfare State<\/a> (New America)","<a  target=_blank href=http://bostonreview.net/forum/sweet-forgiveness>Sweet Forgiveness<\/a> (Boston Review)","<a  target=_blank href=https://www.businessinsider.com/bernanke-vs-woodford-in-gif-form-2012-9>The Complete Guide To America's Jobs Crisis And The Failure Of Monetary Policy Using Animated Gifs<\/a> (Business Insider)","<a  target=_blank href=https://www.dissentmagazine.org/article/from-master-plan-to-no-plan-the-slow-death-of-public-higher-education>From Master Plan to No Plan: The Slow Death of Public Higher Education<\/a> (Dissent)","<a  target=_blank href=https://ourfinancialsecurity.org/wp-content/uploads/2012/06/Mike-Konczal-How-Mortgage-Debt-is-Holding-Back-the-Recovery-PAPER.pdf>How Mortgage Debt is Holding Back the Recovery<\/a> (Roosevelt Institute)","<a  target=_blank href=https://jacobinmag.com/2012/04/against-law-for-order>Against Law, For Order<\/a> (Jacobin)","<a  target=_blank href=http://bostonreview.net/konczal-democratizing-markets>Democratizing Markets<\/a> (Boston Review)","<a  target=_blank href=https://www.salon.com/2012/02/05/the_privatization_trap/>The Privatization Trap<\/a> (Salon)","<a  target=_blank href=https://www.good.is/articles/three-concrete-demands-to-hold-wall-street-accountable>Three Concrete Demands to Hold Wall Street Accountable<\/a> (Good Magazine)","<a  target=_blank href=https://5000ff5f-c81e-4025-9f29-a8526ec49666.usrfiles.com/ugd/5000ff_83a6305e708944028117fa5cd57134c0.pdf>The Boom Not The Slump: The Right Time For Austerity<\/a> (Roosevelt Institute)","<a  target=_blank href=https://5000ff5f-c81e-4025-9f29-a8526ec49666.usrfiles.com/ugd/5000ff_57e540100301484a9b411bc90c925c8f.pdf>Six Critical Elements of Financial Reform<\/a> (Roosevelt Institute)","<a  target=_blank href=https://5000ff5f-c81e-4025-9f29-a8526ec49666.usrfiles.com/ugd/5000ff_68a7df7400314effb24e0d0319693813.pdf>The Current State of Financial Reform<\/a> (Roosevelt Institute)"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>Year<\/th>\n      <th>Month<\/th>\n      <th>Title<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"iDisplayLength":50,"columnDefs":[{"className":"dt-right","targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 

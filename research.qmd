@@ -6,7 +6,7 @@ execute:
 
 ![](images/image-230407671.png){fig-align="center"}
 
-Hello testing! I write for a variety of publications, both popular and academic. Below is a list of columns and op-eds, policy and research papers, and book reviews. Feel free to contact me if you'd like me to write for you.
+This is some of the research and policy papers I've written.
 
 ```{r}
 #| warning = FALSE, message = FALSE
@@ -14,13 +14,16 @@ library(knitr)
 library(tidyverse)
 library(kableExtra)
 library(lubridate)
+library(DT)
+
 my_data <- read_csv("data/mywork.csv") %>%
   mutate(title = cell_spec(`Original Title`, "html", link = Link)) %>%
   mutate(Date = as.Date(Date, "%m/%d/%y")) %>%
-  filter(Format %in% c("Article", "White Paper")) %>%
+  filter(Format %in% c("White Paper")) %>%
   arrange(desc(Date)) %>%
   mutate(Year = year(Date), Month = month(Date,label = TRUE, abbr = FALSE)) %>%
-  select(Year, Month, Outlet, Title = title)
+  mutate(title = paste(title, " (", Outlet, ")", sep="")) %>%
+  select(Year, Month, Title = title)
 
 first_year <- my_data$Year[1]
 my_data$Year = if_else(my_data$Year != lag(my_data$Year,1),my_data$Year,as.numeric("NA"))
@@ -31,7 +34,13 @@ first_month <- my_data$Month[1]
 my_data$Month = if_else(my_data$Month != lag(my_data$Month,1),my_data$Month,as.character(NA))
 my_data$Month[1] <- first_month
 
-options(knitr.kable.NA = '')
-kbl(my_data, escape = FALSE) %>%
-    kable_styling(fixed_thead = T)
+#options(knitr.kable.NA = '')
+#kbl(my_data, escape = FALSE) %>%
+#    kable_styling(fixed_thead = T)
+
+my_data$Title <- str_remove(my_data$Title,"\xd5")
+my_data$Title <- str_remove(my_data$Title,"\xd4")
+
+datatable(my_data, escape = F, rownames = FALSE, options = list(iDisplayLength = 50))
 ```
+
