@@ -1,10 +1,10 @@
 ---
-title: "Writings"
+title: "Research"
 execute:
   echo: false
 ---
 
-![](images/image-230407671.png){fig-align="center"}
+![](images/books.jpg){fig-align="center"}
 
 This is some of the research and policy papers I've written.
 
@@ -43,4 +43,3 @@ my_data$Title <- str_remove(my_data$Title,"\xd4")
 
 datatable(my_data, escape = F, rownames = FALSE, options = list(iDisplayLength = 50))
 ```
-
