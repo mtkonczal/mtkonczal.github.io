@@ -17,6 +17,13 @@ library(lubridate)
 library(DT)
 
 my_data <- read_csv("data/mywork.csv") %>%
+  mutate(`Original Title` = str_to_title(`Original Title`)) %>%
+  mutate(`Original Title` = str_replace_all(`Original Title`," A ", " a ")) %>%
+  mutate(`Original Title` = str_replace_all(`Original Title`," An ", " an ")) %>%
+  mutate(`Original Title` = str_replace_all(`Original Title`," The ", " the ")) %>%
+  mutate(`Original Title` = str_replace_all(`Original Title`," And ", " and ")) %>%
+  mutate(`Original Title` = str_replace_all(`Original Title`," But ", " but ")) %>%
+  mutate(`Original Title` = str_replace_all(`Original Title`," For ", " for ")) %>%
   mutate(title = cell_spec(`Original Title`, "html", link = Link)) %>%
   mutate(Date = as.Date(Date, "%m/%d/%y")) %>%
   filter(Format %in% c("White Paper")) %>%
