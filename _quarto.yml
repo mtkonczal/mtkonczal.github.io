@@ -15,16 +15,20 @@ website:
         text: Home
       - href: about.qmd
         text: About
-      - href: the_book.qmd
-        text: Book
-      - href: writings.qmd
-        text: Writings
-      - href: research.qmd
-        text: Research
-      - href: appearances.qmd
-        text: Media
-      - href: media.qmd
-        text: Quotes
+      - text: Writings
+        menu:
+        - href: the_book.qmd
+          text: Book
+        - href: writings.qmd
+          text: Writings
+        - href: research.qmd
+          text: Research
+      - text: Media
+        menu:
+        - href: appearances.qmd
+          text: Media
+        - href: media.qmd
+          text: Quotes
       - href: resume.qmd
         text: Resume
 
