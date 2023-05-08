@@ -40,6 +40,10 @@ library(scales)
 library(hrbrthemes)
 library(ggrepel)
 library(bea.R)
+library(httr)
+library(data.table)
+library(magrittr)
+
 get_NIPA_data <- function(beaKey, TableName, Frequency, Year, data_set_name = 'NIPA'){
   NIPA_request <- list(
     'UserID' = beaKey ,
@@ -145,18 +149,24 @@ ggplot(core_analysis, aes(x = date, y = WDataValue_P1a, fill=item_nameF)) +
 #| cap-location: top
 
 # Download data
-cpi_data <- read_delim(file = "https://download.bls.gov/pub/time.series/cu/cu.data.0.Current")
+cpi_data <- GET("https://download.bls.gov/pub/time.series/cu/cu.data.0.Current", user_agent("rortybomb@gmail.com")) %>%
+  content(as = "text") %>%
+  fread()
 cpi_data <- cpi_data %>% clean_names()
 cpi_data$value <- as.numeric(cpi_data$value)
 cpi_data$series_id <- str_trim(cpi_data$series_id)
 cpi_data$date <- paste(substr(cpi_data$period, 2,3), "01", substr(cpi_data$year, 3, 4), sep="/")
 cpi_data$date <- as.Date(cpi_data$date, "%m/%d/%y")
 
-series <- read_delim(file = "https://download.bls.gov/pub/time.series/cu/cu.series")
+series <- GET("https://download.bls.gov/pub/time.series/cu/cu.series", user_agent("rortybomb@gmail.com")) %>%
+  content(as = "text") %>%
+  fread()
 series <- series %>% clean_names()
 series$series_id <- str_trim(series$series_id)
 
-items <- read_delim(file = "https://download.bls.gov/pub/time.series/cu/cu.item")
+items <- GET("https://download.bls.gov/pub/time.series/cu/cu.item", user_agent("rortybomb@gmail.com")) %>%
+  content(as = "text") %>%
+  fread()
 series <- inner_join(series, items, by = c("item_code"))
 cpi_data <- inner_join(cpi_data, series, by = c("series_id"))
 
@@ -193,8 +203,8 @@ ggplot(supercore, aes(date, change, color=time_length, label=label_percent(accur
   theme(axis.text.x = element_text(size=14), axis.text.y = element_text(size=14),
         legend.text = element_text(size=11)) +
   scale_color_manual(values=c("#2D779C", "#A4CCCC")) +
-  geom_text(show.legend=FALSE, nudge_x = 155) +
-  geom_text(aes(date,last_value_pre, label=label_percent(accuracy=0.1)(pre_value)), show.legend=FALSE, nudge_x = 155) +
+  geom_text_repel(show.legend=FALSE, nudge_x = 85, min.segment.length = Inf) +
+  geom_text(aes(date,last_value_pre, label=label_percent(accuracy=0.1)(pre_value)), show.legend=FALSE, nudge_x = 85) +
   theme(plot.title.position = "plot")
 ```
 
@@ -211,7 +221,9 @@ library(scales)
 library(hrbrthemes)
 library(ggrepel)
 
-jolts_data <- read_delim(file = "https://download.bls.gov/pub/time.series/jt/jt.data.1.AllItems")
+jolts_data <- GET("https://download.bls.gov/pub/time.series/jt/jt.data.1.AllItems", user_agent("rortybomb@gmail.com")) %>%
+  content(as = "text") %>%
+  fread()
 jolts_data <- jolts_data %>%
   clean_names()
 jolts_data$value <- as.numeric(jolts_data$value)
@@ -220,7 +232,9 @@ jolts_data$date <- paste(substr(jolts_data$period, 2,3), "01", jolts_data$year, 
 jolts_data$date <- as.Date(jolts_data$date, "%m/%d/%Y")
 
 
-eci_wages <- read_delim(file = "https://download.bls.gov/pub/time.series/ci/ci.data.1.AllData") %>%
+eci_wages <- GET("https://download.bls.gov/pub/time.series/ci/ci.data.1.AllData", user_agent("rortybomb@gmail.com")) %>%
+  content(as = "text") %>%
+  fread() %>%
   clean_names()
 eci_wages$value <- as.numeric(eci_wages$value)
 eci_wages <- eci_wages %>%

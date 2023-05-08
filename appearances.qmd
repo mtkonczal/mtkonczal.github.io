@@ -4,7 +4,7 @@ execute:
   echo: false
 ---
 
-![](images/mkonczal%20cspan.png){fig-align="center"}
+![](images/mkonczal_cspan_2.webp){fig-align="center"}
 
 I appear on TV, radio, podcasts, and on panels. Here is a partial list; feel free to contact me if you'd like to join your show.
 
