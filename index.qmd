@@ -198,7 +198,7 @@ ggplot(supercore, aes(date, change, color=time_length, label=label_percent(accur
   geom_col(aes(date,recent_OneMonth), alpha=0.1, linewidth=0, show.legend = FALSE) +
   labs(x="", y="",
        title="Supercore CPI: All items less food, shelter, energy, used cars",
-       subtitle = "All values annualized; trendline is Jan 2017 to Jan 2020, bars are 1-month change since 2021.",
+       subtitle = "Trendline is Jan 2017 to Jan 2020, bars are 1-month change post 2021. All values annualized.",
        caption = "") +
   scale_y_continuous(labels = percent) +
   scale_x_date(date_labels = "%b\n%Y", breaks = supercore_datebreaks) +
@@ -207,7 +207,7 @@ ggplot(supercore, aes(date, change, color=time_length, label=label_percent(accur
         legend.text = element_text(size=11)) +
   scale_color_manual(values=c("#2D779C", "#A4CCCC")) +
   geom_text_repel(show.legend=FALSE, nudge_x = 85, min.segment.length = Inf) +
-  geom_text(aes(date,last_value_pre, label=label_percent(accuracy=0.1)(pre_value)), show.legend=FALSE, nudge_x = 85) +
+  geom_text(aes(date,last_value_pre, label=label_percent(accuracy=0.1)(pre_value)), show.legend=FALSE, nudge_x = 85, min.segment.length = Inf) +
   theme(plot.title.position = "plot")
 ```
 
