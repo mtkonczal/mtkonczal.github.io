@@ -177,6 +177,7 @@ supercore <- cpi_data %>% filter(seasonal == "S") %>%
   select(item_name, date, value) %>%
   mutate(pre_value = value[date=="2020-01-01"]/value[date=="2018-01-01"]) %>%
   mutate(pre_value = pre_value^(12/24)-1) %>%
+  mutate(OneMonth = (value/lag(value,1))^12-1) %>%
   mutate(ThreeMonth = (value/lag(value,3))^4-1) %>%
   mutate(SixMonth = (value/lag(value,6))^2-1) %>%
   filter(date >= "2018-01-01") %>%
@@ -193,9 +194,10 @@ ggplot(supercore, aes(date, change, color=time_length, label=label_percent(accur
   geom_line(size=1.2) +
   theme_modern_rc() +
   geom_line(aes(date,pre_value), linetype="dashed", color="#2D779C") +
+  geom_col(aes(date, OneMonth), alpha=0.1, size=0, show.legend = FALSE) +
   labs(x="", y="",
        title="Supercore CPI: All items less food, shelter, energy, used cars",
-       subtitle = "Monthly percent change, annualized; trendline is value from Jan 2017 to Jan 2020.",
+       subtitle = "All values annualized; trendline is Jan 2017 to Jan 2020, bars are 1-month change.",
        caption = "") +
   scale_y_continuous(labels = percent) +
   scale_x_date(date_labels = "%b\n%Y", breaks = supercore_datebreaks) +
