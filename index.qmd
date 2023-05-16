@@ -185,7 +185,8 @@ supercore <- cpi_data %>% filter(seasonal == "S") %>%
   mutate(time_length = str_replace_all(time_length,"SixMonth", "6-Month Change")) %>%
   mutate(time_length = str_replace_all(time_length,"ThreeMonth", "3-Month Change")) %>%
   mutate(last_value = ifelse(date==max(date),change,NA)) %>%
-  mutate(last_value_pre = ifelse(date==max(date) & time_length=="3-Month Change",pre_value,NA))
+  mutate(last_value_pre = ifelse(date==max(date) & time_length=="3-Month Change",pre_value,NA)) %>%
+  mutate(recent_OneMonth = ifelse(date >= "2021-01-01" & time_length == "3-Month Change", OneMonth, NA))
 
 supercore_datebreaks <- unique(sort(supercore$date,decreasing = TRUE))
 supercore_datebreaks <- supercore_datebreaks[seq(1,length(supercore_datebreaks),12)]
@@ -194,10 +195,10 @@ ggplot(supercore, aes(date, change, color=time_length, label=label_percent(accur
   geom_line(size=1.2) +
   theme_modern_rc() +
   geom_line(aes(date,pre_value), linetype="dashed", color="#2D779C") +
-  geom_col(aes(date, OneMonth), alpha=0.1, size=0, show.legend = FALSE) +
+  geom_col(aes(date,recent_OneMonth), alpha=0.1, linewidth=0, show.legend = FALSE) +
   labs(x="", y="",
        title="Supercore CPI: All items less food, shelter, energy, used cars",
-       subtitle = "All values annualized; trendline is Jan 2017 to Jan 2020, bars are 1-month change.",
+       subtitle = "All values annualized; trendline is Jan 2017 to Jan 2020, bars are 1-month change since 2021.",
        caption = "") +
   scale_y_continuous(labels = percent) +
   scale_x_date(date_labels = "%b\n%Y", breaks = supercore_datebreaks) +
