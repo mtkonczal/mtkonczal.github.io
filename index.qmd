@@ -110,7 +110,7 @@ median %>% mutate(dateF = as.factor(date)) %>%
   theme(legend.position = "none") +
   scale_x_continuous(labels = percent) +
   labs(title="Distribution of Price Increases Moved Out\nBut Now Returning Back",
-       x="Three Month Percent Change", y="", caption="OER is treated as one value, instead of broken out by region and manually seasonally adjusted as per Cleveland Fed's methodology.\nJune 2020 removed as negative outlier. Mike Konczal, Roosevelt Institute") +
+       x="Three Month Percent Change", y="", caption="OER is treated as one value.\nMike Konczal, Roosevelt Institute") +
   theme(plot.title.position = "plot", legend.position = "none", legend.title = element_blank(),
         plot.title = element_text(size = 20,margin=margin(0,0,5,0)),
         plot.subtitle = element_text(size=13),

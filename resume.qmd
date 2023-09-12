@@ -2,6 +2,6 @@
 title: "Resume"
 ---
 
-Click [here to get my one-page resume](https://docs.google.com/viewer?url=https://github.com/mtkonczal/resume/raw/master/mkonczal-resume.pdf), or [click here to get a longer CV](https://docs.google.com/viewer?url=https://github.com/mtkonczal/resume/raw/master/mkonczal-cv.pdf).
+Click [here to get my resume](https://docs.google.com/viewer?url=https://github.com/mtkonczal/resume/raw/master/mkonczal-resume.pdf), or [click here to get a longer CV](https://docs.google.com/viewer?url=https://github.com/mtkonczal/resume/raw/master/mkonczal-cv.pdf).
 
-<iframe width="100%" height="800" src="files/mkonczal-cv.pdf">
+<iframe width="100%" height="800" src="files/mkonczal-resume.pdf">
