@@ -22,133 +22,27 @@ about:
 
 Mike Konczal is director of Macroeconomic Analysis at the Roosevelt Institute, where he focuses on full employment, inequality, and the role of public power in a democracy. He is the author of the recent *Freedom from the Market: America's Fight to Liberate Itself from the Grip of the Invisible Hand,* and a co-author, with Joseph Stiglitz, of *Rewriting the Rules of the American Economy.* A former financial engineer, his writing has been featured in the *New York Times*, *Washington Post*, *Rolling Stone*, *Vox*, and more. A sought-after commentator on the U.S. economy, he has also appeared on *CBS Sunday Morning*, *All Things Considered*, *Planet Money*, *Lovett or Leave It*, and elsewhere.
 
-Here are some of the monthly graphics I'm currently watching, along with the R code to reproduce them yourself.
+I enjoy trying to make the most informative graphics for the monthly economic data releases while sharing the R code.
 
-```{r onion_graphic}
+```{r ridgeline, out.width="100%",fig.height=10}
 #| code-fold: true
 #| code-summary: "Show the code"
 #| code-overflow: wrap
-#| label: onion_graphic_margin_label
-#| fig-cap: "Fed officials have argued goods (dis)inflation is likely transitory, housing is reported with a lag, but non-housing services are a cleaner indicator of demand, as well as being more persistent and determined by wage pressures. Here those are, broken out for PCE inflation."
+#| label: ridgeline_graphic
+#| fig-cap: "This is the distribution of the Cleveland Fed's Median/Trimmed-Mean CPI price basket, using 3-month change annualized, with components whose expenditure weights fall above/below the 85/15th percentile of price changes removed. It moved out during the reopening, but is moving back now."
 #| cap-location: top
 
-# Graphic - Three Onion Layer
-# Hard code in weights
+
 library(tidyverse)
-library(janitor)
-library(scales)
-library(hrbrthemes)
-library(ggrepel)
-library(bea.R)
 library(httr)
 library(data.table)
 library(magrittr)
+library(ggridges)
+library(lubridate)
+library(janitor)
+library(viridis)
+library(scales)
 
-get_NIPA_data <- function(beaKey, TableName, Frequency, Year, data_set_name = 'NIPA'){
-  NIPA_request <- list(
-    'UserID' = beaKey ,
-    'Method' = 'GetData',
-    'datasetname' = data_set_name,
-    'TableName' = TableName,
-    'Frequency' = Frequency,
-    'Year' = Year,
-    'ResultFormat' = 'json'
-  );
-  NIPA_data <- beaGet(NIPA_request, asWide = FALSE)
-  return(NIPA_data)
-}
-
-BEA_date_monthly <- function(x){
-  x <- x %>%
-    mutate(year = substr(TimePeriod, 1, 4)) %>%
-    mutate(month = substr(TimePeriod, 6,7))
-  x$date <- paste(x$month, "01", x$year, sep="/")
-  x$date <- as.Date(x$date, "%m/%d/%Y")
-  x <- x %>% select(-month, -year)
-  return(x)
-}
-
-beaKey <- read_csv("/Users/mkonczal/Documents/data_folder/BEA_key/BEA_key.csv")
-beaKey <- as.character(beaKey)
-# Table IDs
-# https://www.bea.gov/system/files/2021-07/TablesRegisterPreview.txt
-
-PCE_Weight <- get_NIPA_data(beaKey, 'U20405', 'M', '2018,2019,2020,2021,2022,2023', data_set_name = 'NIUnderlyingDetail')
-PCE_Weight <- BEA_date_monthly(PCE_Weight)
-
-PCE_Weight <- PCE_Weight %>% filter(SeriesCode == "DPCERC") %>%
-  select(date, TotalGDP = DataValue) %>%
-  left_join(PCE_Weight, by="date") %>%
-  # The weight is approximated as nominal consumption shares as a percent of the total.
-  mutate(PCEweight = DataValue/TotalGDP) %>%
-  select(date, LineDescription, PCEweight)
-
-pce <- get_NIPA_data(beaKey, 'U20404', 'M', '2018,2019,2020,2021,2022,2023', data_set_name = 'NIUnderlyingDetail')
-pce <- BEA_date_monthly(pce)
-
-pce <- pce %>%
-  left_join(PCE_Weight, by=c('date' = 'date','LineDescription' = 'LineDescription'))
-
-pce <- pce %>%
-  group_by(SeriesCode) %>%
-  mutate(DataValue_P1 = (DataValue - lag(DataValue,1))/lag(DataValue,1)) %>%
-  # Use the lagged weight for weighted share
-  mutate(WDataValue_P1 = DataValue_P1*lag(PCEweight,1)) %>%
-  mutate(WDataValue_P1a = (1+WDataValue_P1)^12-1) %>%
-  ungroup()
-
-# With data in place, move to creating the onion chart
-core_goods_fields <- c("Goods","Gasoline and other energy goods","Food and beverages purchased for off-premises consumption","Services","Electricity and gas","Housing")
-
-core_analysis <- pce %>% filter(LineDescription %in% core_goods_fields) %>%
-  filter(date >= "2018-01-01") %>%
-  select(date, LineDescription, WDataValue_P1) %>%
-  pivot_wider(names_from=LineDescription, values_from = WDataValue_P1) %>%
-  clean_names() %>%
-  mutate(core_goods = goods - food_and_beverages_purchased_for_off_premises_consumption - gasoline_and_other_energy_goods) %>%
-  mutate(core_services = services - electricity_and_gas - housing) %>%
-  mutate(core_inflation = core_goods + core_services) %>%
-  pivot_longer(-date, names_to = "item_name", values_to = "WDataValue_P1") %>%
-  filter(item_name %in% c("core_goods","core_services","housing")) %>%
-  mutate(item_nameF = factor(item_name, levels = c("core_goods", "housing", "core_services"))) %>%
-  mutate(WDataValue_P1a = (WDataValue_P1+1)^12-1) %>%
-  filter(WDataValue_P1a > -0.02)
-
-levels(core_analysis$item_nameF)[levels(core_analysis$item_nameF) == "core_goods"] <-"Core Goods"
-levels(core_analysis$item_nameF)[levels(core_analysis$item_nameF) == "core_services"] <-"Non-Housing Services"
-levels(core_analysis$item_nameF)[levels(core_analysis$item_nameF) == "housing"] <-"Housing"
-
-onion_datebreaks <- unique(sort(core_analysis$date,decreasing = TRUE))
-onion_datebreaks <- onion_datebreaks[seq(1,length(onion_datebreaks),24)]
-
-ggplot(core_analysis, aes(x = date, y = WDataValue_P1a, fill=item_nameF)) +
-  geom_bar(stat = 'identity', size=0) +
-  theme_modern_rc() +
-  theme(legend.position = "none", legend.title = element_blank()) + 
-  facet_grid(~item_nameF) +
-  labs(y = NULL,
-       x = NULL,
-       title = "The PCE inflation onion layers",
-       subtitle = "Monthly contribution to inflation",
-       caption ="BEA, NIPA Tables 2.4.4 and 2.4.5. Weights approximated as nominal consumption shares as a percent of the total.\nApril 2020 Core Services ex Housing value excluded as large negative outlier.") +
-  scale_fill_brewer(palette="RdPu", name = "item_name") +
-  scale_y_continuous(labels = percent) +
-  scale_x_date(date_labels = "%b\n%Y", breaks = onion_datebreaks) +
-  theme(axis.text.x = element_text(size=14), axis.text.y = element_text(size=14),
-  strip.text = element_text(face = "bold", color="white", hjust = 0.5, size = 10),
-  strip.background = element_blank(),
-  plot.title.position = "plot")
-```
-
-```{r supercore_graphic}
-#| code-fold: true
-#| code-summary: "Show the code"
-#| code-overflow: wrap
-#| label: supercore_inflation
-#| fig-cap: "Core inflation excludes prices that are volatile and set globally (food and energy). But by also going to supercore, which excludes used autos (because of complicated supply-side issues) and housing (because of data-measurement and reporting issues), we can get closer to measuring underlying demand pressure of CPI inflation here."
-#| cap-location: top
-
-# Download data
 cpi_data <- GET("https://download.bls.gov/pub/time.series/cu/cu.data.0.Current", user_agent("rortybomb@gmail.com")) %>%
   content(as = "text") %>%
   fread()
@@ -170,117 +64,120 @@ items <- GET("https://download.bls.gov/pub/time.series/cu/cu.item", user_agent("
 series <- inner_join(series, items, by = c("item_code"))
 cpi_data <- inner_join(cpi_data, series, by = c("series_id"))
 
+cpi_weights <- read_csv(file = "data/inflation_weights.csv") %>% select(-year_weight)
 
-# Graphic - Supercore
-supercore <- cpi_data %>% filter(seasonal == "S") %>%
-  filter(item_name == "All items less food, shelter, energy, and used cars and trucks") %>%
-  select(item_name, date, value) %>%
-  mutate(pre_value = value[date=="2020-01-01"]/value[date=="2018-01-01"]) %>%
-  mutate(pre_value = pre_value^(12/24)-1) %>%
-  mutate(OneMonth = (value/lag(value,1))^12-1) %>%
-  mutate(ThreeMonth = (value/lag(value,3))^4-1) %>%
-  mutate(SixMonth = (value/lag(value,6))^2-1) %>%
-  filter(date >= "2018-01-01") %>%
-  pivot_longer(ThreeMonth:SixMonth, names_to = "time_length", values_to = "change") %>%
-  mutate(time_length = str_replace_all(time_length,"SixMonth", "6-Month Change")) %>%
-  mutate(time_length = str_replace_all(time_length,"ThreeMonth", "3-Month Change")) %>%
-  mutate(last_value = ifelse(date==max(date),change,NA)) %>%
-  mutate(last_value_pre = ifelse(date==max(date) & time_length=="3-Month Change",pre_value,NA)) %>%
-  mutate(recent_OneMonth = ifelse(date >= "2021-01-01" & time_length == "3-Month Change", OneMonth, NA))
+cpi_data <- inner_join(cpi_data, cpi_weights, by = c("item_name"))
+cpi_weights <- read_csv(file = "data/inflation_weights_2023.csv") %>% select(item_name, weight_2023 = weight, year = year_weight)
+cpi_data <- left_join(cpi_data, cpi_weights, by = c("item_name", "year"))
 
-supercore_datebreaks <- unique(sort(supercore$date,decreasing = TRUE))
-supercore_datebreaks <- supercore_datebreaks[seq(1,length(supercore_datebreaks),12)]
+cpi_data$weight <- ifelse(!is.na(cpi_data$weight_2023),cpi_data$weight_2023,cpi_data$weight)
 
-ggplot(supercore, aes(date, change, color=time_length, label=label_percent(accuracy=0.1)(last_value))) +
-  geom_line(size=1.2) +
-  theme_modern_rc() +
-  geom_line(aes(date,pre_value), linetype="dashed", color="#2D779C") +
-  geom_col(aes(date,recent_OneMonth), alpha=0.1, linewidth=0, show.legend = FALSE) +
-  labs(x="", y="",
-       title="Supercore CPI: All items less food, shelter, energy, used cars",
-       subtitle = "Trendline is Jan 2017 to Jan 2020, bars are 1-month change post 2021. All values annualized.",
-       caption = "") +
-  scale_y_continuous(labels = percent) +
-  scale_x_date(date_labels = "%b\n%Y", breaks = supercore_datebreaks) +
-  theme(legend.position = c(0.30,0.85), legend.title = element_blank()) +
-  theme(axis.text.x = element_text(size=14), axis.text.y = element_text(size=14),
-        legend.text = element_text(size=11)) +
-  scale_color_manual(values=c("#2D779C", "#A4CCCC")) +
-  geom_text_repel(show.legend=FALSE, nudge_x = 85, min.segment.length = Inf) +
-  geom_text(aes(date,last_value_pre, label=label_percent(accuracy=0.1)(pre_value)), show.legend=FALSE, nudge_x = 85, min.segment.length = Inf) +
-  theme(plot.title.position = "plot")
+### Make the graphic ###
+median_terms <- read_csv("data/mediancpi_component_table.csv") %>% mutate(item_name = Component)
+
+median <- cpi_data %>%  filter(item_name %in% median_terms$item_name | item_name == "Owners' equivalent rent of residences") %>%
+  filter(period != "M13", seasonal == "S") %>%
+  arrange(date) %>%
+  group_by(item_name) %>%
+  mutate(Pchange3 = (value/lag(value, 3)-1)) %>%
+  ungroup() %>%
+  group_by(date) %>%
+  mutate(normalized = sum(weight)) %>%
+  mutate(weightN = weight/normalized) %>%
+  arrange(Pchange3) %>%
+  mutate(cumsum = cumsum(weight)/100) %>%
+  mutate(cumsumN = cumsum(weightN)) %>%
+  ungroup() %>%
+  mutate(Pchange3a = (1+Pchange3)^4-1)
+
+start_month <- month(max(median$date))
+quarters <- ((seq(start_month, start_month + 9, by=3) - 1) %% 12) + 1
+
+#THIS IS THE GRAPHIC - 30 percent-trimmed distribution
+median %>% mutate(dateF = as.factor(date)) %>%
+  filter(cumsumN <= 0.85 & cumsum >= 0.15) %>%
+  mutate(Pchange3a = (1+Pchange3)^4-1) %>%
+  filter(date >= "2017-06-01") %>%
+  filter(date != "2020-06-01") %>%
+  filter(month(date) %in% quarters) %>%
+  mutate(monthC = format(date, "%B, %Y")) %>%
+  mutate(monthC = fct_reorder(monthC,date)) %>%
+  mutate(monthCR = fct_rev(monthC)) %>%
+  ggplot(aes(x = Pchange3a, y = monthCR, fill = stat(x))) +
+  geom_density_ridges_gradient() +
+  scale_fill_viridis(option = "H") +
+  theme_ridges() +
+  theme(legend.position = "none") +
+  scale_x_continuous(labels = percent) +
+  labs(title="Distribution of Price Increases Moved Out\nBut Now Returning Back",
+       x="Three Month Percent Change", y="", caption="OER is treated as one value, instead of broken out by region and manually seasonally adjusted as per Cleveland Fed's methodology.\nJune 2020 removed as negative outlier. Mike Konczal, Roosevelt Institute") +
+  theme(plot.title.position = "plot", legend.position = "none", legend.title = element_blank(),
+        plot.title = element_text(size = 20,margin=margin(0,0,5,0)),
+        plot.subtitle = element_text(size=13),
+        plot.caption = element_text(size=10, face="italic"),
+        axis.text.y = element_text(size=12, face="bold"),
+        axis.text.x = element_text(size=12))
+
+
 ```
 
-```{r ECI_versus_quits}
-#| code-fold: true
-#| code-summary: "Show the code"
-#| code-overflow: wrap
-#| label: quits_and_wages
-#| fig-cap: "The unemployment rate is a poor measure for labor market tightness, and average hourly wages also has measurement problems. All the cool kids look at the JOLTs quit rate and ECI private wages instead."
-#| cap-location: top
+Here are some of the latest things I've been doing; you can find the full list of [research](https://www.mikekonczal.com/research.html), [writings](https://www.mikekonczal.com/writings.html), and [media](https://www.mikekonczal.com/appearances.html) around this website.
+
+```{r quotes_main, echo=FALSE}
+#| warning = FALSE, message = FALSE
+library(knitr)
 library(tidyverse)
-library(janitor)
-library(scales)
-library(hrbrthemes)
-library(ggrepel)
-
-jolts_data <- GET("https://download.bls.gov/pub/time.series/jt/jt.data.1.AllItems", user_agent("rortybomb@gmail.com")) %>%
-  content(as = "text") %>%
-  fread()
-jolts_data <- jolts_data %>%
-  clean_names()
-jolts_data$value <- as.numeric(jolts_data$value)
-jolts_data$series_id <- str_trim(jolts_data$series_id)
-jolts_data$date <- paste(substr(jolts_data$period, 2,3), "01", jolts_data$year, sep="/")
-jolts_data$date <- as.Date(jolts_data$date, "%m/%d/%Y")
+library(kableExtra)
+library(lubridate)
+library(DT)
 
 
-eci_wages <- GET("https://download.bls.gov/pub/time.series/ci/ci.data.1.AllData", user_agent("rortybomb@gmail.com")) %>%
-  content(as = "text") %>%
-  fread() %>%
-  clean_names()
-eci_wages$value <- as.numeric(eci_wages$value)
-eci_wages <- eci_wages %>%
-  mutate(month = case_when(
-    period == "Q01" ~ 3,
-    period == "Q02" ~ 6,
-    period == "Q03" ~ 9,
-    period == "Q04" ~ 12))
-eci_wages$date <- paste(eci_wages$month, "01", eci_wages$year, sep="/")
-eci_wages$date <- as.Date(eci_wages$date, "%m/%d/%Y")
+my_data <- read_csv("data/mywork.csv") %>%
+  mutate(`Original Title` = str_to_title(`Original Title`)) %>%
+  mutate(`Original Title` = str_replace_all(`Original Title`," A ", " a ")) %>%
+  mutate(`Original Title` = str_replace_all(`Original Title`," An ", " an ")) %>%
+  mutate(`Original Title` = str_replace_all(`Original Title`," The ", " the ")) %>%
+  mutate(`Original Title` = str_replace_all(`Original Title`," And ", " and ")) %>%
+  mutate(`Original Title` = str_replace_all(`Original Title`," But ", " but ")) %>%
+  mutate(`Original Title` = str_replace_all(`Original Title`," For ", " for ")) %>%
+  mutate(title = cell_spec(`Original Title`, "html", link = Link)) %>%
+  mutate(Date = as.Date(Date, "%m/%d/%y"))
 
-# Graphic Set 1 : Sets Up Calculations
-# Openings and Quits versus ECI Wages
-JoltsMerge <- jolts_data %>% filter(series_id == "JTS000000000000000QUR") %>% mutate(value = value/100) %>%
-  select(date, quitsR = value)
+chart_1 <- my_data %>%
+  filter(Format != "Quote", Highlight == "X") %>%
+  arrange(desc(Date)) %>%
+  select(Date, Outlet, Title = title, Type = Format) %>%
+  mutate(Date = format(Date, "%B %d, %Y"))
 
-merged <- eci_wages %>% filter(series_id == "CIS2020000000000I") %>% mutate(value = value/lag(value)-1) %>%
-  select(ECI_growth = value, date) %>%
-  inner_join(JoltsMerge, by=c("date")) %>%
-  filter(!is.na(ECI_growth)) %>%
-  mutate(Is_2021_to_2022 = (date >= "2021-01-01"))
+chart_1 <- head(chart_1)
 
-regression_prior <- merged %>% filter(date < "2021-01-01") %>% lm(ECI_growth ~ quitsR, data=.)
+options(knitr.kable.NA = '')
+kbl(chart_1, escape = FALSE) %>%
+    kable_styling(fixed_thead = T)
+chart_1$Title <- str_remove(chart_1$Title,"\xd5")
+chart_1$Title <- str_remove(chart_1$Title,"\xd4")
 
-merged %>%
-  mutate(values_last = if_else(date >= "2022-01-01", date, as.Date(NA))) %>% mutate(values_last2 = as.character(format(values_last, "%b\n%Y"))) %>%
-  mutate(Is_2021_to_2022_v = if_else(date >= "2022-01-01",ECI_growth,as.numeric(NA))) %>%
-  ggplot(aes(quitsR, ECI_growth, color=Is_2021_to_2022, label=values_last2)) + geom_point() + theme_modern_rc() +
-  geom_abline(intercept = regression_prior$coefficients[1], slope=regression_prior$coefficients[2], color="#2D779C") +
-  geom_text_repel(size=3) +
-  geom_path(aes(quitsR,Is_2021_to_2022_v)) +
-  labs(x = "Quit Rate",
-       y = "ECI Private Wage Growth, Quarterly",
-       title = "Labor-market tightness: wage growth versus quit rates",
-       subtitle = "Regression line and blue points reflect 2001 to 2020.",
-       caption =NULL) +
-  theme(panel.grid.major.y = element_line(size=0.5)) +
-  theme(plot.title.position = "plot") +
-  scale_y_continuous(labels = percent) +
-  scale_x_continuous(labels = percent) +
-  theme(axis.title.x = element_text(size=14, color="white", vjust=-1.5), axis.title.y = element_text(size=14, angle = 90, vjust = 3),
-        plot.subtitle = element_text(size=12, color="white"), legend.position = "none") +
-  scale_color_manual(values=c("#2D779C", "#CC79A7"))
+#datatable(my_data, escape = F, rownames = FALSE)
+```
+
+I'm often cited and quoted in coverage around the economy. Here's some recent examples, with the full list [here](https://www.mikekonczal.com/media.html).
+
+```{r chart2, echo=FALSE}
+
+chart_2 <- my_data %>%
+  filter(Format == "Quote", Highlight == "X") %>%
+  arrange(desc(Date)) %>%
+  select(Date, Outlet, Title = title) %>%
+  mutate(Date = format(Date, "%B %d, %Y"))
+
+chart_2 <- head(chart_2)
+
+options(knitr.kable.NA = '')
+kbl(chart_2, escape = FALSE) %>%
+    kable_styling(fixed_thead = T)
+chart_2$Title <- str_remove(chart_2$Title,"\xd5")
+chart_2$Title <- str_remove(chart_2$Title,"\xd4")
+
 ```
 
 ## **Praise for Freedom From the Market:**

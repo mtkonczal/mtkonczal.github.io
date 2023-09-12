@@ -121,6 +121,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   }
 }</script>
 
+<script src="site_libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="site_libs/lightable-0.0.1/lightable.css" rel="stylesheet">
+
 
 <link rel="stylesheet" href="styles.css">
 </head>
@@ -231,274 +234,201 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   </div>
   <div class="about-contents"><main class="content column-page" id="quarto-document-content">
 <p>Mike Konczal is director of Macroeconomic Analysis at the Roosevelt Institute, where he focuses on full employment, inequality, and the role of public power in a democracy. He is the author of the recent <em>Freedom from the Market: America’s Fight to Liberate Itself from the Grip of the Invisible Hand,</em> and a co-author, with Joseph Stiglitz, of <em>Rewriting the Rules of the American Economy.</em> A former financial engineer, his writing has been featured in the <em>New York Times</em>, <em>Washington Post</em>, <em>Rolling Stone</em>, <em>Vox</em>, and more. A sought-after commentator on the U.S. economy, he has also appeared on <em>CBS Sunday Morning</em>, <em>All Things Considered</em>, <em>Planet Money</em>, <em>Lovett or Leave It</em>, and elsewhere.</p>
-<p>Here are some of the monthly graphics I’m currently watching, along with the R code to reproduce them yourself.</p>
+<p>I enjoy trying to make the most informative graphics for the monthly economic data releases while sharing the R code.</p>
 <div class="cell caption-top">
 <details>
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-overflow-wrap code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Graphic - Three Onion Layer</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Hard code in weights</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor)</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(scales)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(hrbrthemes)</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggrepel)</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(bea.R)</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(httr)</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(data.table)</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(magrittr)</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>get_NIPA_data <span class="ot">&lt;-</span> <span class="cf">function</span>(beaKey, TableName, Frequency, Year, <span class="at">data_set_name =</span> <span class="st">'NIPA'</span>){</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  NIPA_request <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    <span class="st">'UserID'</span> <span class="ot">=</span> beaKey ,</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Method'</span> <span class="ot">=</span> <span class="st">'GetData'</span>,</span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    <span class="st">'datasetname'</span> <span class="ot">=</span> data_set_name,</span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    <span class="st">'TableName'</span> <span class="ot">=</span> TableName,</span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Frequency'</span> <span class="ot">=</span> Frequency,</span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Year'</span> <span class="ot">=</span> Year,</span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>    <span class="st">'ResultFormat'</span> <span class="ot">=</span> <span class="st">'json'</span></span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>  );</span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>  NIPA_data <span class="ot">&lt;-</span> <span class="fu">beaGet</span>(NIPA_request, <span class="at">asWide =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(NIPA_data)</span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>BEA_date_monthly <span class="ot">&lt;-</span> <span class="cf">function</span>(x){</span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> x <span class="sc">%&gt;%</span></span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">year =</span> <span class="fu">substr</span>(TimePeriod, <span class="dv">1</span>, <span class="dv">4</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">month =</span> <span class="fu">substr</span>(TimePeriod, <span class="dv">6</span>,<span class="dv">7</span>))</span>
-<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>  x<span class="sc">$</span>date <span class="ot">&lt;-</span> <span class="fu">paste</span>(x<span class="sc">$</span>month, <span class="st">"01"</span>, x<span class="sc">$</span>year, <span class="at">sep=</span><span class="st">"/"</span>)</span>
-<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>  x<span class="sc">$</span>date <span class="ot">&lt;-</span> <span class="fu">as.Date</span>(x<span class="sc">$</span>date, <span class="st">"%m/%d/%Y"</span>)</span>
-<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> x <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span>month, <span class="sc">-</span>year)</span>
-<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(x)</span>
-<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>beaKey <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"/Users/mkonczal/Documents/data_folder/BEA_key/BEA_key.csv"</span>)</span>
-<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>beaKey <span class="ot">&lt;-</span> <span class="fu">as.character</span>(beaKey)</span>
-<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a><span class="co"># Table IDs</span></span>
-<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a><span class="co"># https://www.bea.gov/system/files/2021-07/TablesRegisterPreview.txt</span></span>
-<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>PCE_Weight <span class="ot">&lt;-</span> <span class="fu">get_NIPA_data</span>(beaKey, <span class="st">'U20405'</span>, <span class="st">'M'</span>, <span class="st">'2018,2019,2020,2021,2022,2023'</span>, <span class="at">data_set_name =</span> <span class="st">'NIUnderlyingDetail'</span>)</span>
-<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>PCE_Weight <span class="ot">&lt;-</span> <span class="fu">BEA_date_monthly</span>(PCE_Weight)</span>
-<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>PCE_Weight <span class="ot">&lt;-</span> PCE_Weight <span class="sc">%&gt;%</span> <span class="fu">filter</span>(SeriesCode <span class="sc">==</span> <span class="st">"DPCERC"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(date, <span class="at">TotalGDP =</span> DataValue) <span class="sc">%&gt;%</span></span>
-<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(PCE_Weight, <span class="at">by=</span><span class="st">"date"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>  <span class="co"># The weight is approximated as nominal consumption shares as a percent of the total.</span></span>
-<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">PCEweight =</span> DataValue<span class="sc">/</span>TotalGDP) <span class="sc">%&gt;%</span></span>
-<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(date, LineDescription, PCEweight)</span>
-<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a>pce <span class="ot">&lt;-</span> <span class="fu">get_NIPA_data</span>(beaKey, <span class="st">'U20404'</span>, <span class="st">'M'</span>, <span class="st">'2018,2019,2020,2021,2022,2023'</span>, <span class="at">data_set_name =</span> <span class="st">'NIUnderlyingDetail'</span>)</span>
-<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>pce <span class="ot">&lt;-</span> <span class="fu">BEA_date_monthly</span>(pce)</span>
-<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a>pce <span class="ot">&lt;-</span> pce <span class="sc">%&gt;%</span></span>
-<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(PCE_Weight, <span class="at">by=</span><span class="fu">c</span>(<span class="st">'date'</span> <span class="ot">=</span> <span class="st">'date'</span>,<span class="st">'LineDescription'</span> <span class="ot">=</span> <span class="st">'LineDescription'</span>))</span>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-overflow-wrap code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(httr)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(data.table)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(magrittr)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggridges)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lubridate)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(viridis)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(scales)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>cpi_data <span class="ot">&lt;-</span> <span class="fu">GET</span>(<span class="st">"https://download.bls.gov/pub/time.series/cu/cu.data.0.Current"</span>, <span class="fu">user_agent</span>(<span class="st">"rortybomb@gmail.com"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">content</span>(<span class="at">as =</span> <span class="st">"text"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fread</span>()</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>cpi_data <span class="ot">&lt;-</span> cpi_data <span class="sc">%&gt;%</span> <span class="fu">clean_names</span>()</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>cpi_data<span class="sc">$</span>value <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(cpi_data<span class="sc">$</span>value)</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>cpi_data<span class="sc">$</span>series_id <span class="ot">&lt;-</span> <span class="fu">str_trim</span>(cpi_data<span class="sc">$</span>series_id)</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>cpi_data<span class="sc">$</span>date <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="fu">substr</span>(cpi_data<span class="sc">$</span>period, <span class="dv">2</span>,<span class="dv">3</span>), <span class="st">"01"</span>, <span class="fu">substr</span>(cpi_data<span class="sc">$</span>year, <span class="dv">3</span>, <span class="dv">4</span>), <span class="at">sep=</span><span class="st">"/"</span>)</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>cpi_data<span class="sc">$</span>date <span class="ot">&lt;-</span> <span class="fu">as.Date</span>(cpi_data<span class="sc">$</span>date, <span class="st">"%m/%d/%y"</span>)</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>series <span class="ot">&lt;-</span> <span class="fu">GET</span>(<span class="st">"https://download.bls.gov/pub/time.series/cu/cu.series"</span>, <span class="fu">user_agent</span>(<span class="st">"rortybomb@gmail.com"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">content</span>(<span class="at">as =</span> <span class="st">"text"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fread</span>()</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>series <span class="ot">&lt;-</span> series <span class="sc">%&gt;%</span> <span class="fu">clean_names</span>()</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>series<span class="sc">$</span>series_id <span class="ot">&lt;-</span> <span class="fu">str_trim</span>(series<span class="sc">$</span>series_id)</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>items <span class="ot">&lt;-</span> <span class="fu">GET</span>(<span class="st">"https://download.bls.gov/pub/time.series/cu/cu.item"</span>, <span class="fu">user_agent</span>(<span class="st">"rortybomb@gmail.com"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">content</span>(<span class="at">as =</span> <span class="st">"text"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fread</span>()</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>series <span class="ot">&lt;-</span> <span class="fu">inner_join</span>(series, items, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"item_code"</span>))</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>cpi_data <span class="ot">&lt;-</span> <span class="fu">inner_join</span>(cpi_data, series, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"series_id"</span>))</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>cpi_weights <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="at">file =</span> <span class="st">"data/inflation_weights.csv"</span>) <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span>year_weight)</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>cpi_data <span class="ot">&lt;-</span> <span class="fu">inner_join</span>(cpi_data, cpi_weights, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"item_name"</span>))</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>cpi_weights <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="at">file =</span> <span class="st">"data/inflation_weights_2023.csv"</span>) <span class="sc">%&gt;%</span> <span class="fu">select</span>(item_name, <span class="at">weight_2023 =</span> weight, <span class="at">year =</span> year_weight)</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>cpi_data <span class="ot">&lt;-</span> <span class="fu">left_join</span>(cpi_data, cpi_weights, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"item_name"</span>, <span class="st">"year"</span>))</span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>cpi_data<span class="sc">$</span>weight <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(<span class="sc">!</span><span class="fu">is.na</span>(cpi_data<span class="sc">$</span>weight_2023),cpi_data<span class="sc">$</span>weight_2023,cpi_data<span class="sc">$</span>weight)</span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a><span class="do">### Make the graphic </span><span class="al">###</span></span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>median_terms <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/mediancpi_component_table.csv"</span>) <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">item_name =</span> Component)</span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>median <span class="ot">&lt;-</span> cpi_data <span class="sc">%&gt;%</span>  <span class="fu">filter</span>(item_name <span class="sc">%in%</span> median_terms<span class="sc">$</span>item_name <span class="sc">|</span> item_name <span class="sc">==</span> <span class="st">"Owners' equivalent rent of residences"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(period <span class="sc">!=</span> <span class="st">"M13"</span>, seasonal <span class="sc">==</span> <span class="st">"S"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(date) <span class="sc">%&gt;%</span></span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(item_name) <span class="sc">%&gt;%</span></span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Pchange3 =</span> (value<span class="sc">/</span><span class="fu">lag</span>(value, <span class="dv">3</span>)<span class="sc">-</span><span class="dv">1</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(date) <span class="sc">%&gt;%</span></span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">normalized =</span> <span class="fu">sum</span>(weight)) <span class="sc">%&gt;%</span></span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">weightN =</span> weight<span class="sc">/</span>normalized) <span class="sc">%&gt;%</span></span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(Pchange3) <span class="sc">%&gt;%</span></span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">cumsum =</span> <span class="fu">cumsum</span>(weight)<span class="sc">/</span><span class="dv">100</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">cumsumN =</span> <span class="fu">cumsum</span>(weightN)) <span class="sc">%&gt;%</span></span>
+<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Pchange3a =</span> (<span class="dv">1</span><span class="sc">+</span>Pchange3)<span class="sc">^</span><span class="dv">4-1</span>)</span>
 <span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a>pce <span class="ot">&lt;-</span> pce <span class="sc">%&gt;%</span></span>
-<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(SeriesCode) <span class="sc">%&gt;%</span></span>
-<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">DataValue_P1 =</span> (DataValue <span class="sc">-</span> <span class="fu">lag</span>(DataValue,<span class="dv">1</span>))<span class="sc">/</span><span class="fu">lag</span>(DataValue,<span class="dv">1</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Use the lagged weight for weighted share</span></span>
-<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">WDataValue_P1 =</span> DataValue_P1<span class="sc">*</span><span class="fu">lag</span>(PCEweight,<span class="dv">1</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">WDataValue_P1a =</span> (<span class="dv">1</span><span class="sc">+</span>WDataValue_P1)<span class="sc">^</span><span class="dv">12-1</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span>
-<span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-66"><a href="#cb1-66" aria-hidden="true" tabindex="-1"></a><span class="co"># With data in place, move to creating the onion chart</span></span>
-<span id="cb1-67"><a href="#cb1-67" aria-hidden="true" tabindex="-1"></a>core_goods_fields <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Goods"</span>,<span class="st">"Gasoline and other energy goods"</span>,<span class="st">"Food and beverages purchased for off-premises consumption"</span>,<span class="st">"Services"</span>,<span class="st">"Electricity and gas"</span>,<span class="st">"Housing"</span>)</span>
-<span id="cb1-68"><a href="#cb1-68" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-69"><a href="#cb1-69" aria-hidden="true" tabindex="-1"></a>core_analysis <span class="ot">&lt;-</span> pce <span class="sc">%&gt;%</span> <span class="fu">filter</span>(LineDescription <span class="sc">%in%</span> core_goods_fields) <span class="sc">%&gt;%</span></span>
-<span id="cb1-70"><a href="#cb1-70" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(date <span class="sc">&gt;=</span> <span class="st">"2018-01-01"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb1-71"><a href="#cb1-71" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(date, LineDescription, WDataValue_P1) <span class="sc">%&gt;%</span></span>
-<span id="cb1-72"><a href="#cb1-72" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from=</span>LineDescription, <span class="at">values_from =</span> WDataValue_P1) <span class="sc">%&gt;%</span></span>
-<span id="cb1-73"><a href="#cb1-73" aria-hidden="true" tabindex="-1"></a>  <span class="fu">clean_names</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb1-74"><a href="#cb1-74" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">core_goods =</span> goods <span class="sc">-</span> food_and_beverages_purchased_for_off_premises_consumption <span class="sc">-</span> gasoline_and_other_energy_goods) <span class="sc">%&gt;%</span></span>
-<span id="cb1-75"><a href="#cb1-75" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">core_services =</span> services <span class="sc">-</span> electricity_and_gas <span class="sc">-</span> housing) <span class="sc">%&gt;%</span></span>
-<span id="cb1-76"><a href="#cb1-76" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">core_inflation =</span> core_goods <span class="sc">+</span> core_services) <span class="sc">%&gt;%</span></span>
-<span id="cb1-77"><a href="#cb1-77" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="sc">-</span>date, <span class="at">names_to =</span> <span class="st">"item_name"</span>, <span class="at">values_to =</span> <span class="st">"WDataValue_P1"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb1-78"><a href="#cb1-78" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(item_name <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"core_goods"</span>,<span class="st">"core_services"</span>,<span class="st">"housing"</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb1-79"><a href="#cb1-79" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">item_nameF =</span> <span class="fu">factor</span>(item_name, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"core_goods"</span>, <span class="st">"housing"</span>, <span class="st">"core_services"</span>))) <span class="sc">%&gt;%</span></span>
-<span id="cb1-80"><a href="#cb1-80" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">WDataValue_P1a =</span> (WDataValue_P1<span class="sc">+</span><span class="dv">1</span>)<span class="sc">^</span><span class="dv">12-1</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb1-81"><a href="#cb1-81" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(WDataValue_P1a <span class="sc">&gt;</span> <span class="sc">-</span><span class="fl">0.02</span>)</span>
-<span id="cb1-82"><a href="#cb1-82" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-83"><a href="#cb1-83" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(core_analysis<span class="sc">$</span>item_nameF)[<span class="fu">levels</span>(core_analysis<span class="sc">$</span>item_nameF) <span class="sc">==</span> <span class="st">"core_goods"</span>] <span class="ot">&lt;-</span><span class="st">"Core Goods"</span></span>
-<span id="cb1-84"><a href="#cb1-84" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(core_analysis<span class="sc">$</span>item_nameF)[<span class="fu">levels</span>(core_analysis<span class="sc">$</span>item_nameF) <span class="sc">==</span> <span class="st">"core_services"</span>] <span class="ot">&lt;-</span><span class="st">"Non-Housing Services"</span></span>
-<span id="cb1-85"><a href="#cb1-85" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(core_analysis<span class="sc">$</span>item_nameF)[<span class="fu">levels</span>(core_analysis<span class="sc">$</span>item_nameF) <span class="sc">==</span> <span class="st">"housing"</span>] <span class="ot">&lt;-</span><span class="st">"Housing"</span></span>
-<span id="cb1-86"><a href="#cb1-86" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-87"><a href="#cb1-87" aria-hidden="true" tabindex="-1"></a>onion_datebreaks <span class="ot">&lt;-</span> <span class="fu">unique</span>(<span class="fu">sort</span>(core_analysis<span class="sc">$</span>date,<span class="at">decreasing =</span> <span class="cn">TRUE</span>))</span>
-<span id="cb1-88"><a href="#cb1-88" aria-hidden="true" tabindex="-1"></a>onion_datebreaks <span class="ot">&lt;-</span> onion_datebreaks[<span class="fu">seq</span>(<span class="dv">1</span>,<span class="fu">length</span>(onion_datebreaks),<span class="dv">24</span>)]</span>
-<span id="cb1-89"><a href="#cb1-89" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-90"><a href="#cb1-90" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(core_analysis, <span class="fu">aes</span>(<span class="at">x =</span> date, <span class="at">y =</span> WDataValue_P1a, <span class="at">fill=</span>item_nameF)) <span class="sc">+</span></span>
-<span id="cb1-91"><a href="#cb1-91" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">'identity'</span>, <span class="at">size=</span><span class="dv">0</span>) <span class="sc">+</span></span>
-<span id="cb1-92"><a href="#cb1-92" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_modern_rc</span>() <span class="sc">+</span></span>
-<span id="cb1-93"><a href="#cb1-93" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>, <span class="at">legend.title =</span> <span class="fu">element_blank</span>()) <span class="sc">+</span> </span>
-<span id="cb1-94"><a href="#cb1-94" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>(<span class="sc">~</span>item_nameF) <span class="sc">+</span></span>
-<span id="cb1-95"><a href="#cb1-95" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="cn">NULL</span>,</span>
-<span id="cb1-96"><a href="#cb1-96" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="cn">NULL</span>,</span>
-<span id="cb1-97"><a href="#cb1-97" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"The PCE inflation onion layers"</span>,</span>
-<span id="cb1-98"><a href="#cb1-98" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">"Monthly contribution to inflation"</span>,</span>
-<span id="cb1-99"><a href="#cb1-99" aria-hidden="true" tabindex="-1"></a>       <span class="at">caption =</span><span class="st">"BEA, NIPA Tables 2.4.4 and 2.4.5. Weights approximated as nominal consumption shares as a percent of the total.</span><span class="sc">\n</span><span class="st">April 2020 Core Services ex Housing value excluded as large negative outlier."</span>) <span class="sc">+</span></span>
-<span id="cb1-100"><a href="#cb1-100" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_brewer</span>(<span class="at">palette=</span><span class="st">"RdPu"</span>, <span class="at">name =</span> <span class="st">"item_name"</span>) <span class="sc">+</span></span>
-<span id="cb1-101"><a href="#cb1-101" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> percent) <span class="sc">+</span></span>
-<span id="cb1-102"><a href="#cb1-102" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_date</span>(<span class="at">date_labels =</span> <span class="st">"%b</span><span class="sc">\n</span><span class="st">%Y"</span>, <span class="at">breaks =</span> onion_datebreaks) <span class="sc">+</span></span>
-<span id="cb1-103"><a href="#cb1-103" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">14</span>), <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">14</span>),</span>
-<span id="cb1-104"><a href="#cb1-104" aria-hidden="true" tabindex="-1"></a>  <span class="at">strip.text =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">color=</span><span class="st">"white"</span>, <span class="at">hjust =</span> <span class="fl">0.5</span>, <span class="at">size =</span> <span class="dv">10</span>),</span>
-<span id="cb1-105"><a href="#cb1-105" aria-hidden="true" tabindex="-1"></a>  <span class="at">strip.background =</span> <span class="fu">element_blank</span>(),</span>
-<span id="cb1-106"><a href="#cb1-106" aria-hidden="true" tabindex="-1"></a>  <span class="at">plot.title.position =</span> <span class="st">"plot"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a>start_month <span class="ot">&lt;-</span> <span class="fu">month</span>(<span class="fu">max</span>(median<span class="sc">$</span>date))</span>
+<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a>quarters <span class="ot">&lt;-</span> ((<span class="fu">seq</span>(start_month, start_month <span class="sc">+</span> <span class="dv">9</span>, <span class="at">by=</span><span class="dv">3</span>) <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">%%</span> <span class="dv">12</span>) <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a><span class="co">#THIS IS THE GRAPHIC - 30 percent-trimmed distribution</span></span>
+<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a>median <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">dateF =</span> <span class="fu">as.factor</span>(date)) <span class="sc">%&gt;%</span></span>
+<span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(cumsumN <span class="sc">&lt;=</span> <span class="fl">0.85</span> <span class="sc">&amp;</span> cumsum <span class="sc">&gt;=</span> <span class="fl">0.15</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Pchange3a =</span> (<span class="dv">1</span><span class="sc">+</span>Pchange3)<span class="sc">^</span><span class="dv">4-1</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(date <span class="sc">&gt;=</span> <span class="st">"2017-06-01"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb1-66"><a href="#cb1-66" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(date <span class="sc">!=</span> <span class="st">"2020-06-01"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb1-67"><a href="#cb1-67" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">month</span>(date) <span class="sc">%in%</span> quarters) <span class="sc">%&gt;%</span></span>
+<span id="cb1-68"><a href="#cb1-68" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">monthC =</span> <span class="fu">format</span>(date, <span class="st">"%B, %Y"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb1-69"><a href="#cb1-69" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">monthC =</span> <span class="fu">fct_reorder</span>(monthC,date)) <span class="sc">%&gt;%</span></span>
+<span id="cb1-70"><a href="#cb1-70" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">monthCR =</span> <span class="fu">fct_rev</span>(monthC)) <span class="sc">%&gt;%</span></span>
+<span id="cb1-71"><a href="#cb1-71" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> Pchange3a, <span class="at">y =</span> monthCR, <span class="at">fill =</span> <span class="fu">stat</span>(x))) <span class="sc">+</span></span>
+<span id="cb1-72"><a href="#cb1-72" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density_ridges_gradient</span>() <span class="sc">+</span></span>
+<span id="cb1-73"><a href="#cb1-73" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis</span>(<span class="at">option =</span> <span class="st">"H"</span>) <span class="sc">+</span></span>
+<span id="cb1-74"><a href="#cb1-74" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_ridges</span>() <span class="sc">+</span></span>
+<span id="cb1-75"><a href="#cb1-75" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>) <span class="sc">+</span></span>
+<span id="cb1-76"><a href="#cb1-76" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">labels =</span> percent) <span class="sc">+</span></span>
+<span id="cb1-77"><a href="#cb1-77" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Distribution of Price Increases Moved Out</span><span class="sc">\n</span><span class="st">But Now Returning Back"</span>,</span>
+<span id="cb1-78"><a href="#cb1-78" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span><span class="st">"Three Month Percent Change"</span>, <span class="at">y=</span><span class="st">""</span>, <span class="at">caption=</span><span class="st">"OER is treated as one value, instead of broken out by region and manually seasonally adjusted as per Cleveland Fed's methodology.</span><span class="sc">\n</span><span class="st">June 2020 removed as negative outlier. Mike Konczal, Roosevelt Institute"</span>) <span class="sc">+</span></span>
+<span id="cb1-79"><a href="#cb1-79" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title.position =</span> <span class="st">"plot"</span>, <span class="at">legend.position =</span> <span class="st">"none"</span>, <span class="at">legend.title =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb1-80"><a href="#cb1-80" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">20</span>,<span class="at">margin=</span><span class="fu">margin</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">5</span>,<span class="dv">0</span>)),</span>
+<span id="cb1-81"><a href="#cb1-81" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.subtitle =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">13</span>),</span>
+<span id="cb1-82"><a href="#cb1-82" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.caption =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">10</span>, <span class="at">face=</span><span class="st">"italic"</span>),</span>
+<span id="cb1-83"><a href="#cb1-83" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">12</span>, <span class="at">face=</span><span class="st">"bold"</span>),</span>
+<span id="cb1-84"><a href="#cb1-84" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">12</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="index_files/figure-html/onion_graphic_margin_label-1.png" class="img-fluid figure-img" width="672"></p>
-<p></p><figcaption class="figure-caption">Fed officials have argued goods (dis)inflation is likely transitory, housing is reported with a lag, but non-housing services are a cleaner indicator of demand, as well as being more persistent and determined by wage pressures. Here those are, broken out for PCE inflation.</figcaption><p></p>
+<p><img src="index_files/figure-html/ridgeline_graphic-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<p></p><figcaption class="figure-caption">This is the distribution of the Cleveland Fed’s Median/Trimmed-Mean CPI price basket, using 3-month change annualized, with components whose expenditure weights fall above/below the 85/15th percentile of price changes removed. It moved out during the reopening, but is moving back now.</figcaption><p></p>
 </figure>
 </div>
 </div>
 </div>
-<div class="cell caption-top">
-<details>
-<summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-overflow-wrap code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Download data</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>cpi_data <span class="ot">&lt;-</span> <span class="fu">GET</span>(<span class="st">"https://download.bls.gov/pub/time.series/cu/cu.data.0.Current"</span>, <span class="fu">user_agent</span>(<span class="st">"rortybomb@gmail.com"</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">content</span>(<span class="at">as =</span> <span class="st">"text"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fread</span>()</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>cpi_data <span class="ot">&lt;-</span> cpi_data <span class="sc">%&gt;%</span> <span class="fu">clean_names</span>()</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>cpi_data<span class="sc">$</span>value <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(cpi_data<span class="sc">$</span>value)</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>cpi_data<span class="sc">$</span>series_id <span class="ot">&lt;-</span> <span class="fu">str_trim</span>(cpi_data<span class="sc">$</span>series_id)</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>cpi_data<span class="sc">$</span>date <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="fu">substr</span>(cpi_data<span class="sc">$</span>period, <span class="dv">2</span>,<span class="dv">3</span>), <span class="st">"01"</span>, <span class="fu">substr</span>(cpi_data<span class="sc">$</span>year, <span class="dv">3</span>, <span class="dv">4</span>), <span class="at">sep=</span><span class="st">"/"</span>)</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>cpi_data<span class="sc">$</span>date <span class="ot">&lt;-</span> <span class="fu">as.Date</span>(cpi_data<span class="sc">$</span>date, <span class="st">"%m/%d/%y"</span>)</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>series <span class="ot">&lt;-</span> <span class="fu">GET</span>(<span class="st">"https://download.bls.gov/pub/time.series/cu/cu.series"</span>, <span class="fu">user_agent</span>(<span class="st">"rortybomb@gmail.com"</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">content</span>(<span class="at">as =</span> <span class="st">"text"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fread</span>()</span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>series <span class="ot">&lt;-</span> series <span class="sc">%&gt;%</span> <span class="fu">clean_names</span>()</span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>series<span class="sc">$</span>series_id <span class="ot">&lt;-</span> <span class="fu">str_trim</span>(series<span class="sc">$</span>series_id)</span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>items <span class="ot">&lt;-</span> <span class="fu">GET</span>(<span class="st">"https://download.bls.gov/pub/time.series/cu/cu.item"</span>, <span class="fu">user_agent</span>(<span class="st">"rortybomb@gmail.com"</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">content</span>(<span class="at">as =</span> <span class="st">"text"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fread</span>()</span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>series <span class="ot">&lt;-</span> <span class="fu">inner_join</span>(series, items, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"item_code"</span>))</span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>cpi_data <span class="ot">&lt;-</span> <span class="fu">inner_join</span>(cpi_data, series, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"series_id"</span>))</span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Graphic - Supercore</span></span>
-<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>supercore <span class="ot">&lt;-</span> cpi_data <span class="sc">%&gt;%</span> <span class="fu">filter</span>(seasonal <span class="sc">==</span> <span class="st">"S"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(item_name <span class="sc">==</span> <span class="st">"All items less food, shelter, energy, and used cars and trucks"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(item_name, date, value) <span class="sc">%&gt;%</span></span>
-<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">pre_value =</span> value[date<span class="sc">==</span><span class="st">"2020-01-01"</span>]<span class="sc">/</span>value[date<span class="sc">==</span><span class="st">"2018-01-01"</span>]) <span class="sc">%&gt;%</span></span>
-<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">pre_value =</span> pre_value<span class="sc">^</span>(<span class="dv">12</span><span class="sc">/</span><span class="dv">24</span>)<span class="sc">-</span><span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">OneMonth =</span> (value<span class="sc">/</span><span class="fu">lag</span>(value,<span class="dv">1</span>))<span class="sc">^</span><span class="dv">12-1</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">ThreeMonth =</span> (value<span class="sc">/</span><span class="fu">lag</span>(value,<span class="dv">3</span>))<span class="sc">^</span><span class="dv">4-1</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">SixMonth =</span> (value<span class="sc">/</span><span class="fu">lag</span>(value,<span class="dv">6</span>))<span class="sc">^</span><span class="dv">2-1</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(date <span class="sc">&gt;=</span> <span class="st">"2018-01-01"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(ThreeMonth<span class="sc">:</span>SixMonth, <span class="at">names_to =</span> <span class="st">"time_length"</span>, <span class="at">values_to =</span> <span class="st">"change"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">time_length =</span> <span class="fu">str_replace_all</span>(time_length,<span class="st">"SixMonth"</span>, <span class="st">"6-Month Change"</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">time_length =</span> <span class="fu">str_replace_all</span>(time_length,<span class="st">"ThreeMonth"</span>, <span class="st">"3-Month Change"</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">last_value =</span> <span class="fu">ifelse</span>(date<span class="sc">==</span><span class="fu">max</span>(date),change,<span class="cn">NA</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">last_value_pre =</span> <span class="fu">ifelse</span>(date<span class="sc">==</span><span class="fu">max</span>(date) <span class="sc">&amp;</span> time_length<span class="sc">==</span><span class="st">"3-Month Change"</span>,pre_value,<span class="cn">NA</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">recent_OneMonth =</span> <span class="fu">ifelse</span>(date <span class="sc">&gt;=</span> <span class="st">"2021-01-01"</span> <span class="sc">&amp;</span> time_length <span class="sc">==</span> <span class="st">"3-Month Change"</span>, OneMonth, <span class="cn">NA</span>))</span>
-<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>supercore_datebreaks <span class="ot">&lt;-</span> <span class="fu">unique</span>(<span class="fu">sort</span>(supercore<span class="sc">$</span>date,<span class="at">decreasing =</span> <span class="cn">TRUE</span>))</span>
-<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>supercore_datebreaks <span class="ot">&lt;-</span> supercore_datebreaks[<span class="fu">seq</span>(<span class="dv">1</span>,<span class="fu">length</span>(supercore_datebreaks),<span class="dv">12</span>)]</span>
-<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(supercore, <span class="fu">aes</span>(date, change, <span class="at">color=</span>time_length, <span class="at">label=</span><span class="fu">label_percent</span>(<span class="at">accuracy=</span><span class="fl">0.1</span>)(last_value))) <span class="sc">+</span></span>
-<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">size=</span><span class="fl">1.2</span>) <span class="sc">+</span></span>
-<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_modern_rc</span>() <span class="sc">+</span></span>
-<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(date,pre_value), <span class="at">linetype=</span><span class="st">"dashed"</span>, <span class="at">color=</span><span class="st">"#2D779C"</span>) <span class="sc">+</span></span>
-<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="fu">aes</span>(date,recent_OneMonth), <span class="at">alpha=</span><span class="fl">0.1</span>, <span class="at">linewidth=</span><span class="dv">0</span>, <span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
-<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x=</span><span class="st">""</span>, <span class="at">y=</span><span class="st">""</span>,</span>
-<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a>       <span class="at">title=</span><span class="st">"Supercore CPI: All items less food, shelter, energy, used cars"</span>,</span>
-<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">"Trendline is Jan 2017 to Jan 2020, bars are 1-month change post 2021. All values annualized."</span>,</span>
-<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a>       <span class="at">caption =</span> <span class="st">""</span>) <span class="sc">+</span></span>
-<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> percent) <span class="sc">+</span></span>
-<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_date</span>(<span class="at">date_labels =</span> <span class="st">"%b</span><span class="sc">\n</span><span class="st">%Y"</span>, <span class="at">breaks =</span> supercore_datebreaks) <span class="sc">+</span></span>
-<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="fu">c</span>(<span class="fl">0.30</span>,<span class="fl">0.85</span>), <span class="at">legend.title =</span> <span class="fu">element_blank</span>()) <span class="sc">+</span></span>
-<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">14</span>), <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">14</span>),</span>
-<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.text =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">11</span>)) <span class="sc">+</span></span>
-<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values=</span><span class="fu">c</span>(<span class="st">"#2D779C"</span>, <span class="st">"#A4CCCC"</span>)) <span class="sc">+</span></span>
-<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text_repel</span>(<span class="at">show.legend=</span><span class="cn">FALSE</span>, <span class="at">nudge_x =</span> <span class="dv">85</span>, <span class="at">min.segment.length =</span> <span class="cn">Inf</span>) <span class="sc">+</span></span>
-<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(date,last_value_pre, <span class="at">label=</span><span class="fu">label_percent</span>(<span class="at">accuracy=</span><span class="fl">0.1</span>)(pre_value)), <span class="at">show.legend=</span><span class="cn">FALSE</span>, <span class="at">nudge_x =</span> <span class="dv">85</span>, <span class="at">min.segment.length =</span> <span class="cn">Inf</span>) <span class="sc">+</span></span>
-<span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title.position =</span> <span class="st">"plot"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
+<p>Here are some of the latest things I’ve been doing; you can find the full list of <a href="https://www.mikekonczal.com/research.html">research</a>, <a href="https://www.mikekonczal.com/writings.html">writings</a>, and <a href="https://www.mikekonczal.com/appearances.html">media</a> around this website.</p>
+<div class="cell">
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="index_files/figure-html/supercore_inflation-1.png" class="img-fluid figure-img" width="672"></p>
-<p></p><figcaption class="figure-caption">Core inflation excludes prices that are volatile and set globally (food and energy). But by also going to supercore, which excludes used autos (because of complicated supply-side issues) and housing (because of data-measurement and reporting issues), we can get closer to measuring underlying demand pressure of CPI inflation here.</figcaption><p></p>
-</figure>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+ <thead>
+  <tr>
+   <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"> Date </th>
+   <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"> Outlet </th>
+   <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"> Title </th>
+   <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"> Type </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> September 08, 2023 </td>
+   <td style="text-align:left;"> Roosevelt Institute </td>
+   <td style="text-align:left;"> <a href="https://rooseveltinstitute.org/publications/supply-side-expansion-has-driven-the-decline-in-inflation/" style="     ">Supply-Side Expansion Has Driven the Decline In Inflation</a> </td>
+   <td style="text-align:left;"> White Paper </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> July 21, 2023 </td>
+   <td style="text-align:left;"> The Nation </td>
+   <td style="text-align:left;"> <a href="https://www.thenation.com/article/economy/bidenomics-reaganomics/" style="     ">"Bidenomics" Vs. "Reaganomics"</a> </td>
+   <td style="text-align:left;"> Article </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> April 28, 2023 </td>
+   <td style="text-align:left;"> The Nation </td>
+   <td style="text-align:left;"> <a href="https://www.thenation.com/article/economy/inflation-reduction-act-direct-pay/" style="     ">The Revolutionary Potential Of the Inflation Reduction Act</a> </td>
+   <td style="text-align:left;"> Article </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> March 28, 2023 </td>
+   <td style="text-align:left;"> Why Is This Happening? </td>
+   <td style="text-align:left;"> <a href="https://podcasts.apple.com/us/podcast/wth-happened-at-silicon-valley-bank-with-mike-konczal/id1382983397?i=1000606240576" style="     ">Wth Happened At Silicon Valley Bank?</a> </td>
+   <td style="text-align:left;"> Podcast </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> March 09, 2023 </td>
+   <td style="text-align:left;"> House Subcommittee Testimony </td>
+   <td style="text-align:left;"> <a href="https://rooseveltinstitute.org/publications/inflation-in-2023-causes-progress-and-solutions/" style="     ">Inflation In 2023: Causes, Progress, and Solutions</a> </td>
+   <td style="text-align:left;"> White Paper </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> February 28, 2023 </td>
+   <td style="text-align:left;"> Vox </td>
+   <td style="text-align:left;"> <a href="https://www.vox.com/policy/23614066/inflation-soft-landing-economy-recession" style="     ">How the Us Can Stick the Landing, Beat Inflation, and Avoid a Recession</a> </td>
+   <td style="text-align:left;"> Article </td>
+  </tr>
+</tbody>
+</table>
 </div>
 </div>
-</div>
-<div class="cell caption-top">
-<details>
-<summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-overflow-wrap code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor)</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(scales)</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(hrbrthemes)</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggrepel)</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>jolts_data <span class="ot">&lt;-</span> <span class="fu">GET</span>(<span class="st">"https://download.bls.gov/pub/time.series/jt/jt.data.1.AllItems"</span>, <span class="fu">user_agent</span>(<span class="st">"rortybomb@gmail.com"</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">content</span>(<span class="at">as =</span> <span class="st">"text"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fread</span>()</span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>jolts_data <span class="ot">&lt;-</span> jolts_data <span class="sc">%&gt;%</span></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">clean_names</span>()</span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>jolts_data<span class="sc">$</span>value <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(jolts_data<span class="sc">$</span>value)</span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>jolts_data<span class="sc">$</span>series_id <span class="ot">&lt;-</span> <span class="fu">str_trim</span>(jolts_data<span class="sc">$</span>series_id)</span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>jolts_data<span class="sc">$</span>date <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="fu">substr</span>(jolts_data<span class="sc">$</span>period, <span class="dv">2</span>,<span class="dv">3</span>), <span class="st">"01"</span>, jolts_data<span class="sc">$</span>year, <span class="at">sep=</span><span class="st">"/"</span>)</span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>jolts_data<span class="sc">$</span>date <span class="ot">&lt;-</span> <span class="fu">as.Date</span>(jolts_data<span class="sc">$</span>date, <span class="st">"%m/%d/%Y"</span>)</span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>eci_wages <span class="ot">&lt;-</span> <span class="fu">GET</span>(<span class="st">"https://download.bls.gov/pub/time.series/ci/ci.data.1.AllData"</span>, <span class="fu">user_agent</span>(<span class="st">"rortybomb@gmail.com"</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">content</span>(<span class="at">as =</span> <span class="st">"text"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fread</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">clean_names</span>()</span>
-<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>eci_wages<span class="sc">$</span>value <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(eci_wages<span class="sc">$</span>value)</span>
-<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>eci_wages <span class="ot">&lt;-</span> eci_wages <span class="sc">%&gt;%</span></span>
-<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">month =</span> <span class="fu">case_when</span>(</span>
-<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>    period <span class="sc">==</span> <span class="st">"Q01"</span> <span class="sc">~</span> <span class="dv">3</span>,</span>
-<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>    period <span class="sc">==</span> <span class="st">"Q02"</span> <span class="sc">~</span> <span class="dv">6</span>,</span>
-<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>    period <span class="sc">==</span> <span class="st">"Q03"</span> <span class="sc">~</span> <span class="dv">9</span>,</span>
-<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>    period <span class="sc">==</span> <span class="st">"Q04"</span> <span class="sc">~</span> <span class="dv">12</span>))</span>
-<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>eci_wages<span class="sc">$</span>date <span class="ot">&lt;-</span> <span class="fu">paste</span>(eci_wages<span class="sc">$</span>month, <span class="st">"01"</span>, eci_wages<span class="sc">$</span>year, <span class="at">sep=</span><span class="st">"/"</span>)</span>
-<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>eci_wages<span class="sc">$</span>date <span class="ot">&lt;-</span> <span class="fu">as.Date</span>(eci_wages<span class="sc">$</span>date, <span class="st">"%m/%d/%Y"</span>)</span>
-<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a><span class="co"># Graphic Set 1 : Sets Up Calculations</span></span>
-<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a><span class="co"># Openings and Quits versus ECI Wages</span></span>
-<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>JoltsMerge <span class="ot">&lt;-</span> jolts_data <span class="sc">%&gt;%</span> <span class="fu">filter</span>(series_id <span class="sc">==</span> <span class="st">"JTS000000000000000QUR"</span>) <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">value =</span> value<span class="sc">/</span><span class="dv">100</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(date, <span class="at">quitsR =</span> value)</span>
-<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>merged <span class="ot">&lt;-</span> eci_wages <span class="sc">%&gt;%</span> <span class="fu">filter</span>(series_id <span class="sc">==</span> <span class="st">"CIS2020000000000I"</span>) <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">value =</span> value<span class="sc">/</span><span class="fu">lag</span>(value)<span class="sc">-</span><span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="at">ECI_growth =</span> value, date) <span class="sc">%&gt;%</span></span>
-<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(JoltsMerge, <span class="at">by=</span><span class="fu">c</span>(<span class="st">"date"</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(ECI_growth)) <span class="sc">%&gt;%</span></span>
-<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Is_2021_to_2022 =</span> (date <span class="sc">&gt;=</span> <span class="st">"2021-01-01"</span>))</span>
-<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a>regression_prior <span class="ot">&lt;-</span> merged <span class="sc">%&gt;%</span> <span class="fu">filter</span>(date <span class="sc">&lt;</span> <span class="st">"2021-01-01"</span>) <span class="sc">%&gt;%</span> <span class="fu">lm</span>(ECI_growth <span class="sc">~</span> quitsR, <span class="at">data=</span>.)</span>
-<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a>merged <span class="sc">%&gt;%</span></span>
-<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">values_last =</span> <span class="fu">if_else</span>(date <span class="sc">&gt;=</span> <span class="st">"2022-01-01"</span>, date, <span class="fu">as.Date</span>(<span class="cn">NA</span>))) <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">values_last2 =</span> <span class="fu">as.character</span>(<span class="fu">format</span>(values_last, <span class="st">"%b</span><span class="sc">\n</span><span class="st">%Y"</span>))) <span class="sc">%&gt;%</span></span>
-<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Is_2021_to_2022_v =</span> <span class="fu">if_else</span>(date <span class="sc">&gt;=</span> <span class="st">"2022-01-01"</span>,ECI_growth,<span class="fu">as.numeric</span>(<span class="cn">NA</span>))) <span class="sc">%&gt;%</span></span>
-<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(quitsR, ECI_growth, <span class="at">color=</span>Is_2021_to_2022, <span class="at">label=</span>values_last2)) <span class="sc">+</span> <span class="fu">geom_point</span>() <span class="sc">+</span> <span class="fu">theme_modern_rc</span>() <span class="sc">+</span></span>
-<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="at">intercept =</span> regression_prior<span class="sc">$</span>coefficients[<span class="dv">1</span>], <span class="at">slope=</span>regression_prior<span class="sc">$</span>coefficients[<span class="dv">2</span>], <span class="at">color=</span><span class="st">"#2D779C"</span>) <span class="sc">+</span></span>
-<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text_repel</span>(<span class="at">size=</span><span class="dv">3</span>) <span class="sc">+</span></span>
-<span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_path</span>(<span class="fu">aes</span>(quitsR,Is_2021_to_2022_v)) <span class="sc">+</span></span>
-<span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Quit Rate"</span>,</span>
-<span id="cb3-53"><a href="#cb3-53" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"ECI Private Wage Growth, Quarterly"</span>,</span>
-<span id="cb3-54"><a href="#cb3-54" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Labor-market tightness: wage growth versus quit rates"</span>,</span>
-<span id="cb3-55"><a href="#cb3-55" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">"Regression line and blue points reflect 2001 to 2020."</span>,</span>
-<span id="cb3-56"><a href="#cb3-56" aria-hidden="true" tabindex="-1"></a>       <span class="at">caption =</span><span class="cn">NULL</span>) <span class="sc">+</span></span>
-<span id="cb3-57"><a href="#cb3-57" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.grid.major.y =</span> <span class="fu">element_line</span>(<span class="at">size=</span><span class="fl">0.5</span>)) <span class="sc">+</span></span>
-<span id="cb3-58"><a href="#cb3-58" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title.position =</span> <span class="st">"plot"</span>) <span class="sc">+</span></span>
-<span id="cb3-59"><a href="#cb3-59" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> percent) <span class="sc">+</span></span>
-<span id="cb3-60"><a href="#cb3-60" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">labels =</span> percent) <span class="sc">+</span></span>
-<span id="cb3-61"><a href="#cb3-61" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.title.x =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">14</span>, <span class="at">color=</span><span class="st">"white"</span>, <span class="at">vjust=</span><span class="sc">-</span><span class="fl">1.5</span>), <span class="at">axis.title.y =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">14</span>, <span class="at">angle =</span> <span class="dv">90</span>, <span class="at">vjust =</span> <span class="dv">3</span>),</span>
-<span id="cb3-62"><a href="#cb3-62" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.subtitle =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">12</span>, <span class="at">color=</span><span class="st">"white"</span>), <span class="at">legend.position =</span> <span class="st">"none"</span>) <span class="sc">+</span></span>
-<span id="cb3-63"><a href="#cb3-63" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values=</span><span class="fu">c</span>(<span class="st">"#2D779C"</span>, <span class="st">"#CC79A7"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
+<p>I’m often cited and quoted in coverage around the economy. Here’s some recent examples, with the full list <a href="https://www.mikekonczal.com/media.html">here</a>.</p>
+<div class="cell">
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="index_files/figure-html/quits_and_wages-1.png" class="img-fluid figure-img" width="672"></p>
-<p></p><figcaption class="figure-caption">The unemployment rate is a poor measure for labor market tightness, and average hourly wages also has measurement problems. All the cool kids look at the JOLTs quit rate and ECI private wages instead.</figcaption><p></p>
-</figure>
-</div>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+ <thead>
+  <tr>
+   <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"> Date </th>
+   <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"> Outlet </th>
+   <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"> Title </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> September 11, 2023 </td>
+   <td style="text-align:left;"> Bloomberg </td>
+   <td style="text-align:left;"> <a href="https://www.bloomberg.com/news/newsletters/2023-09-11/five-things-you-need-to-know-to-start-your-day" style="     ">Five Things You Need To Know To Start Your Day</a> </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> September 11, 2023 </td>
+   <td style="text-align:left;"> New York Times </td>
+   <td style="text-align:left;"> <a href="https://www.nytimes.com/2023/09/11/opinion/inflation-unemployment-phillips-recession.html" style="     ">How Goldilocks Came To the U.s. Economy</a> </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> August 29, 2023 </td>
+   <td style="text-align:left;"> New York Times </td>
+   <td style="text-align:left;"> <a href="https://www.nytimes.com/2023/08/29/opinion/a-sad-story-what-can-we-learn-from-the-1970s.html" style="     ">A S.a.d. Story: What Can We Learn From the 1970s?</a> </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> August 03, 2023 </td>
+   <td style="text-align:left;"> New York Times </td>
+   <td style="text-align:left;"> <a href="https://www.nytimes.com/2023/08/03/business/economy/economy-good-news.html" style="     ">Is Good News Finally Good News Again?</a> </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> August 02, 2023 </td>
+   <td style="text-align:left;"> Slow Boring </td>
+   <td style="text-align:left;"> <a href="https://www.slowboring.com/p/why-did-inflation-fall" style="     ">Why Did Inflation Fall?</a> </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> July 12, 2023 </td>
+   <td style="text-align:left;"> NBC News </td>
+   <td style="text-align:left;"> <a href="https://www.nbcnews.com/business/economy/americans-are-finally-getting-raise-thanks-lower-inflation-rcna93844" style="     ">Thanks To Lower Inflation, Americans Are Finally Getting a Raise</a> </td>
+  </tr>
+</tbody>
+</table>
 </div>
 </div>
 <section id="praise-for-freedom-from-the-market" class="level2">
