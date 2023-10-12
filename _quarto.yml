@@ -31,6 +31,11 @@ website:
           text: Quotes
       - href: resume.qmd
         text: Resume
+      - text: Data Analysis
+        menu:
+        - href: cpi.qmd
+          text: CPI Inflation
+
 
   search: 
     location: navbar
