@@ -4,11 +4,11 @@ project:
 
 website:
   title: "Mike Konczal"
-  
+
   page-footer:
     right: |
       <span class="container">Made with [Quarto](https://quarto.org/){target="_blank"} ([This Site's Repo](https://github.com/mtkonczal/mtkonczal.github.io){target="_blank"})</span>
-    
+
   navbar:
     left:
       - href: index.qmd
@@ -35,12 +35,14 @@ website:
         menu:
         - href: cpi.qmd
           text: CPI Inflation
+        - href: inf_dist.qmd
+          text: Inflation Distribution
 
 
-  search: 
+  search:
     location: navbar
     type: overlay
-    
+
 format:
   html:
     theme: spacelab

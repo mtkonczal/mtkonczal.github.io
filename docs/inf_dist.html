@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Mike Konczal -</title>
+<title>Mike Konczal - Inflation Distribution</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -33,6 +33,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
@@ -151,60 +152,48 @@ ul.task-list li input[type="checkbox"] {
 <!-- margin-sidebar -->
     
 <!-- main -->
-<div class="quarto-about-trestles column-page">
-  <div class="about-entity">
-    <img src="images/image-803426826.png" class="about-image
-  rounded " style="width: 20em;">
+<main class="content column-page" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Inflation Distribution</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
   </div>
-  <div class="about-contents"><main class="content column-page" id="quarto-document-content">
-<section id="coverage-of-freedom-from-the-market" class="level2">
-<h2 data-anchor-id="coverage-of-freedom-from-the-market">Coverage of Freedom From the Market</h2>
-<p><a href="https://thenewpress.com/books/freedom-from-market">Book Jacket</a>: “<em>Freedom from the Market</em> blends passionate political argument and a bold new take on American history to reveal that, from the earliest days of the republic, Americans have defined freedom as what we keep free from the control of the market. With chapters on the history of the Homestead Act and land ownership, the eight-hour work day and free time, social insurance and Social Security, World War II day cares, Medicare and desegregation, free public colleges, intellectual property, and the public corporation, Konczal shows how citizens have fought to ensure that everyone has access to the conditions that make us free.”</p>
-<div class="column" style="width:49%;">
-<section id="reviews" class="level3">
-<h3 data-anchor-id="reviews">Reviews</h3>
+  
+
+</header>
+
+<p>This is a tool to visualize the distribution of price inflation for the Consumer Price Index (CPI) and the Personal Consumption Expenditures Price Index (PCE). It was last updated for September, 2023. All values are seasonally-adjusted and annualized.</p>
+ <iframe id="example1" src="https://mtkonczal.shinyapps.io/inflation_distribution/" style="border: none; width: 100%; height: 800px" frameborder="0"></iframe>
+<p><strong>1. CPI Distribution:</strong></p>
 <ul>
-<li><p>Matt Mazewski at <a href="https://www.commonwealmagazine.org/polanyi-ish">Commonweal</a>.</p></li>
-<li><p>Adrian Rutt at <a href="https://www.liberalcurrents.com/freedom-and-the-common-good-mike-konczals-emfreedom-from-the-market-em/">Liberal Currents</a>.</p></li>
-<li><p>Molly Michelmore at <a href="https://democracyjournal.org/magazine/61/freedoms-just-another-word/">Democracy Journal</a>.</p></li>
-<li><p>Martin Wolf at <a href="https://www.ft.com/content/239f31cb-57a3-43d3-ab3d-d18d068f4994">the Financial Times</a>.</p></li>
-<li><p>Binyamin Appelbaum at <a href="https://www.foreignaffairs.com/reviews/review-essay/2021-02-16/market-value">Foreign Affairs</a>.</p></li>
-<li><p>Bryce Covert at <a href="https://foreignpolicy.com/2021/02/06/social-welfare-is-as-american-as-apple-pie/">Foreign Policy</a>.</p></li>
-<li><p>Justin H. Vassallo at <a href="https://lareviewofbooks.org/article/resisting-market-rule/">the Los Angeles Review of Books</a>.</p></li>
-<li><p>Barton Swaim at <a href="https://www.wsj.com/articles/politics-of-markets-and-morals-11611961820">the Wall Street Journal</a>.</p></li>
-<li><p>Ryan Cooper at <a href="https://theweek.com/articles/963196/america-forgotten-how-free">The Week</a>.</p></li>
-<li><p>Henry Farrell at <a href="https://crookedtimber.org/2021/01/26/freedom-from-the-market/">Crooked Timber</a>.</p></li>
-<li><p>An author at <a href="https://karlpolanyiproject.blogspot.com/2021/01/polanyi-goes-to-america.html">the Karl Polyani Project</a>.</p></li>
-<li><p>Stephen Eide at <a href="https://www.nationalreview.com/2021/01/americas-supposedly-socialist-history/">National Review</a>.</p></li>
+<li><p><strong>Item Categories:</strong> The CPI distribution encompasses a total of 179 unique and non-overlapping item categories.</p></li>
+<li><p><strong>Coverage:</strong> These categories collectively account for approximately 85 percent of the total consumer basket, offering a broad spectrum analysis of consumer expenditure patterns.</p></li>
+<li><p><strong>Regional Housing Data:</strong> Unlike methodologies employed by <a href="https://www.clevelandfed.org/indicators-and-data/median-cpi">the Cleveland Fed</a>, our current CPI distribution does not differentiate housing data by region (while applying new seasonal adjustments). This limitation means our housing data may present less dispersion (see more <a href="https://www.clevelandfed.org/-/media/project/clevelandfedtenant/clevelandfedsite/indicators-and-data/median-cpi/revisions-to-mcpi-and-trimmed-mean-2007.pdf">here</a>).</p></li>
 </ul>
-</section>
-</div>
-<div class="column" style="width:49%;">
-<section id="media-appearances" class="level3">
-<h3 data-anchor-id="media-appearances">Media Appearances</h3>
+<p><strong>2. PCE Distribution:</strong></p>
 <ul>
-<li><p>I was on The Majority Report with Sam Seder <a href="https://majorityreportradio.com/2021/01/27/1-27-americas-fight-to-liberate-itself-from-the-grip-of-the-market-w-mike-konczal">podcast</a>&nbsp;(<a href="https://www.youtube.com/watch?v=6i9XRNUNx8c">YouTube</a>) to discuss the book.</p></li>
-<li><p>I was on the <a href="https://leftanchor.podbean.com/e/episode-175-americas-tradition-of-egalitarian-freedom-with-mike-konczal/">Left Anchor podcast</a> to discuss the book.</p></li>
-<li><p>I was on <a href="https://www.stitcher.com/show/voxs-the-weeds/episode/freedom-from-markets-81017167">Vox’s The Weeds podcast</a> with Matthew Yglesias to discuss the book.</p></li>
-<li><p>I was on the <a href="https://massforshutins.libsyn.com/030-mike-konczal-freedom-from-the-market-2021">Gin and Tacos podcast Mass for Shut-Ins</a> with Ed Burmila to discuss the book.</p></li>
-<li><p>I was on the <a href="https://www.lawyersgunsmoneyblog.com/2021/01/lgm-podcast-market">Lawyers, Guns and Money podcast</a> with Erik Loomis to discuss the book.</p></li>
+<li><p><strong>Item Categories:</strong> The PCE distribution is detailed, featuring 131 distinct, non-overlapping item categories.</p></li>
+<li><p><strong>Categorization Detail:</strong> These items are classified under a ‘level 4’ categorization system, indicating a structure organized with four sets of indentations for nuanced analysis.</p></li>
+<li><p><strong>Coverage:</strong> The PCE distribution is exhaustive, representing around 100 percent of the consumer basket, thereby providing a complete overview of consumer spending.</p></li>
 </ul>
-</section>
-<section id="excerpts-and-other-resources" class="level3">
-<h3 data-anchor-id="excerpts-and-other-resources">Excerpts and other Resources</h3>
+<p><strong>3. Notes Distribution:</strong></p>
 <ul>
-<li><p>There was an adapted excerpt of the book, <a href="https://www.thenation.com/article/politics/health-care-freedom-medicare/">covering Medicare and desegregation</a>, at The Nation.</p></li>
-<li><p>There was an adapted excerpt of the book, <a href="http://bostonreview.net/class-inequality-law-justice/mike-konczal-time-universal-measure-freedom">covering the eight-hour workday</a>, at Boston Review.</p></li>
-<li><p>I was <a href="https://www.dissentmagazine.org/online_articles/life-beyond-markets-mike-konczal">interviewed at Dissent Magazine</a> by historian Tim Barker about the book.</p></li>
+<li><p>You can access the underlying distribution data <a href="https://github.com/mtkonczal/BLS-CPI-Inflation-Analysis/blob/main/data/shiny_density_test.csv">here</a>.</p></li>
+<li><p>“Exclude Top/Bottom Percent” (currently) is by the unweighted percent number of items, not by their expenditure weights (contrasted with the 16 percent trimmed-mean CPI, which excludes the top and bottom 8 percent of expenditures).</p></li>
 </ul>
-</section>
-</div>
 
 
-</section>
-</main></div>
-</div>
- <!-- /main -->
+
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
@@ -225,6 +214,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
   }
   toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
   const clipboard = new window.ClipboardJS('.code-copy-button', {
     target: function(trigger) {
       return trigger.previousElementSibling;
