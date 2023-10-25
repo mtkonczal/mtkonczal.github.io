@@ -32,7 +32,7 @@ You can right-click on the graphic to save it. Notes:
 
 -   **Item Categories:** The PCE distribution is detailed, featuring 131 distinct, non-overlapping item categories.
 
--   **Coverage:** These items are classified under a 'level 4' categorization system, indicating a structure organized with four sets of indentations for nuanced analysis. The PCE distribution is exhaustive, representing around 100 percent of the consumer basket, thereby providing a complete overview of consumer spending.
+-   **Coverage:** These items are classified under a 'level 4' categorization system, or four levels down within the underlying NIPA categories. The PCE distribution is exhaustive, representing around 100 percent of nominal spending, thereby providing a complete overview of spending in the economy.
 
 **3. Notes Distribution:**
 
@@ -40,4 +40,4 @@ You can right-click on the graphic to save it. Notes:
 
 -   "Exclude Top/Bottom Percent" (currently) is by the unweighted percent number of items, not by their expenditure weights (contrasted with the 16 percent trimmed-mean CPI, which excludes the top and bottom 8 percent of expenditures).
 
-This tool was last updated on `r format(Sys.time(), '%B %d, %Y')`. Please let me know if you have any suggestions!
+This page was last updated on `r format(Sys.time(), '%B %d, %Y')`. Please let me know if you have any suggestions!
