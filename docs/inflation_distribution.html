@@ -171,17 +171,19 @@ ul.task-list li input[type="checkbox"] {
 
 </header>
 
-<p>This is a tool to visualize the distribution of price inflation for the Consumer Price Index (CPI) and the Personal Consumption Expenditures Price Index (PCE). It was last updated for September, 2023. All values are seasonally-adjusted and annualized.</p>
+<p>This is a tool to visualize the distribution of price inflation for the Consumer Price Index (CPI) and the Personal Consumption Expenditures Price Index (PCE). All values are seasonally-adjusted and annualized.</p>
  <iframe id="example1" src="https://mtkonczal.shinyapps.io/inflation_distribution/" style="border: none; width: 100%; height: 800px" frameborder="0"></iframe>
 <p>You can right-click on the graphic to save it. Notes:</p>
 <p><strong>1. CPI Distribution:</strong></p>
 <ul>
+<li><p><strong>Date Range and Data Source:</strong> From January 2011 through the most recent month. The sourcing is from the BLS flat files, located <a href="https://download.bls.gov/pub/time.series/cu/">here</a>.</p></li>
 <li><p><strong>Item Categories:</strong> The CPI distribution encompasses a total of 179 unique and non-overlapping item categories.</p></li>
 <li><p><strong>Coverage:</strong> These categories collectively account for approximately 85 percent of the total consumer basket, offering a broad spectrum analysis of consumer expenditure patterns.</p></li>
 <li><p><strong>Regional Housing Data:</strong> Unlike methodologies employed by <a href="https://www.clevelandfed.org/indicators-and-data/median-cpi">the Cleveland Fed</a>, our current CPI distribution does not differentiate housing data by region (while applying new seasonal adjustments). This limitation means our housing data may present less dispersion (see more <a href="https://www.clevelandfed.org/-/media/project/clevelandfedtenant/clevelandfedsite/indicators-and-data/median-cpi/revisions-to-mcpi-and-trimmed-mean-2007.pdf">here</a>).</p></li>
 </ul>
 <p><strong>2. PCE Distribution:</strong></p>
 <ul>
+<li><p><strong>Date Range and Data Source:</strong> From January 1970 through the most recent month. The sourcing is from the NIPA flat files, located <a href="https://apps.bea.gov/iTable/?ReqID=19&amp;step=4&amp;isuri=1&amp;1921=flatfiles">here</a>.</p></li>
 <li><p><strong>Item Categories:</strong> The PCE distribution is detailed, featuring 131 distinct, non-overlapping item categories.</p></li>
 <li><p><strong>Coverage:</strong> These items are classified under a ‘level 4’ categorization system, indicating a structure organized with four sets of indentations for nuanced analysis. The PCE distribution is exhaustive, representing around 100 percent of the consumer basket, thereby providing a complete overview of consumer spending.</p></li>
 </ul>
@@ -190,6 +192,7 @@ ul.task-list li input[type="checkbox"] {
 <li><p>You can access the underlying distribution data <a href="https://github.com/mtkonczal/BLS-CPI-Inflation-Analysis/blob/main/data/shiny_density_test.csv">here</a>.</p></li>
 <li><p>“Exclude Top/Bottom Percent” (currently) is by the unweighted percent number of items, not by their expenditure weights (contrasted with the 16 percent trimmed-mean CPI, which excludes the top and bottom 8 percent of expenditures).</p></li>
 </ul>
+<p>This tool was last updated on October 24, 2023. Please let me know if you have any suggestions!</p>
 
 
 

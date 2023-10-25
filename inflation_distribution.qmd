@@ -7,18 +7,18 @@ execute:
 ```{r setup, include=FALSE}
 library(lubridate)
 knitr::opts_chunk$set(warning = FALSE, message = FALSE)
-current_datetime <- format(Sys.time() %m-% months(1), '%B, %Y')
 ```
 
-This is a tool to visualize the distribution of price inflation for the Consumer Price Index (CPI) and the Personal Consumption Expenditures Price Index (PCE). It was last updated for `r current_datetime`. All values are seasonally-adjusted and annualized.
+This is a tool to visualize the distribution of price inflation for the Consumer Price Index (CPI) and the Personal Consumption Expenditures Price Index (PCE). All values are seasonally-adjusted and annualized.
 
 ```{=html}
  <iframe id="example1" src="https://mtkonczal.shinyapps.io/inflation_distribution/" style="border: none; width: 100%; height: 800px" frameborder="0"></iframe>
 ```
-
 You can right-click on the graphic to save it. Notes:
 
 **1. CPI Distribution:**
+
+-   **Date Range and Data Source:** From January 2011 through the most recent month. The sourcing is from the BLS flat files, located [here](https://download.bls.gov/pub/time.series/cu/).
 
 -   **Item Categories:** The CPI distribution encompasses a total of 179 unique and non-overlapping item categories.
 
@@ -28,13 +28,16 @@ You can right-click on the graphic to save it. Notes:
 
 **2. PCE Distribution:**
 
+-   **Date Range and Data Source:** From January 1970 through the most recent month. The sourcing is from the NIPA flat files, located [here](https://apps.bea.gov/iTable/?ReqID=19&step=4&isuri=1&1921=flatfiles).
+
 -   **Item Categories:** The PCE distribution is detailed, featuring 131 distinct, non-overlapping item categories.
 
 -   **Coverage:** These items are classified under a 'level 4' categorization system, indicating a structure organized with four sets of indentations for nuanced analysis. The PCE distribution is exhaustive, representing around 100 percent of the consumer basket, thereby providing a complete overview of consumer spending.
 
-
 **3. Notes Distribution:**
 
-- You can access the underlying distribution data [here](https://github.com/mtkonczal/BLS-CPI-Inflation-Analysis/blob/main/data/shiny_density_test.csv).
+-   You can access the underlying distribution data [here](https://github.com/mtkonczal/BLS-CPI-Inflation-Analysis/blob/main/data/shiny_density_test.csv).
 
-- "Exclude Top/Bottom Percent" (currently) is by the unweighted percent number of items, not by their expenditure weights (contrasted with the 16 percent trimmed-mean CPI, which excludes the top and bottom 8 percent of expenditures).
+-   "Exclude Top/Bottom Percent" (currently) is by the unweighted percent number of items, not by their expenditure weights (contrasted with the 16 percent trimmed-mean CPI, which excludes the top and bottom 8 percent of expenditures).
+
+This tool was last updated on `r format(Sys.time(), '%B %d, %Y')`. Please let me know if you have any suggestions!
