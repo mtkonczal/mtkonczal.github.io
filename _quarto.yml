@@ -35,7 +35,7 @@ website:
         menu:
         - href: cpi.qmd
           text: CPI Inflation
-        - href: inf_dist.qmd
+        - href: inflation_distribution.qmd
           text: Inflation Distribution
 
 
