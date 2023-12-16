@@ -37,6 +37,8 @@ website:
           text: CPI Inflation
         - href: inflation_distribution.qmd
           text: Inflation Distribution
+        - href: IEA_presentation.qmd
+          text: IEA Presentation
 
 
   search:

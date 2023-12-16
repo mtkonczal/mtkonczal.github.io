@@ -1,0 +1,7 @@
+---
+title: "IEA Presentation"
+---
+
+Click [here to download my IEA presentation](https://github.com/mtkonczal/Blog-Posts-Presentations-and-Testimony/blob/main/IEA_presentation_Dec_2023_inflation/IEA_presentation_Dec_2023.pdf). The code is [here](https://github.com/mtkonczal/Blog-Posts-Presentations-and-Testimony/tree/main/IEA_presentation_Dec_2023_inflation).
+
+<iframe width="100%" height="800" src="files/IEA_presentation_Dec_2023.pdf">
