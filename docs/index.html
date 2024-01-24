@@ -317,7 +317,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a>median <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">dateF =</span> <span class="fu">as.factor</span>(date)) <span class="sc">%&gt;%</span></span>
 <span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(cumsumN <span class="sc">&lt;=</span> <span class="fl">0.85</span> <span class="sc">&amp;</span> cumsum <span class="sc">&gt;=</span> <span class="fl">0.15</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Pchange3a =</span> (<span class="dv">1</span><span class="sc">+</span>Pchange3)<span class="sc">^</span><span class="dv">4-1</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(date <span class="sc">&gt;=</span> <span class="st">"2017-06-01"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(date <span class="sc">&gt;=</span> <span class="st">"2018-06-01"</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb1-66"><a href="#cb1-66" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(date <span class="sc">!=</span> <span class="st">"2020-06-01"</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb1-67"><a href="#cb1-67" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">month</span>(date) <span class="sc">%in%</span> quarters) <span class="sc">%&gt;%</span></span>
 <span id="cb1-68"><a href="#cb1-68" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">monthC =</span> <span class="fu">format</span>(date, <span class="st">"%B, %Y"</span>)) <span class="sc">%&gt;%</span></span>
@@ -329,7 +329,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb1-74"><a href="#cb1-74" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_ridges</span>() <span class="sc">+</span></span>
 <span id="cb1-75"><a href="#cb1-75" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>) <span class="sc">+</span></span>
 <span id="cb1-76"><a href="#cb1-76" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">labels =</span> percent) <span class="sc">+</span></span>
-<span id="cb1-77"><a href="#cb1-77" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Distribution of Price Increases Moved Out</span><span class="sc">\n</span><span class="st">But Now Returning Back"</span>,</span>
+<span id="cb1-77"><a href="#cb1-77" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Inflation Distribution Returning Back"</span>,</span>
 <span id="cb1-78"><a href="#cb1-78" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span><span class="st">"Three Month Percent Change"</span>, <span class="at">y=</span><span class="st">""</span>, <span class="at">caption=</span><span class="st">"OER is treated as one value.</span><span class="sc">\n</span><span class="st">Mike Konczal, Roosevelt Institute"</span>) <span class="sc">+</span></span>
 <span id="cb1-79"><a href="#cb1-79" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title.position =</span> <span class="st">"plot"</span>, <span class="at">legend.position =</span> <span class="st">"none"</span>, <span class="at">legend.title =</span> <span class="fu">element_blank</span>(),</span>
 <span id="cb1-80"><a href="#cb1-80" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">20</span>,<span class="at">margin=</span><span class="fu">margin</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">5</span>,<span class="dv">0</span>)),</span>
@@ -461,8 +461,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 - Matt Mazewski, <a href="https://www.commonwealmagazine.org/polanyi-ish"><em>Commonweal</em></a></p>
 <p>“terrific book.”<br>
 - Jamelle Bouie, <a href="https://twitter.com/jbouie/status/1450470921001750528"><em>New York Times</em></a></p>
+<p>“Markets will set us free—except when they won’t, don’t, can’t. In this deeply researched yet eminently readable book, Mike Konczal tells the powerful forgotten story of how American democracy once tamed markets to advance our freedom, and shows us how it could do so once again.”<br>
+— Jacob Hacker, Yale University.</p>
 <p>“Freedom from the Market has the potential to be a very important book, focusing attention on the contested, messy but crucially important intersection between social movements and the state. It provides a set of ideas that people on both sides of that divide can learn from, and a lively alternative foundation to the deracinated technocratic notions of politics, in which good policy would somehow, magically, be politically self supporting, that has prevailed up until quite recently. Strongly recommended.”<br>
-—Henry Farrell, <a href="https://crookedtimber.org/2021/01/26/freedom-from-the-market/"><em>Crooked Timber</em></a></p>
+- Henry Farrell, <a href="https://crookedtimber.org/2021/01/26/freedom-from-the-market/"><em>Crooked Timber</em></a></p>
 
 
 </section>

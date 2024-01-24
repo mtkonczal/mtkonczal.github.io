@@ -97,7 +97,7 @@ quarters <- ((seq(start_month, start_month + 9, by=3) - 1) %% 12) + 1
 median %>% mutate(dateF = as.factor(date)) %>%
   filter(cumsumN <= 0.85 & cumsum >= 0.15) %>%
   mutate(Pchange3a = (1+Pchange3)^4-1) %>%
-  filter(date >= "2017-06-01") %>%
+  filter(date >= "2018-06-01") %>%
   filter(date != "2020-06-01") %>%
   filter(month(date) %in% quarters) %>%
   mutate(monthC = format(date, "%B, %Y")) %>%
@@ -109,7 +109,7 @@ median %>% mutate(dateF = as.factor(date)) %>%
   theme_ridges() +
   theme(legend.position = "none") +
   scale_x_continuous(labels = percent) +
-  labs(title="Distribution of Price Increases Moved Out\nBut Now Returning Back",
+  labs(title="Inflation Distribution Returning Back",
        x="Three Month Percent Change", y="", caption="OER is treated as one value.\nMike Konczal, Roosevelt Institute") +
   theme(plot.title.position = "plot", legend.position = "none", legend.title = element_blank(),
         plot.title = element_text(size = 20,margin=margin(0,0,5,0)),
@@ -196,5 +196,8 @@ chart_2$Title <- str_remove(chart_2$Title,"\xd4")
 "terrific book."\
 - Jamelle Bouie, [*New York Times*](https://twitter.com/jbouie/status/1450470921001750528)
 
+“Markets will set us free—except when they won't, don't, can't. In this deeply researched yet eminently readable book, Mike Konczal tells the powerful forgotten story of how American democracy once tamed markets to advance our freedom, and shows us how it could do so once again."\
+— Jacob Hacker, Yale University.
+
 "Freedom from the Market has the potential to be a very important book, focusing attention on the contested, messy but crucially important intersection between social movements and the state. It provides a set of ideas that people on both sides of that divide can learn from, and a lively alternative foundation to the deracinated technocratic notions of politics, in which good policy would somehow, magically, be politically self supporting, that has prevailed up until quite recently. Strongly recommended."\
----Henry Farrell, [*Crooked Timber*](https://crookedtimber.org/2021/01/26/freedom-from-the-market/)
+- Henry Farrell, [*Crooked Timber*](https://crookedtimber.org/2021/01/26/freedom-from-the-market/)
