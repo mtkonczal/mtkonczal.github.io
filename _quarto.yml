@@ -33,8 +33,6 @@ website:
         text: Resume
       - text: Data Analysis
         menu:
-        - href: cpi.qmd
-          text: CPI Inflation
         - href: inflation_distribution.qmd
           text: Inflation Distribution
         - href: IEA_presentation.qmd

@@ -22,7 +22,7 @@ about:
 
 Mike Konczal serves as the Director of Macroeconomic Analysis at the Roosevelt Institute. His work centers on key economic issues such as achieving full employment, understanding inequality, and the interplay of public power in markets. He authored *Freedom from the Market: America's Fight to Liberate Itself from the Grip of the Invisible Hand,* and co-authored *Rewriting the Rules of the American Economy* with Joseph Stiglitz. Mike is a respected voice in U.S. economic discourse, frequently cited in media outlets, and has provided testimony before Congress. His writing has been featured in the *New York Times*, *Washington Post*, and more, with appearances including *CBS Sunday Morning*, *Planet Money*, *Washington Journal*, and elsewhere.
 
-I enjoy making informative graphics for the monthly economic data releases.
+He enjoys making informative graphics for the monthly economic data releases.
 
 ```{r ridgeline, out.width="100%",fig.height=10}
 #| code-fold: true
