@@ -14,6 +14,8 @@ This is a tool to visualize the distribution of price inflation for the Consumer
 ```{=html}
  <iframe id="example1" src="https://mtkonczal.shinyapps.io/inflation_distribution/" style="border: none; width: 100%; height: 800px" frameborder="0"></iframe>
 ```
+Data last updated: Jan 24th, 2024.
+
 You can right-click on the graphic to save it. Notes:
 
 **1. CPI Distribution:**
