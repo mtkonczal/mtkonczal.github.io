@@ -25,8 +25,6 @@ website:
           text: Media
         - href: media.qmd
           text: Quotes
-      - href: resume.qmd
-        text: Resume
       - text: Data Analysis
         menu:
         - href: inflation_distribution.qmd
