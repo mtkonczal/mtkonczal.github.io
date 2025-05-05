@@ -17,22 +17,16 @@ website:
         text: About
       - href: writings.qmd
         text: Writing
-      - href: freedom_from_the_market.qmd
-        text: Book
       - text: Media
         menu:
         - href: appearances.qmd
           text: Media
         - href: media.qmd
           text: Quotes
-      - text: Data Analysis
-        menu:
-        - href: inflation_distribution.qmd
-          text: Inflation Distribution
-        - href: IEA_presentation.qmd
-          text: IEA Presentation
-
-
+      - href: freedom_from_the_market.qmd
+        text: Book
+      - href: inflation_distribution.qmd
+        text: Inflation Distribution
   search:
     location: navbar
     type: overlay
