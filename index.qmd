@@ -20,9 +20,9 @@ about:
       href: mailto:konczal@gmail.com
 ---
 
-Mike Konczal is the Senior Director of Policy and Research at the [Economic Security Project](https://www.economicsecurityproject.org/), where he oversees policy development, research, and strategic analysis to build economic power for all Americans. Previously, he served as a Special Assistant to the President for Economic Policy and Chief Economist for the National Economic Council. He was an early hire at the Roosevelt Institute, leading major projects on financial reform, inequality, economic ideas, and macroeconomics. He authored *Freedom from the Market: America's Fight to Liberate Itself from the Grip of the Invisible Hand,* and co-authored *Rewriting the Rules of the American Economy* with Joseph Stiglitz. Mike is a respected voice in U.S. economic discourse, frequently cited in media outlets, and has provided testimony before Congress. His writing has been featured in the *New York Times*, *Washington Post*, and more, with appearances including *CBS Sunday Morning*, *Planet Money*, *Washington Journal*, and elsewhere.
+Mike Konczal is the Senior Director of Policy and Research at the [Economic Security Project](https://www.economicsecurityproject.org/), where he oversees policy development, research, and strategic analysis to build economic power for all Americans. Previously, he served as a Special Assistant to the President for Economic Policy and Chief Economist for the National Economic Council. He was an early hire at the Roosevelt Institute, leading major projects on financial reform, inequality, economic ideas, and macroeconomics. He authored *Freedom from the Market: America's Fight to Liberate Itself from the Grip of the Invisible Hand,* and co-authored *Rewriting the Rules of the American Economy* with Joseph Stiglitz. Mike is a respected voice in U.S. economic discourse, frequently cited in media outlets, and has provided testimony before Congress.
 
-Here are some of the latest things I've been doing; you can find the full list of [writings](https://www.mikekonczal.com/writings.html), and [media](https://www.mikekonczal.com/appearances.html) around this website.
+Here are some of the latest things he's been doing; you can find the full list of [writings](https://www.mikekonczal.com/writings.html), and [media](https://www.mikekonczal.com/appearances.html) around this website.
 
 ```{r quotes_main, echo=FALSE}
 #| warning = FALSE, message = FALSE
@@ -60,45 +60,3 @@ chart_1$Title <- str_remove(chart_1$Title,"\xd4")
 
 #datatable(my_data, escape = F, rownames = FALSE)
 ```
-
-I'm often cited and quoted in coverage around the economy. Here's some recent examples, with the full list [here](https://www.mikekonczal.com/media.html).
-
-```{r chart2, echo=FALSE}
-
-chart_2 <- my_data %>%
-  filter(Format == "Quote", Highlight == "X") %>%
-  arrange(desc(Date)) %>%
-  select(Date, Outlet, Title = title) %>%
-  mutate(Date = format(Date, "%B %d, %Y"))
-
-chart_2 <- head(chart_2)
-
-options(knitr.kable.NA = '')
-kbl(chart_2, escape = FALSE) %>%
-    kable_styling(fixed_thead = T)
-chart_2$Title <- str_remove(chart_2$Title,"\xd5")
-chart_2$Title <- str_remove(chart_2$Title,"\xd4")
-
-```
-
-## **Praise for Freedom From the Market:**
-
-![](images/image-803426826.png){fig-align="center" width="50%"}
-
-"The Roosevelt Institute's Konczal is one of the warriors in this fight, arguing fiercely for the need to set much narrower limits on what is left to markets than has been the case in recent decades. A powerful polemic."\
---- Martin Wolf, [*Financial Times*](https://www.ft.com/content/239f31cb-57a3-43d3-ab3d-d18d068f4994)
-
-"By identifying an alternative grammar, one that is grounded in the American past, Freedom from the Market provides a way out of the political cul-de-sac created by the failure of the market to deliver on its promises of 'freedom.'"\
---- Molly Michelmore, [*Democracy: A Journal of Ideas*](https://democracyjournal.org/magazine/61/freedoms-just-another-word/)
-
-"Freedom from the Market is an impressive book, easily one of the best I've read in the past several years. I cannot recommend it highly enough."\
---- Matt Mazewski, [*Commonweal*](https://www.commonwealmagazine.org/polanyi-ish)
-
-"terrific book."\
---- Jamelle Bouie, [*New York Times*](https://twitter.com/jbouie/status/1450470921001750528)
-
-"Markets will set us free---except when they won't, don't, can't. In this deeply researched yet eminently readable book, Mike Konczal tells the powerful forgotten story of how American democracy once tamed markets to advance our freedom, and shows us how it could do so once again."\
---- Jacob Hacker, Yale University.
-
-"Freedom from the Market has the potential to be a very important book, focusing attention on the contested, messy but crucially important intersection between social movements and the state. It provides a set of ideas that people on both sides of that divide can learn from, and a lively alternative foundation to the deracinated technocratic notions of politics, in which good policy would somehow, magically, be politically self supporting, that has prevailed up until quite recently. Strongly recommended."\
---- Henry Farrell, [*Crooked Timber*](https://crookedtimber.org/2021/01/26/freedom-from-the-market/)

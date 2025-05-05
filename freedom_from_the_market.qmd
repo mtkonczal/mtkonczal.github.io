@@ -5,9 +5,25 @@ about:
   template: trestles
 ---
 
-## Coverage of Freedom From the Market
+## **Praise for Freedom From the Market:**
 
-[Book Jacket](https://thenewpress.com/books/freedom-from-market): "*Freedom from the Market* blends passionate political argument and a bold new take on American history to reveal that, from the earliest days of the republic, Americans have defined freedom as what we keep free from the control of the market. With chapters on the history of the Homestead Act and land ownership, the eight-hour work day and free time, social insurance and Social Security, World War II day cares, Medicare and desegregation, free public colleges, intellectual property, and the public corporation, Konczal shows how citizens have fought to ensure that everyone has access to the conditions that make us free."
+"The Roosevelt Institute's Konczal is one of the warriors in this fight, arguing fiercely for the need to set much narrower limits on what is left to markets than has been the case in recent decades. A powerful polemic."\
+--- Martin Wolf, [*Financial Times*](https://www.ft.com/content/239f31cb-57a3-43d3-ab3d-d18d068f4994)
+
+"By identifying an alternative grammar, one that is grounded in the American past, Freedom from the Market provides a way out of the political cul-de-sac created by the failure of the market to deliver on its promises of 'freedom.'"\
+--- Molly Michelmore, [*Democracy: A Journal of Ideas*](https://democracyjournal.org/magazine/61/freedoms-just-another-word/)
+
+"Freedom from the Market is an impressive book, easily one of the best I've read in the past several years. I cannot recommend it highly enough."\
+--- Matt Mazewski, [*Commonweal*](https://www.commonwealmagazine.org/polanyi-ish)
+
+"terrific book."\
+--- Jamelle Bouie, [*New York Times*](https://twitter.com/jbouie/status/1450470921001750528)
+
+"Markets will set us free---except when they won't, don't, can't. In this deeply researched yet eminently readable book, Mike Konczal tells the powerful forgotten story of how American democracy once tamed markets to advance our freedom, and shows us how it could do so once again."\
+--- Jacob Hacker, Yale University.
+
+"Freedom from the Market has the potential to be a very important book, focusing attention on the contested, messy but crucially important intersection between social movements and the state. It provides a set of ideas that people on both sides of that divide can learn from, and a lively alternative foundation to the deracinated technocratic notions of politics, in which good policy would somehow, magically, be politically self supporting, that has prevailed up until quite recently. Strongly recommended."\
+--- Henry Farrell, [*Crooked Timber*](https://crookedtimber.org/2021/01/26/freedom-from-the-market/)
 
 ::: {.column width="49%"}
 ### Reviews
