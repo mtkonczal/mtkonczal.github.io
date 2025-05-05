@@ -15,14 +15,10 @@ website:
         text: Home
       - href: about.qmd
         text: About
-      - text: Writings
-        menu:
-        - href: the_book.qmd
-          text: Book
-        - href: writings.qmd
-          text: Writings
-        - href: research.qmd
-          text: Research
+      - href: writings.qmd
+        text: Writing
+      - href: the_book.qmd
+        text: Book
       - text: Media
         menu:
         - href: appearances.qmd

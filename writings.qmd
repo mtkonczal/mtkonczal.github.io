@@ -27,11 +27,12 @@ my_data <- read_csv("data/mywork.csv") %>%
   mutate(title = cell_spec(`Original Title`, "html", link = Link)) %>%
   mutate(title = paste0('<a  target=_blank href=', Link, '>', `Original Title`,'</a>' )) %>%
   mutate(Date = as.Date(Date, "%m/%d/%y")) %>%
-  filter(Format %in% c("Article", "Book Review")) %>%
+  filter(Format %in% c("Article", "Book Review", "White Paper")) %>%
   arrange(desc(Date)) %>%
   mutate(Year = year(Date), Month = month(Date,label = TRUE, abbr = FALSE)) %>%
   mutate(title = paste(title, " (", Outlet, ")", sep="")) %>%
-  select(Year, Month, Title = title)
+  mutate(Format = str_replace_all(Format, "White Paper", "Research")) %>%
+  select(Year, Month, Type = Format, Title = title)
 
 first_year <- my_data$Year[1]
 my_data$Year = if_else(my_data$Year != lag(my_data$Year,1),my_data$Year,as.numeric("NA"))
