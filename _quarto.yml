@@ -33,7 +33,7 @@ website:
 
 format:
   html:
-    theme: spacelab
+    theme: flatly
     css: styles.css
     toc: false
     page-layout: full
