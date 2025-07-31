@@ -25,8 +25,6 @@ website:
           text: Quotes
       - href: freedom_from_the_market.qmd
         text: Book
-      - href: inflation_distribution.qmd
-        text: Inflation Distribution
   search:
     location: navbar
     type: overlay
