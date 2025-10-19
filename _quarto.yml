@@ -17,12 +17,8 @@ website:
         text: About
       - href: writings.qmd
         text: Writing
-      - text: Media
-        menu:
-        - href: appearances.qmd
-          text: Media
-        - href: media.qmd
-          text: Quotes
+      - href: clips.qmd
+        text: Clips
       - href: freedom_from_the_market.qmd
         text: Book
   search:

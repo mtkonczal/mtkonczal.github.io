@@ -1,12 +1,12 @@
 ---
-title: "Media Quotes and Citations"
+title: "Clips"
 execute:
   echo: false
 ---
 
-![](images/cc_panel.jpg){fig-align="center"}
+![](images/mkonczal_cspan_2.webp){fig-align="center"}
 
-I talk to reporters, writers, the public, and other interested people about the economy and politics all the time. Here is a partial list of that and times my work has been referenced; feel free to contact me if you'd like to chat.
+I appear on podcasts, TV, radio, and on panels. I also talk to reporters, writers, and other interested in the economy and politics. Here is a partial list; feel free to contact me if you'd like to chat.
 
 ```{r}
 #| warning = FALSE, message = FALSE
@@ -26,11 +26,11 @@ my_data <- read_csv("data/mywork.csv") %>%
   mutate(`Original Title` = str_replace_all(`Original Title`," For ", " for ")) %>%
   mutate(title = cell_spec(`Original Title`, "html", link = Link)) %>%
   mutate(Date = as.Date(Date, "%m/%d/%y")) %>%
-  filter(Format == "Quote") %>%
+  filter(Format %in% c("TV","Radio","Podcast","Panel","Quote")) %>%
   arrange(desc(Date)) %>%
   mutate(Year = year(Date), Month = month(Date,label = TRUE, abbr = FALSE)) %>%
   mutate(title = paste(title, " (", Outlet, ")", sep="")) %>%
-  select(Year, Month, Title = title)
+  select(Year, Month, Type = Format, Title = title)
 
 first_year <- my_data$Year[1]
 my_data$Year = if_else(my_data$Year != lag(my_data$Year,1),my_data$Year,as.numeric("NA"))
@@ -46,6 +46,8 @@ my_data$Month[1] <- first_month
 #    kable_styling(fixed_thead = T)
 #my_data$Title <- str_remove(my_data$Title,"\xd5")
 #my_data$Title <- str_remove(my_data$Title,"\xd4")
+my_data$Title <- str_remove(my_data$Title,"\xd5")
+my_data$Title <- str_remove(my_data$Title,"\xd4")
 
 datatable(my_data, escape = F, rownames = FALSE, options = list(iDisplayLength = 50))
 ```
