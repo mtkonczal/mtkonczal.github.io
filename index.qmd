@@ -49,7 +49,7 @@ my_data <- read_csv("data/mywork.csv") %>%
   mutate(Date = as.Date(Date, "%m/%d/%y"))
 
 chart_1 <- my_data %>%
-  filter(Format != "Quote", Highlight == "X") %>%
+  filter(Highlight == "X") %>%
   arrange(desc(Date)) %>%
   select(Date, Outlet, Title = title, Type = Format) %>%
   mutate(Date = format(Date, "%B %d, %Y"))
