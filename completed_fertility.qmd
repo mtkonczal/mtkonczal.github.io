@@ -2,9 +2,6 @@
 title: "Completed Fertility Visualizer"
 ---
 
-<iframe
-  src="https://fertility-trends-visualizer-585244168828.us-west1.run.app/"
-  style="width: 100%; height: 70%; border: none;"
-  loading="lazy"
-  scrolling="yes"
-></iframe>
+<iframe src="https://fertility-trends-visualizer-585244168828.us-west1.run.app/" style="width: 100%; height: 100%; border: none;" loading="lazy" scrolling="yes">
+
+</iframe>
