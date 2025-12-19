@@ -21,6 +21,10 @@ website:
         text: Clips
       - href: freedom_from_the_market.qmd
         text: Book
+      - href: https://newsletter.mikekonczal.com/
+        text: Newsletter
+        target: _blank
+        rel: noopener
   search:
     location: navbar
     type: overlay
