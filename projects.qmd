@@ -1,0 +1,17 @@
+---
+title: "Projects"
+---
+
+Here are some of my data projects and tools.
+
+**[Resume:](resume.qmd)**
+My resume and longer CV, with links to downloadable PDFs.
+
+**[tidyusmacro:](tidyusmacro.qmd)**
+An R package providing utilities to retrieve and tidy U.S. macroeconomic data series from public government data providers.
+
+**[Inflation Distribution:](inflation_distribution.qmd)**
+A tool to visualize the distribution of price inflation for CPI and PCE, with seasonally-adjusted and annualized values.
+
+**[Completed Fertility Visualizer:](completed_fertility.qmd)**
+An interactive tool for exploring trends in completed fertility data.

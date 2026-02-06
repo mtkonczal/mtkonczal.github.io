@@ -1,0 +1,9 @@
+---
+title: "tidyusmacro"
+---
+
+An R package providing utilities to retrieve and tidy U.S. macroeconomic data series from public government data providers. Install from [GitHub](https://github.com/mtkonczal/tidyusmacro).
+
+```{=html}
+<iframe src="https://www.mikekonczal.com/tidyusmacro/" style="border: none; width: 100%; height: 800px" frameborder="0"></iframe>
+```

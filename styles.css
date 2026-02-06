@@ -1,1 +1,8 @@
 /* css styles */
+
+a {
+  color: #2874a6;
+}
+a:hover {
+  color: #1a4f7a;
+}

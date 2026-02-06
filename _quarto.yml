@@ -21,6 +21,8 @@ website:
         text: Clips
       - href: freedom_from_the_market.qmd
         text: Book
+      - href: projects.qmd
+        text: Projects
       - href: https://newsletter.mikekonczal.com/
         text: Newsletter
         target: _blank
