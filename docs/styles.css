@@ -1,8 +1,383 @@
-/* css styles */
+/* ==========================================================================
+   styles.css — Mike Konczal site
+   Layered on top of the Quarto Flatly theme.
+   ========================================================================== */
 
-a {
-  color: #2874a6;
+/* --- Links (existing) ---------------------------------------------------- */
+a { color: #2874a6; }
+a:hover { color: #1a4f7a; }
+
+/* --- Design tokens ------------------------------------------------------- */
+:root {
+  --mk-ink:        #1a2733;
+  --mk-ink-soft:   #4a5a6a;
+  --mk-mute:       #7e8a96;
+  --mk-rule:       #e6e9ed;
+  --mk-rule-soft:  #f0f2f5;
+  --mk-bg-soft:    #f8f9fb;
+  --mk-accent:     #2874a6;
+  --mk-accent-dk:  #1a4f7a;
+  --mk-radius:     6px;
 }
-a:hover {
-  color: #1a4f7a;
+
+/* ==========================================================================
+   Recent work — homepage (index.qmd)
+   A clean editorial list, not a table.
+   ========================================================================== */
+
+.mk-recent {
+  margin: 1.25rem 0 2rem;
+  border-top: 1px solid var(--mk-rule);
+}
+
+.mk-recent__heading {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--mk-ink-soft);
+  margin: 1.75rem 0 0.5rem;
+  padding-bottom: 0.45rem;
+  border-bottom: 2px solid var(--mk-ink);
+}
+.mk-recent__heading + .mk-recent { border-top: none; margin-top: 0; }
+
+.mk-recent__item {
+  display: grid;
+  grid-template-columns: 9.5rem 1fr auto;
+  column-gap: 1.5rem;
+  align-items: baseline;
+  padding: 0.95rem 0;
+  border-bottom: 1px solid var(--mk-rule);
+  text-decoration: none;
+  color: inherit;
+}
+.mk-recent__item:hover { text-decoration: none; }
+
+.mk-recent__date {
+  font-variant-numeric: tabular-nums;
+  font-size: 0.82rem;
+  letter-spacing: 0.02em;
+  color: var(--mk-mute);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.mk-recent__body {
+  min-width: 0;
+}
+
+.mk-recent__title {
+  font-size: 0.875rem;
+  line-height: 1.45;
+  color: var(--mk-ink);
+  text-decoration: none;
+  font-weight: 500;
+  text-wrap: pretty;
+}
+.mk-recent__title:hover {
+  color: var(--mk-accent-dk);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+.mk-recent__meta {
+  margin-top: 0.2rem;
+  font-size: 0.85rem;
+  color: var(--mk-ink-soft);
+}
+.mk-recent__outlet { font-style: italic; }
+.mk-recent__sep {
+  display: inline-block;
+  margin: 0 0.45rem;
+  color: var(--mk-mute);
+}
+
+.mk-recent__type {
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--mk-mute);
+  white-space: nowrap;
+  padding-top: 0.15rem;
+}
+
+@media (max-width: 640px) {
+  .mk-recent__item {
+    grid-template-columns: 1fr;
+    row-gap: 0.25rem;
+    padding: 0.85rem 0;
+  }
+  .mk-recent__type { padding-top: 0; }
+}
+
+/* ==========================================================================
+   Writings & Clips lists — DataTables (DT::datatable) override
+   ========================================================================== */
+
+/* Wrapper added in the qmd via class names */
+.mk-table {
+  --row-pad-y: 0.85rem;
+  --row-pad-x: 0.25rem;
+  margin-top: 1.25rem;
+}
+
+/* Reset DT chrome */
+.mk-table .dataTables_wrapper {
+  font-family: inherit;
+  color: var(--mk-ink);
+}
+
+/* Top toolbar: search left, length right (we flip default order) */
+.mk-table .dataTables_wrapper .top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1.25rem;
+  margin: 0 0 1rem;
+  padding: 0.85rem 1rem;
+  background: var(--mk-bg-soft);
+  border: 1px solid var(--mk-rule);
+  border-radius: var(--mk-radius);
+}
+.mk-table .dataTables_wrapper .dataTables_filter,
+.mk-table .dataTables_wrapper .dataTables_length {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--mk-ink-soft);
+}
+.mk-table .dataTables_wrapper .dataTables_filter { flex: 1 1 240px; text-align: left; }
+.mk-table .dataTables_wrapper .dataTables_length { flex: 0 0 auto; }
+
+.mk-table .dataTables_wrapper .dataTables_filter label,
+.mk-table .dataTables_wrapper .dataTables_length label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 500;
+  color: var(--mk-mute);
+  text-transform: uppercase;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+}
+
+.mk-table .dataTables_wrapper input[type="search"],
+.mk-table .dataTables_wrapper select {
+  border: 1px solid var(--mk-rule);
+  background: #fff;
+  border-radius: 4px;
+  padding: 0.4rem 0.6rem;
+  font-size: 0.9rem;
+  font-family: inherit;
+  color: var(--mk-ink);
+  text-transform: none;
+  letter-spacing: normal;
+  font-weight: 400;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.mk-table .dataTables_wrapper input[type="search"] {
+  min-width: 220px;
+  flex: 1;
+}
+.mk-table .dataTables_wrapper input[type="search"]:focus,
+.mk-table .dataTables_wrapper select:focus {
+  border-color: var(--mk-accent);
+  box-shadow: 0 0 0 3px rgba(40, 116, 166, 0.15);
+}
+.mk-table .dataTables_wrapper input[type="search"]::placeholder {
+  color: var(--mk-mute);
+}
+
+/* Hide the noisy "Showing X of Y" line */
+.mk-table .dataTables_wrapper .dataTables_info {
+  font-size: 0.8rem;
+  color: var(--mk-mute);
+  padding-top: 0.85rem;
+}
+
+/* The table itself */
+.mk-table table.dataTable {
+  width: 100% !important;
+  border-collapse: collapse !important;
+  border: none;
+  margin: 0 !important;
+  font-size: 0.95rem;
+}
+
+.mk-table table.dataTable thead th {
+  background: transparent;
+  border-bottom: 2px solid var(--mk-ink);
+  border-top: none;
+  padding: 0.4rem var(--row-pad-x) 0.55rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--mk-ink-soft);
+  text-align: left;
+}
+.mk-table table.dataTable thead th.sorting,
+.mk-table table.dataTable thead th.sorting_asc,
+.mk-table table.dataTable thead th.sorting_desc {
+  cursor: pointer;
+  position: relative;
+  padding-right: 1.25rem;
+}
+.mk-table table.dataTable thead th.sorting:after,
+.mk-table table.dataTable thead th.sorting_asc:after,
+.mk-table table.dataTable thead th.sorting_desc:after {
+  position: absolute;
+  right: 0.35rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.7rem;
+  color: var(--mk-mute);
+  opacity: 0.6;
+}
+.mk-table table.dataTable thead th.sorting:after { content: "↕"; }
+.mk-table table.dataTable thead th.sorting_asc:after { content: "▲"; opacity: 1; color: var(--mk-accent); }
+.mk-table table.dataTable thead th.sorting_desc:after { content: "▼"; opacity: 1; color: var(--mk-accent); }
+
+.mk-table table.dataTable tbody td {
+  padding: var(--row-pad-y) var(--row-pad-x);
+  border-top: 1px solid var(--mk-rule);
+  vertical-align: top;
+  line-height: 1.45;
+}
+.mk-table table.dataTable tbody tr:first-child td { border-top: none; }
+.mk-table table.dataTable tbody tr:hover { background: var(--mk-bg-soft); }
+.mk-table table.dataTable.no-footer { border-bottom: 1px solid var(--mk-rule); }
+
+/* Year column — big, sticky-feeling left rail */
+.mk-table td.mk-col-year {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--mk-ink);
+  width: 4.5rem;
+  white-space: nowrap;
+  letter-spacing: 0.01em;
+}
+
+/* Month column */
+.mk-table td.mk-col-month {
+  width: 7rem;
+  white-space: nowrap;
+  color: var(--mk-mute);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding-top: calc(var(--row-pad-y) + 0.15rem);
+}
+
+/* Type column → pill */
+.mk-table td.mk-col-type {
+  width: 7.5rem;
+  white-space: nowrap;
+}
+.mk-pill {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  border: 1px solid var(--mk-rule);
+  background: #fff;
+  color: var(--mk-ink-soft);
+  line-height: 1.3;
+}
+.mk-pill[data-type="Article"]     { color: #1a4f7a; border-color: #cfe0ec; background: #eaf3fa; }
+.mk-pill[data-type="Research"]    { color: #5b3a85; border-color: #ddd0ea; background: #f1ebf7; }
+.mk-pill[data-type="Book Review"] { color: #6b4a17; border-color: #ead9b6; background: #fbf3df; }
+.mk-pill[data-type="TV"]          { color: #8a2a3c; border-color: #ecc8cf; background: #fbe9ed; }
+.mk-pill[data-type="Radio"]       { color: #1f6b54; border-color: #c2e1d6; background: #e6f3ed; }
+.mk-pill[data-type="Podcast"]     { color: #2d4f9e; border-color: #cdd9ee; background: #ebf0f9; }
+.mk-pill[data-type="Panel"]       { color: #6b4a17; border-color: #ead9b6; background: #fbf3df; }
+.mk-pill[data-type="Quote"]       { color: #525a64; border-color: #dde2e7; background: #f3f5f7; }
+
+/* Title column — link styling */
+.mk-table td.mk-col-title { line-height: 1.5; }
+.mk-table td.mk-col-title a {
+  color: var(--mk-ink);
+  text-decoration: none;
+  font-weight: 500;
+  border-bottom: 1px solid transparent;
+  transition: color 0.15s, border-color 0.15s;
+}
+.mk-table td.mk-col-title a:hover {
+  color: var(--mk-accent-dk);
+  border-bottom-color: var(--mk-accent);
+}
+.mk-table td.mk-col-title .mk-outlet {
+  display: block;
+  margin-top: 0.15rem;
+  font-size: 0.82rem;
+  color: var(--mk-mute);
+  font-style: italic;
+}
+
+/* Pagination */
+.mk-table .dataTables_paginate {
+  padding: 1rem 0 0;
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+.mk-table .dataTables_paginate .paginate_button {
+  padding: 0.35rem 0.7rem !important;
+  margin: 0 !important;
+  border: 1px solid var(--mk-rule) !important;
+  border-radius: 4px !important;
+  background: #fff !important;
+  color: var(--mk-ink-soft) !important;
+  font-size: 0.85rem !important;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+.mk-table .dataTables_paginate .paginate_button:hover {
+  background: var(--mk-bg-soft) !important;
+  border-color: var(--mk-mute) !important;
+  color: var(--mk-ink) !important;
+}
+.mk-table .dataTables_paginate .paginate_button.current,
+.mk-table .dataTables_paginate .paginate_button.current:hover {
+  background: var(--mk-accent) !important;
+  border-color: var(--mk-accent) !important;
+  color: #fff !important;
+}
+.mk-table .dataTables_paginate .paginate_button.disabled,
+.mk-table .dataTables_paginate .paginate_button.disabled:hover {
+  background: #fff !important;
+  color: #c9ced4 !important;
+  border-color: var(--mk-rule-soft) !important;
+  cursor: default;
+}
+
+/* Layout overrides for Quarto's default DT positioning */
+.mk-table .dataTables_wrapper .row { display: contents; } /* if Bootstrap rows wrap them */
+.mk-table .dataTables_wrapper .dt-buttons { display: none; }
+
+/* Mobile */
+@media (max-width: 720px) {
+  .mk-table table.dataTable thead { display: none; }
+  .mk-table table.dataTable tbody td {
+    display: block;
+    width: 100% !important;
+    border-top: none;
+    padding: 0.15rem 0;
+  }
+  .mk-table table.dataTable tbody tr {
+    display: block;
+    padding: 1rem 0;
+    border-top: 1px solid var(--mk-rule);
+  }
+  .mk-table table.dataTable tbody tr:first-child { border-top: none; }
+  .mk-table td.mk-col-year { font-size: 0.8rem; color: var(--mk-mute); font-weight: 600; }
+  .mk-table td.mk-col-month { padding-top: 0; }
+  .mk-table td.mk-col-title { padding-top: 0.35rem !important; }
 }

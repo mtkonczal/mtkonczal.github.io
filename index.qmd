@@ -26,41 +26,55 @@ A former financial engineer, he was an early hire at the Roosevelt Institute, wh
 
 Specializing in economic data analysis and policy research, Mike is a respected voice in U.S. economic discourse, frequently cited in media outlets, and has provided testimony before Congress. Born and raised in Chicago, he now lives in Takoma Park, Maryland, with his wife, two daughters, and pit bull.
 
-You can find the full list of [writings](https://www.mikekonczal.com/writings.html) and [media](https://www.mikekonczal.com/clips.html) around this website. You can read his newsletter [here](https://newsletter.mikekonczal.com/). This is some of the latest things he's been doing:
+You can find the full list of [writings](https://www.mikekonczal.com/writings.html) and [media](https://www.mikekonczal.com/clips.html) around this website. You can read his newsletter [here](https://newsletter.mikekonczal.com/).
 
-```{r quotes_main, echo=FALSE}
-#| warning = FALSE, message = FALSE
-library(knitr)
+::: {.mk-recent__heading}
+Latest Things
+:::
+
+```{r recent_work, echo=FALSE, message=FALSE, warning=FALSE}
 library(tidyverse)
-library(kableExtra)
 library(lubridate)
-library(DT)
+library(htmltools)
 
+fix_title_case <- function(x) {
+  x <- str_to_title(x)
+  for (w in c(" A "," An "," The "," And "," But "," For "," Of "," In "," On "," To "," With ")) {
+    x <- str_replace_all(x, w, str_to_lower(w))
+  }
+  # strip stray smart-quote bytes that snuck into the CSV
+  x <- str_remove_all(x, "[\u00d4\u00d5]")
+  x
+}
 
-my_data <- read_csv("data/mywork.csv") %>%
-  mutate(`Original Title` = str_to_title(`Original Title`)) %>%
-  mutate(`Original Title` = str_replace_all(`Original Title`," A ", " a ")) %>%
-  mutate(`Original Title` = str_replace_all(`Original Title`," An ", " an ")) %>%
-  mutate(`Original Title` = str_replace_all(`Original Title`," The ", " the ")) %>%
-  mutate(`Original Title` = str_replace_all(`Original Title`," And ", " and ")) %>%
-  mutate(`Original Title` = str_replace_all(`Original Title`," But ", " but ")) %>%
-  mutate(`Original Title` = str_replace_all(`Original Title`," For ", " for ")) %>%
-  mutate(title = cell_spec(`Original Title`, "html", link = Link)) %>%
-  mutate(Date = as.Date(Date, "%m/%d/%y"))
-
-chart_1 <- my_data %>%
+recent <- read_csv("data/mywork.csv", show_col_types = FALSE) %>%
+  mutate(
+    Title = fix_title_case(`Original Title`),
+    Date  = as.Date(Date, "%m/%d/%y"),
+    Type  = str_replace_all(Format, "White Paper", "Research")
+  ) %>%
   filter(Highlight == "X") %>%
   arrange(desc(Date)) %>%
-  select(Date, Outlet, Title = title, Type = Format) %>%
-  mutate(Date = format(Date, "%B %d, %Y"))
+  head(6)
 
-chart_1 <- head(chart_1)
+items <- pmap(recent, function(Date, Title, Outlet, Type, Link, ...) {
+  tags$a(
+    class = "mk-recent__item",
+    href  = Link,
+    target = "_blank",
+    rel = "noopener",
+    tags$div(class = "mk-recent__date",
+             format(Date, "%b %d, %Y")),
+    tags$div(class = "mk-recent__body",
+             tags$div(class = "mk-recent__title", Title),
+             tags$div(class = "mk-recent__meta",
+                      tags$span(class = "mk-recent__outlet", Outlet))),
+    tags$div(class = "mk-recent__type", Type)
+  )
+})
 
-options(knitr.kable.NA = '')
-kbl(chart_1, escape = FALSE) %>%
-    kable_styling(fixed_thead = T)
-chart_1$Title <- str_remove(chart_1$Title,"\xd5")
-chart_1$Title <- str_remove(chart_1$Title,"\xd4")
-
-#datatable(my_data, escape = F, rownames = FALSE)
+# Make the whole row a link by switching the wrapper element
+htmltools::tagList(
+  tags$div(class = "mk-recent", !!!items)
+)
 ```

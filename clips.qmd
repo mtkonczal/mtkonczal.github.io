@@ -6,48 +6,70 @@ execute:
 
 ![](images/mkonczal_cspan_2.webp){fig-align="center"}
 
-I appear on podcasts, TV, radio, and on panels. I also talk to reporters, writers, and other interested in the economy and politics. Here is a partial list; feel free to contact me if you'd like to chat.
+I appear on podcasts, TV, radio, and on panels. I also talk to reporters, writers, and others interested in the economy and politics. Here is a partial list; feel free to contact me if you'd like to chat.
 
-```{r}
-#| warning = FALSE, message = FALSE
-library(knitr)
+::: {.mk-table}
+
+```{r clips_table, message=FALSE, warning=FALSE}
 library(tidyverse)
-library(kableExtra)
 library(lubridate)
 library(DT)
+library(htmltools)
 
-my_data <- read_csv("data/mywork.csv") %>%
-  mutate(`Original Title` = str_to_title(`Original Title`)) %>%
-  mutate(`Original Title` = str_replace_all(`Original Title`," A ", " a ")) %>%
-  mutate(`Original Title` = str_replace_all(`Original Title`," An ", " an ")) %>%
-  mutate(`Original Title` = str_replace_all(`Original Title`," The ", " the ")) %>%
-  mutate(`Original Title` = str_replace_all(`Original Title`," And ", " and ")) %>%
-  mutate(`Original Title` = str_replace_all(`Original Title`," But ", " but ")) %>%
-  mutate(`Original Title` = str_replace_all(`Original Title`," For ", " for ")) %>%
-  mutate(title = cell_spec(`Original Title`, "html", link = Link)) %>%
-  mutate(Date = as.Date(Date, "%m/%d/%y")) %>%
-  filter(Format %in% c("TV","Radio","Podcast","Panel","Quote")) %>%
+fix_title_case <- function(x) {
+  x <- str_to_title(x)
+  for (w in c(" A "," An "," The "," And "," But "," For "," Of "," In "," On "," To "," With ")) {
+    x <- str_replace_all(x, w, str_to_lower(w))
+  }
+  str_remove_all(x, "[\u00d4\u00d5]")
+}
+
+my_data <- read_csv("data/mywork.csv", show_col_types = FALSE) %>%
+  mutate(
+    Title = fix_title_case(`Original Title`),
+    Date  = as.Date(Date, "%m/%d/%y")
+  ) %>%
+  filter(Format %in% c("TV", "Radio", "Podcast", "Panel", "Quote")) %>%
   arrange(desc(Date)) %>%
-  mutate(Year = year(Date), Month = month(Date,label = TRUE, abbr = FALSE)) %>%
-  mutate(title = paste(title, " (", Outlet, ")", sep="")) %>%
-  select(Year, Month, Type = Format, Title = title)
+  mutate(
+    Year   = year(Date),
+    Month  = format(Date, "%b"),
+    TitleHTML = paste0(
+      '<a href="', Link, '" target="_blank" rel="noopener">', Title, '</a>',
+      '<span class="mk-outlet">', Outlet, '</span>'
+    ),
+    TypeHTML = paste0('<span class="mk-pill" data-type="', Format, '">', Format, '</span>')
+  ) %>%
+  select(Year, Month, Type = TypeHTML, Title = TitleHTML)
 
-first_year <- my_data$Year[1]
-my_data$Year = if_else(my_data$Year != lag(my_data$Year,1),my_data$Year,as.numeric("NA"))
-my_data$Year[1] <- first_year
-
-my_data$Month <- as.character(my_data$Month)
-first_month <- my_data$Month[1]
-my_data$Month = if_else(my_data$Month != lag(my_data$Month,1),my_data$Month,as.character(NA))
-my_data$Month[1] <- first_month
-
-#options(knitr.kable.NA = '')
-#kbl(my_data, escape = FALSE) %>%
-#    kable_styling(fixed_thead = T)
-#my_data$Title <- str_remove(my_data$Title,"\xd5")
-#my_data$Title <- str_remove(my_data$Title,"\xd4")
-my_data$Title <- str_remove(my_data$Title,"\xd5")
-my_data$Title <- str_remove(my_data$Title,"\xd4")
-
-datatable(my_data, escape = F, rownames = FALSE, options = list(iDisplayLength = 50))
+datatable(
+  my_data,
+  rownames = FALSE,
+  escape   = FALSE,
+  class    = "row-border compact",
+  options  = list(
+    pageLength   = 25,
+    lengthMenu   = c(10, 25, 50, 100),
+    dom          = "<'top'fl>rt<'bottom'ip>",
+    autoWidth    = FALSE,
+    order        = list(list(0, 'desc')),
+    columnDefs   = list(
+      list(targets = 0, className = "mk-col-year"),
+      list(targets = 1, className = "mk-col-month"),
+      list(targets = 2, className = "mk-col-type", orderable = FALSE),
+      list(targets = 3, className = "mk-col-title")
+    ),
+    language = list(
+      search       = "",
+      searchPlaceholder = "Search clips…",
+      lengthMenu   = "Show _MENU_",
+      info         = "_START_–_END_ of _TOTAL_",
+      infoEmpty    = "No results",
+      infoFiltered = "(filtered from _MAX_)",
+      paginate     = list(previous = "‹ Prev", `next` = "Next ›")
+    )
+  )
+)
 ```
+
+:::
