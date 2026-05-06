@@ -3,26 +3,253 @@
    Layered on top of the Quarto Flatly theme.
    ========================================================================== */
 
-/* --- Links (existing) ---------------------------------------------------- */
-a { color: #2874a6; }
-a:hover { color: #1a4f7a; }
+/* --- Fonts ---------------------------------------------------------------- */
+@import url('https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&family=Inter:wght@400;500;600;700&display=swap');
 
 /* --- Design tokens ------------------------------------------------------- */
 :root {
+  /* Prussian blue palette */
+  --mk-blue-900:   #1d3a5b;  /* sidebar bg, primary ink-blue */
+  --mk-blue-700:   #2c4a6b;  /* primary accent */
+  --mk-blue-500:   #3a6ea5;  /* link blue */
+  --mk-blue-300:   #6f9bc4;
+  --mk-blue-50:    #eef3f8;
+
   --mk-ink:        #1a2733;
   --mk-ink-soft:   #4a5a6a;
   --mk-mute:       #7e8a96;
   --mk-rule:       #e6e9ed;
   --mk-rule-soft:  #f0f2f5;
   --mk-bg-soft:    #f8f9fb;
-  --mk-accent:     #2874a6;
-  --mk-accent-dk:  #1a4f7a;
+  --mk-accent:     var(--mk-blue-500);
+  --mk-accent-dk:  var(--mk-blue-900);
   --mk-radius:     6px;
+
+  --mk-font-serif: "Newsreader", Georgia, "Iowan Old Style", "Times New Roman", serif;
+  --mk-font-ui:    "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+/* --- Base typography ----------------------------------------------------- */
+body {
+  font-family: var(--mk-font-serif);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  color: var(--mk-ink);
+  font-weight: 400;
+}
+h1, h2, h3, h4, .quarto-title h1 {
+  font-family: var(--mk-font-serif);
+  font-weight: 600;
+  letter-spacing: -0.012em;
+  color: var(--mk-blue-900);
+}
+h1 { font-size: 2.4rem; line-height: 1.15; }
+h2 { font-size: 1.5rem; line-height: 1.25; }
+h3 { font-size: 1.2rem; }
+p  { text-wrap: pretty; }
+
+a { color: var(--mk-blue-500); text-decoration: none; border-bottom: 1px solid rgba(58,110,165,0.25); transition: color .15s, border-color .15s; }
+a:hover { color: var(--mk-blue-900); border-bottom-color: var(--mk-blue-700); }
+
+/* --- Layout: sidebar + content -------------------------------------------- */
+.mk-layout {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  min-height: 100vh;
+  background: #fff;
+}
+
+.mk-sidebar {
+  background: var(--mk-blue-900);
+  color: #e6edf4;
+  padding: 1.75rem 1.5rem;
+  font-family: var(--mk-font-ui);
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+.mk-sidebar__brand {
+  font-family: var(--mk-font-serif);
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #fff;
+  letter-spacing: -0.01em;
+  margin: 0 0 0.15rem;
+}
+.mk-sidebar__brand a { color: #fff; border: none; }
+.mk-sidebar__brand a:hover { color: #fff; opacity: 0.85; }
+.mk-sidebar__tagline {
+  font-size: 0.78rem;
+  color: rgba(255,255,255,0.6);
+  margin: 0 0 1.5rem;
+  letter-spacing: 0.01em;
+  line-height: 1.4;
+}
+.mk-sidebar__cta {
+  display: block;
+  background: var(--mk-blue-500);
+  color: #fff;
+  padding: 0.5rem 0.85rem;
+  border-radius: 4px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-align: center;
+  margin: 1.5rem 0 0;
+  border: none;
+  letter-spacing: 0.01em;
+}
+.mk-sidebar__cta:hover { background: #fff; color: var(--mk-blue-900); }
+.mk-sidebar__nav {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+.mk-sidebar__nav a {
+  display: block;
+  padding: 0.45rem 0.6rem;
+  margin-left: -0.6rem;
+  border-radius: 4px;
+  color: rgba(255,255,255,0.78);
+  font-size: 0.92rem;
+  font-weight: 500;
+  border: none;
+  letter-spacing: 0;
+  transition: background 0.15s, color 0.15s;
+}
+.mk-sidebar__nav a:hover { background: rgba(255,255,255,0.06); color: #fff; }
+.mk-sidebar__nav a.is-active {
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+  box-shadow: inset 2px 0 0 var(--mk-blue-300);
+}
+.mk-sidebar__nav .mk-sidebar__divider {
+  height: 1px;
+  background: rgba(255,255,255,0.1);
+  margin: 0.6rem 0;
+}
+.mk-sidebar__social {
+  display: flex;
+  gap: 0.85rem;
+  padding-top: 1rem;
+  margin-top: 0.75rem;
+}
+.mk-sidebar__social a {
+  color: rgba(255,255,255,0.55);
+  border: none;
+  font-size: 0.85rem;
+}
+.mk-sidebar__social a:hover { color: #fff; }
+
+/* Home page hero: square photo beside intro paragraph */
+.mk-hero {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 1.5rem;
+  align-items: start;
+  margin: 0 0 1.25rem;
+}
+.mk-hero__photo {
+  width: 200px;
+  height: 200px;
+  background: linear-gradient(135deg, var(--mk-blue-50), #c8d4e2);
+  border-radius: 4px;
+  object-fit: cover;
+  display: block;
+}
+.mk-hero__lede {
+  margin: 0;
+  font-size: 1.075rem;
+  line-height: 1.55;
+}
+@media (max-width: 640px) {
+  .mk-hero { grid-template-columns: 1fr; }
+  .mk-hero__photo { width: 160px; height: 160px; }
+}
+
+/* Content column */
+.mk-main {
+  padding: 3rem 3rem 5rem;
+  max-width: 1100px;
+  width: 100%;
+}
+.mk-main--wide { max-width: none; }
+
+/* Three-column home → now two: just content, no profile rail */
+.mk-home {
+  display: block;
+}
+.mk-profile { display: none; }
+
+@media (max-width: 1000px) {
+  .mk-layout { grid-template-columns: 1fr; }
+  .mk-sidebar {
+    position: static;
+    height: auto;
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: wrap;
+    padding: 1rem 1.25rem;
+    gap: 1rem;
+  }
+  .mk-sidebar__brand,
+  .mk-sidebar__tagline { margin: 0; flex: 0 0 auto; }
+  .mk-sidebar__tagline { display: none; }
+  .mk-sidebar__nav { flex-direction: row; flex-wrap: wrap; gap: 0.25rem; margin: 0; }
+  .mk-sidebar__social { padding: 0; border: none; margin: 0 0 0 auto; }
+  .mk-main { padding: 1.5rem 1.25rem 4rem; }
+  .mk-home { grid-template-columns: 1fr; }
+  .mk-profile { position: static; max-width: 320px; }
+}
+
+/* Clips intro: photo + text side-by-side */
+.mk-clips-intro {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.25rem;
+  margin: 0 0 1.5rem;
+}
+.mk-clips-intro p { margin: 0; }
+.mk-clips-photo,
+.mk-clips-intro img {
+  width: 220px;
+  height: auto;
+  flex: 0 0 220px;
+  border-radius: 4px;
+  margin: 0;
+}
+@media (max-width: 600px) {
+  .mk-clips-intro { flex-direction: column; }
+  .mk-clips-photo,
+  .mk-clips-intro img { width: 100%; max-width: 320px; flex: none; }
+}
+
+/* Section heading on the Clips page (In the Press) */
+.quarto-content h2,
+main h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  margin: 2.5rem 0 0.4rem;
+  color: var(--mk-blue-900);
+}
+
+/* Now page */
+.mk-now-meta {
+  font-family: var(--mk-font-ui);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--mk-mute);
+  margin: -0.5rem 0 2rem;
 }
 
 /* ==========================================================================
    Recent work — homepage (index.qmd)
-   A clean editorial list, not a table.
    ========================================================================== */
 
 .mk-recent {
@@ -31,6 +258,7 @@ a:hover { color: #1a4f7a; }
 }
 
 .mk-recent__heading {
+  font-family: var(--mk-font-ui);
   font-size: 0.72rem;
   font-weight: 600;
   letter-spacing: 0.12em;
@@ -38,7 +266,7 @@ a:hover { color: #1a4f7a; }
   color: var(--mk-ink-soft);
   margin: 1.75rem 0 0.5rem;
   padding-bottom: 0.45rem;
-  border-bottom: 2px solid var(--mk-ink);
+  border-bottom: 2px solid var(--mk-blue-900);
 }
 .mk-recent__heading + .mk-recent { border-top: none; margin-top: 0; }
 
@@ -55,9 +283,10 @@ a:hover { color: #1a4f7a; }
 .mk-recent__item:hover { text-decoration: none; }
 
 .mk-recent__date {
+  font-family: var(--mk-font-ui);
   font-variant-numeric: tabular-nums;
-  font-size: 0.82rem;
-  letter-spacing: 0.02em;
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
   color: var(--mk-mute);
   text-transform: uppercase;
   white-space: nowrap;
@@ -95,8 +324,9 @@ a:hover { color: #1a4f7a; }
 }
 
 .mk-recent__type {
-  font-size: 0.7rem;
-  letter-spacing: 0.08em;
+  font-family: var(--mk-font-ui);
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--mk-mute);
   white-space: nowrap;
@@ -208,10 +438,11 @@ a:hover { color: #1a4f7a; }
 
 .mk-table table.dataTable thead th {
   background: transparent;
-  border-bottom: 2px solid var(--mk-ink);
+  border-bottom: 2px solid var(--mk-blue-900);
   border-top: none;
   padding: 0.4rem var(--row-pad-x) 0.55rem;
-  font-size: 0.72rem;
+  font-family: var(--mk-font-ui);
+  font-size: 0.7rem;
   font-weight: 600;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -279,7 +510,8 @@ a:hover { color: #1a4f7a; }
 }
 .mk-pill {
   display: inline-block;
-  font-size: 0.7rem;
+  font-family: var(--mk-font-ui);
+  font-size: 0.68rem;
   font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;

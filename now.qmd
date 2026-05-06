@@ -1,0 +1,24 @@
+---
+title: "Now"
+execute:
+  echo: false
+---
+
+::: {.mk-now-meta}
+Updated May 2026
+:::
+
+A snapshot of what I'm working on, reading, and thinking about right now. Inspired by [nownownow.com](https://nownownow.com/about).
+
+## Working on
+
+I'm building out affordability topics at the [Economic Security Project](https://www.economicsecurityproject.org/), primarily working on applying a broken markets and broken incomes from our [The Affordability Framework](https://economicsecurityproject.org/wp-content/uploads/251022-Affordability-Framework.pdf) to the housing market. Wrapping up a housing paper with my old friend [Ned Resnikoff](https://www.resnikoffconsulting.com/), which I'm excited to share with you soon. As a result, reading a lot about housing policy and economics research.
+
+## Writing
+
+Continuing to build out my Substack, and finding ways I can use terminal-line Claude Code AI to do data analysis that I can quickly write-up for blog posts.
+
+## Reading
+
+Arin Dube's [The Wage Standard](https://www.penguinrandomhouse.com/books/708374/the-wage-standard-by-arindrajit-dube/) which is excellent, hopefully more content on that soon.
+

@@ -4,9 +4,7 @@ execute:
   echo: false
 ---
 
-![](images/mkonczal_cspan_2.webp){fig-align="center"}
-
-I appear on podcasts, TV, radio, and on panels. I also talk to reporters, writers, and others interested in the economy and politics. Here is a partial list; feel free to contact me if you'd like to chat.
+I appear on podcasts, TV, radio, and on panels. Below is a partial list of those appearances. Feel free to contact me if you'd like to chat.
 
 ::: {.mk-table}
 
@@ -24,13 +22,15 @@ fix_title_case <- function(x) {
   str_remove_all(x, "[\u00d4\u00d5]")
 }
 
-my_data <- read_csv("data/mywork.csv", show_col_types = FALSE) %>%
+raw <- read_csv("data/mywork.csv", show_col_types = FALSE) %>%
   mutate(
     Title = fix_title_case(`Original Title`),
     Date  = as.Date(Date, "%m/%d/%y")
   ) %>%
-  filter(Format %in% c("TV", "Radio", "Podcast", "Panel", "Quote")) %>%
-  arrange(desc(Date)) %>%
+  arrange(desc(Date))
+
+appearances <- raw %>%
+  filter(Format %in% c("TV", "Radio", "Podcast", "Panel")) %>%
   mutate(
     Year   = year(Date),
     Month  = format(Date, "%b"),
@@ -43,12 +43,12 @@ my_data <- read_csv("data/mywork.csv", show_col_types = FALSE) %>%
   select(Year, Month, Type = TypeHTML, Title = TitleHTML)
 
 datatable(
-  my_data,
+  appearances,
   rownames = FALSE,
   escape   = FALSE,
   class    = "row-border compact",
   options  = list(
-    pageLength   = 25,
+    pageLength   = 10,
     lengthMenu   = c(10, 25, 50, 100),
     dom          = "<'top'fl>rt<'bottom'ip>",
     autoWidth    = FALSE,
@@ -61,7 +61,57 @@ datatable(
     ),
     language = list(
       search       = "",
-      searchPlaceholder = "Search clips…",
+      searchPlaceholder = "Search appearances…",
+      lengthMenu   = "Show _MENU_",
+      info         = "_START_–_END_ of _TOTAL_",
+      infoEmpty    = "No results",
+      infoFiltered = "(filtered from _MAX_)",
+      paginate     = list(previous = "‹ Prev", `next` = "Next ›")
+    )
+  )
+)
+```
+
+:::
+
+## In the Press
+
+I'm regularly quoted in news coverage of the economy, financial reform, and progressive policy. A partial list of those mentions below.
+
+::: {.mk-table .mk-table--quotes}
+
+```{r quotes_table, message=FALSE, warning=FALSE}
+quotes <- raw %>%
+  filter(Format == "Quote") %>%
+  mutate(
+    Year   = year(Date),
+    Month  = format(Date, "%b"),
+    TitleHTML = paste0(
+      '<a href="', Link, '" target="_blank" rel="noopener">', Title, '</a>',
+      '<span class="mk-outlet">', Outlet, '</span>'
+    )
+  ) %>%
+  select(Year, Month, Title = TitleHTML)
+
+datatable(
+  quotes,
+  rownames = FALSE,
+  escape   = FALSE,
+  class    = "row-border compact",
+  options  = list(
+    pageLength   = 10,
+    lengthMenu   = c(10, 25, 50, 100),
+    dom          = "<'top'fl>rt<'bottom'ip>",
+    autoWidth    = FALSE,
+    order        = list(list(0, 'desc')),
+    columnDefs   = list(
+      list(targets = 0, className = "mk-col-year"),
+      list(targets = 1, className = "mk-col-month"),
+      list(targets = 2, className = "mk-col-title")
+    ),
+    language = list(
+      search       = "",
+      searchPlaceholder = "Search press mentions…",
       lengthMenu   = "Show _MENU_",
       info         = "_START_–_END_ of _TOTAL_",
       infoEmpty    = "No results",
