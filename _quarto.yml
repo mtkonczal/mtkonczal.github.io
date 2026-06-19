@@ -13,8 +13,6 @@ website:
     left:
       - href: now.qmd
         text: Now
-      - href: about.qmd
-        text: About
       - href: portfolio.qmd
         text: Portfolio
       - href: freedom_from_the_market.qmd

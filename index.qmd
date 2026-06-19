@@ -1,5 +1,7 @@
 ---
 title: "Mike Konczal"
+aliases:
+  - about.html
 execute:
   warning: false
 image: images/mkonczal_index.jpg
@@ -22,9 +24,9 @@ about:
 
 Mike Konczal is the Senior Director of Policy and Research at the [Economic Security Project](https://www.economicsecurityproject.org/), where he oversees policy development, research, and strategic analysis to build economic power for all Americans. Previously, he served as a Special Assistant to the President for Economic Policy and Chief Economist at the National Economic Council.
 
-A former financial engineer, he was an early hire at the Roosevelt Institute, where he led major projects on financial reform, inequality, economic ideas, and macroeconomics. He is the author of [*Freedom from the Market*](https://www.mikekonczal.com/freedom_from_the_market.html) (New Press, 2021), described by the *Financial Times* as "a powerful polemic," and co-author of [*Rewriting the Rules of the American Economy*](https://wwnorton.com/books/rewriting-the-rules-of-the-american-economy/) (W.W. Norton, 2015) with Joseph Stiglitz.
+A former software and financial engineer, he was an early hire at the Roosevelt Institute, where he led major projects on financial reform, inequality, economic ideas, and macroeconomics. He is the author of [*Freedom from the Market*](https://www.mikekonczal.com/freedom_from_the_market.html) (New Press, 2021), described by the *Financial Times* as "a powerful polemic," and co-author of [*Rewriting the Rules of the American Economy*](https://wwnorton.com/books/rewriting-the-rules-of-the-american-economy/) (W.W. Norton, 2015) with Joseph Stiglitz. He holds a B.A. in math and computer science and an M.S. in finance from the University of Illinois at Urbana-Champaign.
 
-Specializing in economic data analysis and policy research, Mike is a respected voice in U.S. economic discourse, frequently cited in media outlets, and has provided testimony before Congress. Born and raised in Chicago, he now lives in Takoma Park, Maryland, with his wife, two daughters, and pit bull.
+Specializing in economic data analysis and policy research, Mike is a respected voice in U.S. economic discourse, frequently cited in media outlets, and has provided testimony before Congress. The *New York Times Magazine* has described him as having "a cult following among progressives." Born and raised in Chicago, he now lives in Takoma Park, Maryland, with his wife, two daughters, and pit bull.
 
 You can find the full list of his [writing and media](https://www.mikekonczal.com/portfolio.html) around this website. You can read his newsletter [here](https://newsletter.mikekonczal.com/).
 
