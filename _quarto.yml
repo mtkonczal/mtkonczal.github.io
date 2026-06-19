@@ -15,10 +15,8 @@ website:
         text: Now
       - href: about.qmd
         text: About
-      - href: writings.qmd
-        text: Writing
-      - href: clips.qmd
-        text: Clips
+      - href: portfolio.qmd
+        text: Portfolio
       - href: freedom_from_the_market.qmd
         text: Book
       - href: https://newsletter.mikekonczal.com/

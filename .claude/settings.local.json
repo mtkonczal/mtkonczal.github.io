@@ -5,7 +5,8 @@
       "WebFetch(domain:raw.githubusercontent.com)",
       "WebFetch(domain:mtkonczal.github.io)",
       "WebFetch(domain:www.mikekonczal.com)",
-      "WebSearch"
+      "WebSearch",
+      "Bash(awk -F, '{print $NF}')"
     ]
   }
 }

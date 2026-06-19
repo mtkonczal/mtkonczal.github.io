@@ -343,6 +343,63 @@ main h2 {
 }
 
 /* ==========================================================================
+   Portfolio — segmented tab control above the combined table
+   ========================================================================== */
+
+.mk-tabs {
+  display: inline-flex;
+  gap: 0.2rem;
+  padding: 0.25rem;
+  margin: 1.5rem 0 0;
+  background: var(--mk-bg-soft);
+  border: 1px solid var(--mk-rule);
+  border-radius: 999px;
+  font-family: var(--mk-font-ui);
+}
+.mk-tab {
+  appearance: none;
+  border: none;
+  background: transparent;
+  color: var(--mk-ink-soft);
+  font-family: var(--mk-font-ui);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  padding: 0.5rem 1.15rem;
+  border-radius: 999px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: background 0.18s, color 0.18s, box-shadow 0.18s;
+}
+.mk-tab:hover { color: var(--mk-blue-900); }
+.mk-tab:focus-visible { outline: 2px solid var(--mk-blue-500); outline-offset: 2px; }
+.mk-tab.is-active {
+  background: var(--mk-blue-900);
+  color: #fff;
+  box-shadow: 0 1px 3px rgba(29, 58, 91, 0.28);
+}
+.mk-tab__count {
+  font-variant-numeric: tabular-nums;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  padding: 0.05rem 0.4rem;
+  border-radius: 999px;
+  background: rgba(29, 58, 91, 0.08);
+  color: var(--mk-mute);
+}
+.mk-tab.is-active .mk-tab__count {
+  background: rgba(255, 255, 255, 0.18);
+  color: #fff;
+}
+
+/* Snug the combined table up under the tabs */
+#mk-portfolio-tabs + .mk-table { margin-top: 0.85rem; }
+
+/* ==========================================================================
    Writings & Clips lists — DataTables (DT::datatable) override
    ========================================================================== */
 
@@ -530,6 +587,7 @@ main h2 {
 .mk-pill[data-type="Podcast"]     { color: #2d4f9e; border-color: #cdd9ee; background: #ebf0f9; }
 .mk-pill[data-type="Panel"]       { color: #6b4a17; border-color: #ead9b6; background: #fbf3df; }
 .mk-pill[data-type="Quote"]       { color: #525a64; border-color: #dde2e7; background: #f3f5f7; }
+.mk-pill[data-type="Press"]       { color: #525a64; border-color: #dde2e7; background: #f3f5f7; }
 
 /* Title column — link styling */
 .mk-table td.mk-col-title { line-height: 1.5; }
