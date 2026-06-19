@@ -6,12 +6,9 @@ resources:
   - fertility-visualizer.html
 ---
 
-Placeholder intro. The chart below is interactive: switch the x-axis between
-age, year, and birth cohort in the sidebar, toggle the three-year smoothing, and
-select which series to show.
+See write-up on my Substack newsletter [here](https://newsletter.mikekonczal.com/p/the-eldest-millennials-had-the-same). The chart below is interactive: switch the x-axis between age, year, and birth cohort in the sidebar, toggle the three-year smoothing, and select which series to show.
 
-::: {.column-page}
-
+::: column-page
 ```{=html}
 <!--
   The visualizer is embedded as an iframe so its Tailwind/React bundle stays
@@ -28,11 +25,6 @@ select which series to show.
   style="width: 100%; height: 720px; border: 0; border-radius: 12px;">
 </iframe>
 ```
-
 :::
 
-Source: CPS Fertility Supplement via IPUMS (Version 13.0). Completed fertility is
-the weighted (FRSUPPWT) mean of children ever born (FREVER), by year and age.
-Calculations by Mike Konczal.
-</content>
-</invoke>
+Source: CPS Fertility Supplement via IPUMS (Version 13.0). Completed fertility is the weighted (FRSUPPWT) mean of children ever born (FREVER), by year and age. Calculations by Mike Konczal. </content> </invoke>

@@ -19,10 +19,7 @@ about:
 "terrific book."\
 --- Jamelle Bouie, [*New York Times*](https://twitter.com/jbouie/status/1450470921001750528)
 
-"Markets will set us free---except when they won't, don't, can't. In this deeply researched yet eminently readable book, Mike Konczal tells the powerful forgotten story of how American democracy once tamed markets to advance our freedom, and shows us how it could do so once again."\
---- Jacob Hacker, Yale University.
-
-"Freedom from the Market has the potential to be a very important book, focusing attention on the contested, messy but crucially important intersection between social movements and the state. It provides a set of ideas that people on both sides of that divide can learn from, and a lively alternative foundation to the deracinated technocratic notions of politics, in which good policy would somehow, magically, be politically self supporting, that has prevailed up until quite recently. Strongly recommended."\
+"Freedom from the Market has the potential to be a very important book, focusing attention on the contested, messy but crucially important intersection between social movements and the state. [...] Strongly recommended."\
 --- Henry Farrell, [*Crooked Timber*](https://crookedtimber.org/2021/01/26/freedom-from-the-market/)
 
 ::: {.column width="49%"}
