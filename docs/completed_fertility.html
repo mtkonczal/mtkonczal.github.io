@@ -6,8 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="dcterms.date" content="2026-06-19">
 
-<title>Completed Fertility Visualizer – Mike Konczal</title>
+<title>Completed Fertility in the United States – Mike Konczal</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -116,18 +117,25 @@ ul.task-list li input[type="checkbox"] {
 <!-- margin-sidebar -->
     
 <!-- main -->
-<main class="content column-page" id="quarto-document-content">
+<main class="content page-columns page-full column-body" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Completed Fertility Visualizer</h1>
+<h1 class="title">Completed Fertility in the United States</h1>
+<p class="subtitle lead">Children ever born, by age, year, and birth cohort</p>
 </div>
 
 
 
-<div class="quarto-title-meta column-page">
+<div class="quarto-title-meta column-body">
 
     
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">June 19, 2026</p>
+    </div>
+  </div>
   
     
   </div>
@@ -137,8 +145,20 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<iframe src="https://fertility-trends-visualizer-585244168828.us-west1.run.app/" style="width: 100%; height: 100%; border: none;" loading="lazy" scrolling="yes">
+<p>Placeholder intro. The chart below is interactive: switch the x-axis between age, year, and birth cohort in the sidebar, toggle the three-year smoothing, and select which series to show.</p>
+<div class="column-page">
+<!--
+  The visualizer is embedded as an iframe so its Tailwind/React bundle stays
+  isolated from this page's Bootstrap styling.
+
+  height: 720px works for desktop (sidebar + chart side by side). Below 768px
+  the layout stacks vertically and may want more height; bump it if it clips.
+  Swap .column-page for .column-screen-inset above if you want it near-full-width.
+-->
+<iframe src="fertility-visualizer.html" title="Completed Fertility Visualizer" loading="lazy" style="width: 100%; height: 720px; border: 0; border-radius: 12px;">
 </iframe>
+</div>
+<p>Source: CPS Fertility Supplement via IPUMS (Version 13.0). Completed fertility is the weighted (FRSUPPWT) mean of children ever born (FREVER), by year and age. Calculations by Mike Konczal.  </p>
 
 
 

@@ -89,5 +89,12 @@
     "title": "Now",
     "section": "Reading",
     "text": "Reading\nArin Dube’s The Wage Standard which is excellent, hopefully more content on that soon."
+  },
+  {
+    "objectID": "completed_fertility.html",
+    "href": "completed_fertility.html",
+    "title": "Completed Fertility in the United States",
+    "section": "",
+    "text": "Placeholder intro. The chart below is interactive: switch the x-axis between age, year, and birth cohort in the sidebar, toggle the three-year smoothing, and select which series to show.\n\n\n\n\n\nSource: CPS Fertility Supplement via IPUMS (Version 13.0). Completed fertility is the weighted (FRSUPPWT) mean of children ever born (FREVER), by year and age. Calculations by Mike Konczal."
   }
 ]

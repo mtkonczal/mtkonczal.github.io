@@ -1,7 +1,38 @@
 ---
-title: "Completed Fertility Visualizer"
+title: "Completed Fertility in the United States"
+subtitle: "Children ever born, by age, year, and birth cohort"
+date: last-modified
+resources:
+  - fertility-visualizer.html
 ---
 
-<iframe src="https://fertility-trends-visualizer-585244168828.us-west1.run.app/" style="width: 100%; height: 100%; border: none;" loading="lazy" scrolling="yes">
+Placeholder intro. The chart below is interactive: switch the x-axis between
+age, year, and birth cohort in the sidebar, toggle the three-year smoothing, and
+select which series to show.
 
+::: {.column-page}
+
+```{=html}
+<!--
+  The visualizer is embedded as an iframe so its Tailwind/React bundle stays
+  isolated from this page's Bootstrap styling.
+
+  height: 720px works for desktop (sidebar + chart side by side). Below 768px
+  the layout stacks vertically and may want more height; bump it if it clips.
+  Swap .column-page for .column-screen-inset above if you want it near-full-width.
+-->
+<iframe
+  src="fertility-visualizer.html"
+  title="Completed Fertility Visualizer"
+  loading="lazy"
+  style="width: 100%; height: 720px; border: 0; border-radius: 12px;">
 </iframe>
+```
+
+:::
+
+Source: CPS Fertility Supplement via IPUMS (Version 13.0). Completed fertility is
+the weighted (FRSUPPWT) mean of children ever born (FREVER), by year and age.
+Calculations by Mike Konczal.
+</content>
+</invoke>
