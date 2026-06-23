@@ -51,7 +51,7 @@ recent <- read_csv("data/mywork.csv", show_col_types = FALSE) %>%
   ) %>%
   filter(Highlight == "X") %>%
   arrange(desc(Date)) %>%
-  head(6)
+  head(5)
 
 items <- pmap(recent, function(Date, Title, Outlet, Type, Link, ...) {
   tags$a(
