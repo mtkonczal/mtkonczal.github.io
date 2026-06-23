@@ -6,6 +6,7 @@ aliases:
   - writings.html
   - clips.html
   - freedom_from_the_market.html
+  - now.html
 execute:
   echo: false
   warning: false
@@ -24,9 +25,9 @@ Specializing in economic data analysis and policy research, Mike is a respected 
 :::
 :::
 
-::: {#latest .mk-recent__heading}
-Latest Things
-:::
+## Latest Things {#latest}
+
+A running shortlist of my most recent and notable work: new writing, research, and media as it comes out. For the complete record, see the [Portfolio](#portfolio) below.
 
 ```{r recent_work, echo=FALSE, message=FALSE, warning=FALSE}
 library(tidyverse)
@@ -210,6 +211,8 @@ datatable(
 
 :::
 
+I maintain the [tidyusmacro](tidyusmacro.html) R library. You can [check out my resume here](resume.html).
+
 ## Freedom from the Market {#book}
 
 ::: {.mk-book}
@@ -235,49 +238,57 @@ datatable(
 ::: {.column width="49%"}
 ### Reviews
 
-[Commonweal](https://www.commonwealmagazine.org/polanyi-ish).
-
-[Liberal Currents](https://www.liberalcurrents.com/freedom-and-the-common-good-mike-konczals-emfreedom-from-the-market-em/).
-
-[Democracy Journal](https://democracyjournal.org/magazine/61/freedoms-just-another-word/).
-
-[the Financial Times](https://www.ft.com/content/239f31cb-57a3-43d3-ab3d-d18d068f4994).
-
-[Foreign Affairs](https://www.foreignaffairs.com/reviews/review-essay/2021-02-16/market-value).
-
-[Foreign Policy](https://foreignpolicy.com/2021/02/06/social-welfare-is-as-american-as-apple-pie/).
-
-[the Los Angeles Review of Books](https://lareviewofbooks.org/article/resisting-market-rule/).
-
-[the Wall Street Journal](https://www.wsj.com/articles/politics-of-markets-and-morals-11611961820).
-
-[The Week](https://theweek.com/articles/963196/america-forgotten-how-free).
-
-[Crooked Timber](https://crookedtimber.org/2021/01/26/freedom-from-the-market/).
-
-[the Karl Polyani Project](https://karlpolanyiproject.blogspot.com/2021/01/polanyi-goes-to-america.html).
-
-[National Review](https://www.nationalreview.com/2021/01/americas-supposedly-socialist-history/).
+[Commonweal](https://www.commonwealmagazine.org/polanyi-ish) ·
+[Liberal Currents](https://www.liberalcurrents.com/freedom-and-the-common-good-mike-konczals-emfreedom-from-the-market-em/) ·
+[Democracy Journal](https://democracyjournal.org/magazine/61/freedoms-just-another-word/) ·
+[the Financial Times](https://www.ft.com/content/239f31cb-57a3-43d3-ab3d-d18d068f4994) ·
+[Foreign Affairs](https://www.foreignaffairs.com/reviews/review-essay/2021-02-16/market-value) ·
+[Foreign Policy](https://foreignpolicy.com/2021/02/06/social-welfare-is-as-american-as-apple-pie/) ·
+[the Los Angeles Review of Books](https://lareviewofbooks.org/article/resisting-market-rule/) ·
+[the Wall Street Journal](https://www.wsj.com/articles/politics-of-markets-and-morals-11611961820) ·
+[The Week](https://theweek.com/articles/963196/america-forgotten-how-free) ·
+[Crooked Timber](https://crookedtimber.org/2021/01/26/freedom-from-the-market/) ·
+[the Karl Polanyi Project](https://karlpolanyiproject.blogspot.com/2021/01/polanyi-goes-to-america.html) ·
+[National Review](https://www.nationalreview.com/2021/01/americas-supposedly-socialist-history/)
 :::
 
 ::: {.column width="49%"}
 ### Media Appearances
 
-[Majority Report Podcast](https://majorityreportradio.com/2021/01/27/1-27-americas-fight-to-liberate-itself-from-the-grip-of-the-market-w-mike-konczal) ([YouTube](https://www.youtube.com/watch?v=6i9XRNUNx8c))
-
-[Left Anchor podcast](https://leftanchor.podbean.com/e/episode-175-americas-tradition-of-egalitarian-freedom-with-mike-konczal/)
-
-[Vox's The Weeds podcast](https://www.stitcher.com/show/voxs-the-weeds/episode/freedom-from-markets-81017167)
-
-[Gin and Tacos podcast Mass for Shut-Ins](https://massforshutins.libsyn.com/030-mike-konczal-freedom-from-the-market-2021)
-
-[Lawyers, Guns and Money podcast](https://www.lawyersgunsmoneyblog.com/2021/01/lgm-podcast-market)
-
+[Majority Report Podcast](https://majorityreportradio.com/2021/01/27/1-27-americas-fight-to-liberate-itself-from-the-grip-of-the-market-w-mike-konczal) ([YouTube](https://www.youtube.com/watch?v=6i9XRNUNx8c)) ·
+[Left Anchor podcast](https://leftanchor.podbean.com/e/episode-175-americas-tradition-of-egalitarian-freedom-with-mike-konczal/) ·
+[Vox's The Weeds podcast](https://www.stitcher.com/show/voxs-the-weeds/episode/freedom-from-markets-81017167) ·
+[Gin and Tacos podcast Mass for Shut-Ins](https://massforshutins.libsyn.com/030-mike-konczal-freedom-from-the-market-2021) ·
+[Lawyers, Guns and Money podcast](https://www.lawyersgunsmoneyblog.com/2021/01/lgm-podcast-market) ·
 [Dissent Interview](https://www.dissentmagazine.org/online_articles/life-beyond-markets-mike-konczal)
 
 ### Excerpts and other Resources
 
-[Medicare and desegregation at The Nation](https://www.thenation.com/article/politics/health-care-freedom-medicare/)
-
+[Medicare and desegregation at The Nation](https://www.thenation.com/article/politics/health-care-freedom-medicare/) ·
 [Eight-hour workday at Boston Review](http://bostonreview.net/class-inequality-law-justice/mike-konczal-time-universal-measure-freedom)
 :::
+
+<!-- ==========================================================================
+     NOW  —  TO UPDATE: change the date below, then edit the prose under each
+     heading. That's all. Add or rename ### headings freely.
+     ========================================================================== -->
+
+## Now {#now}
+
+::: {.mk-now-meta}
+Updated May 2026
+:::
+
+A snapshot of what I'm working on, reading, and thinking about right now. Inspired by [nownownow.com](https://nownownow.com/about).
+
+### Working on
+
+I'm building out affordability topics at the [Economic Security Project](https://www.economicsecurityproject.org/), primarily working on applying a broken markets and broken incomes from our [The Affordability Framework](https://economicsecurityproject.org/wp-content/uploads/251022-Affordability-Framework.pdf) to the housing market. Wrapping up a housing paper with my old friend [Ned Resnikoff](https://www.resnikoffconsulting.com/), which I'm excited to share with you soon. As a result, reading a lot about housing policy and economics research.
+
+### Writing
+
+Continuing to build out my Substack, and finding ways I can use terminal-line Claude Code AI to do data analysis that I can quickly write-up for blog posts.
+
+### Reading
+
+Arin Dube's [The Wage Standard](https://www.penguinrandomhouse.com/books/708374/the-wage-standard-by-arindrajit-dube/) which is excellent, hopefully more content on that soon.

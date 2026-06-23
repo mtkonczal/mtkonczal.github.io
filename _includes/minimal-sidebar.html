@@ -1,0 +1,12 @@
+<style>
+  /* Utility pages (resume, tidyusmacro): show only the brand at the top and
+     the newsletter + social block at the bottom. Hide the section nav, and
+     move the flex auto-spacer (normally on the nav) onto the CTA so the
+     bottom block stays pinned to the bottom.
+
+     Note: this is injected into <head> BEFORE styles.css, so the descendant
+     selector (.mk-sidebar ...) is used to out-specify the base rules rather
+     than relying on source order. */
+  .mk-sidebar .mk-sidebar__nav { display: none; }
+  .mk-sidebar .mk-sidebar__cta { margin-top: auto; }
+</style>
