@@ -276,7 +276,7 @@ I maintain the [tidyusmacro](tidyusmacro.html) R library. You can [check out my 
 
 ## Now {#now}
 
-A snapshot of what I'm working on, reading, and thinking about right now. Inspired by [nownownow.com](https://nownownow.com/about).
+A snapshot of what I'm working on, reading, and thinking about right now.
 
 ::::: {.mk-now role="group" aria-label="Browse Now updates"}
 
