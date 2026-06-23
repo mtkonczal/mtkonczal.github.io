@@ -237,21 +237,27 @@ body:has(.mk-hero) main#quarto-document-content.column-page {
   background: var(--mk-blue-500);
 }
 
-/* --- Latest / Portfolio section openers -----------------------------------
-   These two primary sections previously carried numbered eyebrow labels
+/* --- Section openers -------------------------------------------------------
+   The primary sections previously carried numbered eyebrow labels
    ("01 — Latest Things" / "02 — Portfolio") that simply restated the heading
    directly beneath them. With the eyebrows gone, the headings carry the
    section on their own: a larger, tighter-set serif title sitting above the
-   shared blue accent rule (the ::after defined above now shows through). */
+   shared blue accent rule (the ::after defined above now shows through).
+   All four section openers share this treatment so they read at one size.
+   (#book sets its own white heading color below for the dark band.) */
 #latest > h2:first-child,
-#portfolio > h2:first-child {
+#portfolio > h2:first-child,
+#book > h2:first-child,
+#now > h2:first-child {
   font-size: 1.95rem;
   line-height: 1.12;
   letter-spacing: -0.02em;
   color: var(--mk-blue-900);
 }
 #latest > h2:first-child::after,
-#portfolio > h2:first-child::after {
+#portfolio > h2:first-child::after,
+#book > h2:first-child::after,
+#now > h2:first-child::after {
   width: 3rem;
   margin-top: 0.85rem;
 }
