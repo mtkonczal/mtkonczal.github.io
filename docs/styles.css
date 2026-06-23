@@ -27,7 +27,7 @@
 
   /* Section bands (homepage alternating backgrounds) */
   --mk-band-tint:  #eaf1f9;   /* soft Prussian tint for the alternate bands */
-  --mk-band-pad-y: 3.75rem;   /* vertical breathing room inside each band */
+  --mk-band-pad-y: 2.5rem;    /* vertical breathing room inside each band */
   --mk-band-max:   1140px;    /* width of the centered inner content column */
 
   --mk-font-serif: "Newsreader", Georgia, "Iowan Old Style", "Times New Roman", serif;
@@ -260,8 +260,8 @@ body:has(.mk-hero) main#quarto-document-content.column-page {
   .mk-content:has(.mk-hero) > #title-block-header,
   .mk-content:has(.mk-hero) > .mk-hero,
   .mk-content:has(.mk-hero) > section.level2 {
-    padding-top: 2.5rem;
-    padding-bottom: 2.5rem;
+    padding-top: 1.75rem;
+    padding-bottom: 1.75rem;
     padding-inline: 1.25rem;
   }
 }
@@ -401,6 +401,122 @@ main h2 {
   color: var(--mk-mute);
   margin: -0.5rem 0 2rem;
 }
+
+/* --- Now updates: carousel with big arrows flanking the update ----------- */
+.mk-now {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;  /* arrow | text | arrow */
+  align-items: center;                               /* arrows ride the middle */
+  gap: 1.5rem;
+  margin: 0.25rem 0 1.75rem;
+}
+.mk-now-viewport { min-width: 0; }
+.mk-now-viewport .mk-now-meta { display: inline-block; margin: 0 0 0.85rem; }
+
+.mk-now-arrow {
+  appearance: none;
+  -webkit-appearance: none;
+  border: 1px solid var(--mk-rule);
+  background: #fff;
+  color: var(--mk-blue-900);
+  width: 3rem;
+  height: 3rem;
+  padding: 0;
+  border-radius: 999px;
+  font-family: var(--mk-font-ui);
+  font-size: 1.4rem;
+  line-height: 1;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 1px 3px rgba(29, 58, 91, 0.10);
+  transition: background 0.15s, color 0.15s, border-color 0.15s, box-shadow 0.15s, transform 0.1s;
+}
+.mk-now-arrow:hover:not(:disabled) {
+  background: var(--mk-blue-900);
+  color: #fff;
+  border-color: var(--mk-blue-900);
+  box-shadow: 0 3px 11px rgba(29, 58, 91, 0.22);
+}
+.mk-now-arrow:active:not(:disabled) { transform: translateY(1px); }
+.mk-now-arrow:disabled { opacity: 0.3; cursor: default; box-shadow: none; }
+.mk-now-arrow:focus-visible { outline: 2px solid var(--mk-blue-500); outline-offset: 2px; }
+
+@media (max-width: 640px) {
+  .mk-now { gap: 0.6rem; }
+  .mk-now-arrow { width: 2.5rem; height: 2.5rem; font-size: 1.2rem; }
+}
+
+/* Show one update at a time; trim the leading margin of each entry's first head */
+.mk-now-entry[hidden] { display: none; }
+.mk-now-entry > section.level3:first-child > h3:first-child,
+.mk-now-entry > h3:first-child { margin-top: 0; }
+
+/* The date label doubles as a permalink to the standalone page for that update */
+.mk-now-permalink { border-bottom: none; }
+.mk-now-permalink:hover { color: var(--mk-blue-700); }
+.mk-now-permalink::after {
+  content: "\2197";          /* ↗ */
+  font-size: 0.78em;
+  margin-left: 0.35em;
+  opacity: 0.55;
+}
+.mk-now-permalink:hover::after { opacity: 1; }
+
+/* ==========================================================================
+   Now archive — standalone, deep-linkable page (now.qmd). No site sidebar:
+   the rail is hidden and the page grid collapsed so content centers cleanly.
+   Scoped with :has(.mk-now-archive) so only now.qmd is affected.
+   ========================================================================== */
+body:has(.mk-now-archive) { padding-left: 0; }
+body:has(.mk-now-archive) .mk-sidebar { display: none; }
+body:has(.mk-now-archive) #quarto-content.page-columns { display: block; }
+body:has(.mk-now-archive) main#quarto-document-content.column-page {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+body:has(.mk-now-archive) .mk-content {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 3rem 1.5rem 5rem;
+}
+
+.mk-now-back {
+  display: inline-block;
+  font-family: var(--mk-font-ui);
+  font-size: 0.82rem;
+  letter-spacing: 0.01em;
+  border-bottom: none;
+  margin-bottom: 0.5rem;
+}
+.mk-now-back:hover { color: var(--mk-blue-900); }
+
+/* Each archived entry: divided, with a uniform inset so :target can fill it */
+.mk-now-archive .mk-now-entry {
+  padding: 1.9rem 1.25rem 2.1rem;
+  border-top: 1px solid var(--mk-rule);
+  border-radius: var(--mk-radius);
+  scroll-margin-top: 1.5rem;
+  transition: background 0.3s ease;
+}
+.mk-now-archive .mk-now-entry:target { background: var(--mk-band-tint); }
+
+/* The clickable date header above each entry */
+.mk-now-entry__date {
+  font-family: var(--mk-font-ui);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--mk-mute);
+  margin: 0 0 1rem;
+}
+.mk-now-entry__date a { color: var(--mk-mute); border-bottom: none; }
+.mk-now-entry__date a:hover { color: var(--mk-blue-700); }
+.mk-now-entry__date a::before { content: "# "; opacity: 0.5; }
+.mk-now-archive .mk-now-entry section.level3:first-of-type > h3 { margin-top: 0; }
 
 /* ==========================================================================
    Recent work — homepage (index.qmd)

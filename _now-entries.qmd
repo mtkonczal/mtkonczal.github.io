@@ -1,0 +1,39 @@
+<!-- =========================================================================
+     NOW UPDATES  —  newest entry first.
+
+     To post a new update: copy one ::: {.mk-now-entry} block, paste it at the
+     TOP of this file, and update BOTH ids to the new month:
+         {#now-YYYY-MM .mk-now-entry data-date="YYYY-MM"}
+     Then rewrite the prose. Leave the older blocks below.
+
+     The #now-YYYY-MM id is the deep-link anchor (e.g. now.html#now-2026-06).
+     The data-date drives the "Updated <month>" label and ordering.
+
+     This file is spliced into BOTH index.qmd (the homepage pager) and now.qmd
+     (the standalone, sidebar-free archive) via {{< include _now-entries.qmd >}};
+     it is a partial (leading underscore), so Quarto never renders it on its own.
+     ========================================================================= -->
+
+::: {#now-2026-06 .mk-now-entry data-date="2026-06"}
+### Working on
+
+We released the housing report I'd been wrapping up: [Building Affordability: The Policy Agenda for America's Housing Crisis](https://economicsecurityproject.org/resource/building-affordability/?utm_campaign=a-roadmap-for-u-s-housing-policy), my paper with Becky Chao and [Ned Resnikoff](https://www.resnikoffconsulting.com/). It is a roadmap for U.S. housing policy, read through the lens of broken markets and broken incomes.
+
+### Thinking about
+
+How much I appreciate expectations now that Kevin Warsh is Fed chair.
+:::
+
+::: {#now-2026-05 .mk-now-entry data-date="2026-05"}
+### Working on
+
+I'm building out affordability topics at the [Economic Security Project](https://www.economicsecurityproject.org/), primarily working on applying a broken markets and broken incomes from our [The Affordability Framework](https://economicsecurityproject.org/wp-content/uploads/251022-Affordability-Framework.pdf) to the housing market. Wrapping up a housing paper with my old friend [Ned Resnikoff](https://www.resnikoffconsulting.com/), which I'm excited to share with you soon. As a result, reading a lot about housing policy and economics research.
+
+### Writing
+
+Continuing to build out my Substack, and finding ways I can use terminal-line Claude Code AI to do data analysis that I can quickly write-up for blog posts.
+
+### Reading
+
+Arin Dube's [The Wage Standard](https://www.penguinrandomhouse.com/books/708374/the-wage-standard-by-arindrajit-dube/) which is excellent, hopefully more content on that soon.
+:::

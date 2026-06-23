@@ -6,7 +6,6 @@ aliases:
   - writings.html
   - clips.html
   - freedom_from_the_market.html
-  - now.html
 execute:
   echo: false
   warning: false
@@ -269,26 +268,72 @@ I maintain the [tidyusmacro](tidyusmacro.html) R library. You can [check out my 
 :::
 
 <!-- ==========================================================================
-     NOW  —  TO UPDATE: change the date below, then edit the prose under each
-     heading. That's all. Add or rename ### headings freely.
+     NOW  —  the prose for each update lives in _now-entries.qmd (newest first).
+     To post a new update, edit THAT file, not this one. The arrows below page
+     back and forth through the entries; the "Updated <month>" label and the
+     arrow states update automatically from each entry's data-date.
      ========================================================================== -->
 
 ## Now {#now}
 
-::: {.mk-now-meta}
-Updated May 2026
-:::
-
 A snapshot of what I'm working on, reading, and thinking about right now. Inspired by [nownownow.com](https://nownownow.com/about).
 
-### Working on
+::::: {.mk-now role="group" aria-label="Browse Now updates"}
 
-I'm building out affordability topics at the [Economic Security Project](https://www.economicsecurityproject.org/), primarily working on applying a broken markets and broken incomes from our [The Affordability Framework](https://economicsecurityproject.org/wp-content/uploads/251022-Affordability-Framework.pdf) to the housing market. Wrapping up a housing paper with my old friend [Ned Resnikoff](https://www.resnikoffconsulting.com/), which I'm excited to share with you soon. As a result, reading a lot about housing policy and economics research.
+```{=html}
+<button type="button" class="mk-now-arrow mk-now-arrow--left" data-now-newer aria-label="Show newer update">&#10094;</button>
+```
 
-### Writing
+:::: {.mk-now-viewport}
 
-Continuing to build out my Substack, and finding ways I can use terminal-line Claude Code AI to do data analysis that I can quickly write-up for blog posts.
+```{=html}
+<a class="mk-now-meta mk-now-permalink" data-now-label href="now.html" aria-live="polite" title="Open this update on its own page">Updated</a>
+```
 
-### Reading
+{{< include _now-entries.qmd >}}
 
-Arin Dube's [The Wage Standard](https://www.penguinrandomhouse.com/books/708374/the-wage-standard-by-arindrajit-dube/) which is excellent, hopefully more content on that soon.
+::::
+
+```{=html}
+<button type="button" class="mk-now-arrow mk-now-arrow--right" data-now-older aria-label="Show older update">&#10095;</button>
+```
+
+:::::
+
+```{=html}
+<script>
+(function () {
+  var root = document.getElementById("now");
+  if (!root) return;
+  var entries = Array.prototype.slice.call(root.querySelectorAll(".mk-now-entry"));
+  if (!entries.length) return;
+  // Newest first, by each entry's data-date ("YYYY-MM").
+  entries.sort(function (a, b) {
+    return (b.getAttribute("data-date") || "").localeCompare(a.getAttribute("data-date") || "");
+  });
+  var label = root.querySelector("[data-now-label]");
+  var older = root.querySelector("[data-now-older]"); // right arrow: back in time
+  var newer = root.querySelector("[data-now-newer]"); // left arrow: forward in time
+  var months = ["January","February","March","April","May","June","July","August",
+                "September","October","November","December"];
+  var i = 0; // 0 = newest
+  function fmt(d) {
+    var p = (d || "").split("-");
+    return "Updated " + (months[parseInt(p[1], 10) - 1] || "") + " " + (p[0] || "");
+  }
+  function render() {
+    entries.forEach(function (el, idx) { el.hidden = idx !== i; });
+    var d = entries[i].getAttribute("data-date");
+    if (label) {
+      label.textContent = fmt(d);                        // permalink to the standalone page
+      label.setAttribute("href", "now.html#now-" + d);
+    }
+    if (older) older.disabled = i >= entries.length - 1; // nothing older
+    if (newer) newer.disabled = i <= 0;                  // nothing newer
+  }
+  if (older) older.addEventListener("click", function () { if (i < entries.length - 1) { i++; render(); } });
+  if (newer) newer.addEventListener("click", function () { if (i > 0) { i--; render(); } });
+  render();
+})();
+</script>
+```

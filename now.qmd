@@ -1,0 +1,52 @@
+---
+title: "Now"
+description: "What Mike Konczal is working on, reading, and thinking about — a running log."
+---
+
+::: {.mk-now-archive}
+
+[← Back to mikekonczal.com](index.html#now){.mk-now-back}
+
+A running log of what I'm working on, reading, and thinking about, newest first. Each entry has its own link. Inspired by [nownownow.com](https://nownownow.com/about).
+
+{{< include _now-entries.qmd >}}
+
+:::
+
+```{=html}
+<script>
+(function () {
+  var wrap = document.querySelector(".mk-now-archive");
+  if (!wrap) return;
+  var entries = Array.prototype.slice.call(wrap.querySelectorAll(".mk-now-entry"));
+  if (!entries.length) return;
+  var months = ["January","February","March","April","May","June","July","August",
+                "September","October","November","December"];
+  // Newest first.
+  entries.sort(function (a, b) {
+    return (b.getAttribute("data-date") || "").localeCompare(a.getAttribute("data-date") || "");
+  });
+  entries.forEach(function (el) {
+    el.hidden = false;                       // archive shows every entry
+    var d = el.getAttribute("data-date") || "";
+    var p = d.split("-");
+    var id = el.id || ("now-" + d);
+    el.id = id;
+    // Prepend a clickable date header (the per-entry permalink).
+    var h = document.createElement("h2");
+    h.className = "mk-now-entry__date";
+    var a = document.createElement("a");
+    a.href = "#" + id;
+    a.textContent = (months[parseInt(p[1], 10) - 1] || "") + " " + (p[0] || "");
+    h.appendChild(a);
+    el.insertBefore(h, el.firstChild);
+    wrap.appendChild(el);                     // enforce newest-first DOM order
+  });
+  // Re-scroll once the date headers exist, so a deep link lands cleanly.
+  if (location.hash) {
+    var t = document.getElementById(location.hash.slice(1));
+    if (t) t.scrollIntoView({ block: "start" });
+  }
+})();
+</script>
+```
