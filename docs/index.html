@@ -33,6 +33,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
@@ -94,6 +95,11 @@ ul.task-list li input[type="checkbox"] {
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="./">Mike Konczal</a> 
+        <div class="sidebar-tools-main tools-wide">
+    <a href="https://twitter.com/mtkonczal" title="Twitter" class="quarto-navigation-tool px-1" aria-label="Twitter"><i class="bi bi-twitter"></i></a>
+    <a href="https://github.com/mtkonczal" title="GitHub" class="quarto-navigation-tool px-1" aria-label="GitHub"><i class="bi bi-github"></i></a>
+    <a href="mailto:konczal@gmail.com" title="Contact me" class="quarto-navigation-tool px-1" aria-label="Contact me"><i class="bi bi-envelope"></i></a>
+</div>
     </div>
       </div>
         <div class="mt-2 flex-shrink-0 align-items-center">
@@ -140,41 +146,36 @@ ul.task-list li input[type="checkbox"] {
 <!-- margin-sidebar -->
     
 <!-- main -->
-<div class="quarto-about-trestles column-page-right">
-  <div class="about-entity">
-    <img src="images/mkonczal_index.jpg" class="about-image
-  rounded " style="width: 20em;">
+<main class="content column-page-right" id="quarto-document-content">
+
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
 <h1 class="title">Mike Konczal</h1>
 </div>
+
+
+
 <div class="quarto-title-meta column-page-right">
+
+    
+  
+    
   </div>
+  
+
+
 </header>
-    <div class="about-links">
-  <a href="https://newsletter.mikekonczal.com/" class="about-link" rel="" target="">
-    <i class="bi bi-bookmark-dash-fill"></i>
-     <span class="about-link-text">Newsletter</span>
-  </a>
-  <a href="https://twitter.com/mtkonczal" class="about-link" rel="" target="">
-    <i class="bi bi-twitter"></i>
-     <span class="about-link-text">Twitter</span>
-  </a>
-  <a href="https://github.com/mtkonczal" class="about-link" rel="" target="">
-    <i class="bi bi-github"></i>
-     <span class="about-link-text">GitHub</span>
-  </a>
-  <a href="mailto:konczal@gmail.com" class="about-link" rel="" target="">
-    <i class="bi bi-envelope"></i>
-     <span class="about-link-text">Contact me</span>
-  </a>
-</div>
-  </div>
-  <div class="about-contents"><main class="content column-page-right" id="quarto-document-content">
+
+
+<div class="mk-hero">
+<p><img class="mk-hero__photo" src="images/mkonczal_index.jpg" alt="Mike Konczal"></p>
+<div class="mk-hero__bio">
 <p>Mike Konczal is the Senior Director of Policy and Research at the <a href="https://www.economicsecurityproject.org/">Economic Security Project</a>, where he oversees policy development, research, and strategic analysis to build economic power for all Americans. Previously, he served as a Special Assistant to the President for Economic Policy and Chief Economist at the National Economic Council.</p>
 <p>A former software and financial engineer, he was an early hire at the Roosevelt Institute, where he led major projects on financial reform, inequality, economic ideas, and macroeconomics. He is the author of <a href="https://www.mikekonczal.com/freedom_from_the_market.html"><em>Freedom from the Market</em></a> (New Press, 2021), described by the <em>Financial Times</em> as “a powerful polemic,” and co-author of <a href="https://wwnorton.com/books/rewriting-the-rules-of-the-american-economy/"><em>Rewriting the Rules of the American Economy</em></a> (W.W. Norton, 2015) with Joseph Stiglitz. He holds a B.A. in math and computer science and an M.S. in finance from the University of Illinois at Urbana-Champaign.</p>
 <p>Specializing in economic data analysis and policy research, Mike is a respected voice in U.S. economic discourse, frequently cited in media outlets, and has provided testimony before Congress. The <em>New York Times Magazine</em> has described him as having “a cult following among progressives.” Born and raised in Chicago, he now lives in Takoma Park, Maryland, with his wife, two daughters, and pit bull.</p>
 <p>You can find the full list of his <a href="https://www.mikekonczal.com/portfolio.html">writing and media</a> around this website. You can read his newsletter <a href="https://newsletter.mikekonczal.com/">here</a>.</p>
+</div>
+</div>
 <div class="mk-recent__heading">
 <p>Latest Things</p>
 </div>
@@ -246,9 +247,8 @@ ul.task-list li input[type="checkbox"] {
 </div>
 
 
-</main></div>
-</div>
- <!-- /main -->
+
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
@@ -269,6 +269,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
   }
   toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
   const isCodeAnnotation = (el) => {
     for (const clz of el.classList) {
       if (clz.startsWith('code-annotation-')) {                     

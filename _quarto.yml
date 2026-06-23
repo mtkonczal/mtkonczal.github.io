@@ -12,6 +12,16 @@ website:
   sidebar:
     style: docked
     search: true
+    tools:
+      - icon: twitter
+        text: Twitter
+        href: https://twitter.com/mtkonczal
+      - icon: github
+        text: GitHub
+        href: https://github.com/mtkonczal
+      - icon: envelope
+        text: Contact me
+        href: mailto:konczal@gmail.com
     contents:
       - href: index.qmd
         text: Home
