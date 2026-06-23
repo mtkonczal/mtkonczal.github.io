@@ -202,6 +202,29 @@ body { margin: 0; padding-left: 240px; }
   .mk-hero__photo { max-width: 320px; }
 }
 
+/* Book section: cover on the left, praise quotes on the right (mirrors hero) */
+.mk-book {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 2.5rem;
+  align-items: start;
+  max-width: 1100px;
+  margin: 0 0 2rem;
+}
+.mk-book > p { margin: 0; }   /* Pandoc wraps the raw <img> in a paragraph */
+.mk-book__cover {
+  width: 100%;
+  height: auto;
+  border-radius: 4px;
+  display: block;
+  box-shadow: 0 2px 14px rgba(29, 58, 91, 0.18);
+}
+.mk-book__praise > :first-child { margin-top: 0; }
+@media (max-width: 640px) {
+  .mk-book { grid-template-columns: 1fr; gap: 1.25rem; }
+  .mk-book__cover { max-width: 240px; }
+}
+
 /* Content column */
 .mk-main {
   padding: 3rem 3rem 5rem;
