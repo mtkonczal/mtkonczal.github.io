@@ -9,8 +9,12 @@ website:
     right: |
       <span class="container">Made with [Quarto](https://quarto.org/){target="_blank"} ([This Site's Repo](https://github.com/mtkonczal/mtkonczal.github.io){target="_blank"})</span>
 
-  navbar:
-    left:
+  sidebar:
+    style: docked
+    search: true
+    contents:
+      - href: index.qmd
+        text: Home
       - href: now.qmd
         text: Now
       - href: portfolio.qmd
@@ -22,7 +26,7 @@ website:
         target: _blank
         rel: noopener
   search:
-    location: navbar
+    location: sidebar
     type: overlay
 
 format:

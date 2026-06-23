@@ -37,12 +37,12 @@ ul.task-list li input[type="checkbox"] {
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-d1b12f2568ecbe55642fee6aa00bd082.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-9a72e21b71d0a144d3287e70d692211f.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
-  "location": "navbar",
+  "location": "sidebar",
   "copy-button": false,
   "collapse-after": 3,
-  "panel-placement": "end",
+  "panel-placement": "start",
   "type": "overlay",
   "limit": 50,
   "keyboard-shortcut": [
@@ -69,53 +69,78 @@ ul.task-list li input[type="checkbox"] {
 <link rel="stylesheet" href="styles.css">
 </head>
 
-<body class="nav-fixed">
+<body class="nav-sidebar docked">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
-    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
-      <div class="navbar-container container-fluid">
-      <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="./index.html">
-    <span class="navbar-title">Mike Konczal</span>
-    </a>
-  </div>
-            <div id="quarto-search" class="" title="Search"></div>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
-  <span class="navbar-toggler-icon"></span>
-</button>
-          <div class="collapse navbar-collapse" id="navbarCollapse">
-            <ul class="navbar-nav navbar-nav-scroll me-auto">
-  <li class="nav-item">
-    <a class="nav-link" href="./now.html"> 
-<span class="menu-text">Now</span></a>
-  </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="./portfolio.html"> 
-<span class="menu-text">Portfolio</span></a>
-  </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="./freedom_from_the_market.html"> 
-<span class="menu-text">Book</span></a>
-  </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="https://newsletter.mikekonczal.com/" rel="noopener" target="_blank"> 
-<span class="menu-text">Newsletter</span></a>
-  </li>  
-</ul>
-          </div> <!-- /navcollapse -->
-            <div class="quarto-navbar-tools">
-</div>
-      </div> <!-- /container-fluid -->
-    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">Home</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full">
 <!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Mike Konczal</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Home</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./now.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Now</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./portfolio.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Portfolio</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./freedom_from_the_market.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Book</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="https://newsletter.mikekonczal.com/" class="sidebar-item-text sidebar-link" rel="noopener" target="_blank">
+ <span class="menu-text">Newsletter</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     
 <!-- main -->
-<div class="quarto-about-trestles column-page">
+<div class="quarto-about-trestles column-page-right">
   <div class="about-entity">
     <img src="images/mkonczal_index.jpg" class="about-image
   rounded " style="width: 20em;">
@@ -123,7 +148,7 @@ ul.task-list li input[type="checkbox"] {
 <div class="quarto-title">
 <h1 class="title">Mike Konczal</h1>
 </div>
-<div class="quarto-title-meta column-page">
+<div class="quarto-title-meta column-page-right">
   </div>
 </header>
     <div class="about-links">
@@ -145,7 +170,7 @@ ul.task-list li input[type="checkbox"] {
   </a>
 </div>
   </div>
-  <div class="about-contents"><main class="content column-page" id="quarto-document-content">
+  <div class="about-contents"><main class="content column-page-right" id="quarto-document-content">
 <p>Mike Konczal is the Senior Director of Policy and Research at the <a href="https://www.economicsecurityproject.org/">Economic Security Project</a>, where he oversees policy development, research, and strategic analysis to build economic power for all Americans. Previously, he served as a Special Assistant to the President for Economic Policy and Chief Economist at the National Economic Council.</p>
 <p>A former software and financial engineer, he was an early hire at the Roosevelt Institute, where he led major projects on financial reform, inequality, economic ideas, and macroeconomics. He is the author of <a href="https://www.mikekonczal.com/freedom_from_the_market.html"><em>Freedom from the Market</em></a> (New Press, 2021), described by the <em>Financial Times</em> as “a powerful polemic,” and co-author of <a href="https://wwnorton.com/books/rewriting-the-rules-of-the-american-economy/"><em>Rewriting the Rules of the American Economy</em></a> (W.W. Norton, 2015) with Joseph Stiglitz. He holds a B.A. in math and computer science and an M.S. in finance from the University of Illinois at Urbana-Champaign.</p>
 <p>Specializing in economic data analysis and policy research, Mike is a respected voice in U.S. economic discourse, frequently cited in media outlets, and has provided testimony before Congress. The <em>New York Times Magazine</em> has described him as having “a cult following among progressives.” Born and raised in Chicago, he now lives in Takoma Park, Maryland, with his wife, two daughters, and pit bull.</p>
