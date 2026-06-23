@@ -11,7 +11,8 @@
       "Bash(quarto render *)",
       "Read(//Applications/Google Chrome.app/Contents/MacOS/**)",
       "Bash(npm ls *)",
-      "Bash(Rscript -e 'cat\\(R.version.string, \"\\\\n\"\\); for \\(p in c\\(\"tidyverse\",\"lubridate\",\"htmltools\"\\)\\) cat\\(p, as.character\\(packageVersion\\(p\\)\\), \"\\\\n\"\\)')"
+      "Bash(Rscript -e 'cat\\(R.version.string, \"\\\\n\"\\); for \\(p in c\\(\"tidyverse\",\"lubridate\",\"htmltools\"\\)\\) cat\\(p, as.character\\(packageVersion\\(p\\)\\), \"\\\\n\"\\)')",
+      "Bash(echo \"quarto: $\\(quarto --version\\)\")"
     ]
   }
 }

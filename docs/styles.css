@@ -237,23 +237,24 @@ body:has(.mk-hero) main#quarto-document-content.column-page {
   background: var(--mk-blue-500);
 }
 
-/* Mono-style eyebrow label above the Latest / Portfolio headings (mockup
-   structure). The eyebrow replaces the short rule on these two sections. */
-#latest > h2:first-child::before,
-#portfolio > h2:first-child::before {
-  display: block;
-  font-family: var(--mk-font-ui);
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--mk-blue-500);
-  margin-bottom: 0.7rem;
+/* --- Latest / Portfolio section openers -----------------------------------
+   These two primary sections previously carried numbered eyebrow labels
+   ("01 — Latest Things" / "02 — Portfolio") that simply restated the heading
+   directly beneath them. With the eyebrows gone, the headings carry the
+   section on their own: a larger, tighter-set serif title sitting above the
+   shared blue accent rule (the ::after defined above now shows through). */
+#latest > h2:first-child,
+#portfolio > h2:first-child {
+  font-size: 1.95rem;
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  color: var(--mk-blue-900);
 }
-#latest > h2:first-child::before    { content: "01 — Latest Things"; }
-#portfolio > h2:first-child::before { content: "02 — Portfolio"; }
 #latest > h2:first-child::after,
-#portfolio > h2:first-child::after { display: none; }
+#portfolio > h2:first-child::after {
+  width: 3rem;
+  margin-top: 0.85rem;
+}
 
 /* --- Feature band: the book section on deep Prussian blue ----------------- */
 .mk-content:has(.mk-hero) > #book { color: #cdd9e6; }
@@ -572,7 +573,10 @@ body:has(.mk-now-archive) .mk-content {
 
 .mk-recent__title {
   font-family: var(--mk-font-serif);
-  font-size: 1.4rem;
+  /* Sits a deliberate step above the portfolio table titles (1.18rem) so the
+     curated shortlist reads as the louder list, without overpowering the
+     section heading. */
+  font-size: 1.3rem;
   font-weight: 600;
   line-height: 1.25;
   color: var(--mk-blue-900);
