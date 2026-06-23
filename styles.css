@@ -237,6 +237,24 @@ body:has(.mk-hero) main#quarto-document-content.column-page {
   background: var(--mk-blue-500);
 }
 
+/* Mono-style eyebrow label above the Latest / Portfolio headings (mockup
+   structure). The eyebrow replaces the short rule on these two sections. */
+#latest > h2:first-child::before,
+#portfolio > h2:first-child::before {
+  display: block;
+  font-family: var(--mk-font-ui);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--mk-blue-500);
+  margin-bottom: 0.7rem;
+}
+#latest > h2:first-child::before    { content: "01 — Latest Things"; }
+#portfolio > h2:first-child::before { content: "02 — Portfolio"; }
+#latest > h2:first-child::after,
+#portfolio > h2:first-child::after { display: none; }
+
 /* --- Feature band: the book section on deep Prussian blue ----------------- */
 .mk-content:has(.mk-hero) > #book { color: #cdd9e6; }
 .mk-content:has(.mk-hero) > #book h2,
@@ -519,38 +537,27 @@ body:has(.mk-now-archive) .mk-content {
 .mk-now-archive .mk-now-entry section.level3:first-of-type > h3 { margin-top: 0; }
 
 /* ==========================================================================
-   Recent work — homepage (index.qmd)
+   Latest Things — homepage highlight reel (index.qmd)
+   3-column grid rows (date · serif title/outlet · filled kind pill). Same row
+   shape as the Portfolio index below, but the kind reads as a filled accent
+   pill rather than quiet text — this is the one place the two lists differ.
    ========================================================================== */
 
-.mk-recent {
-  margin: 1.25rem 0 2rem;
-  border-top: 1px solid var(--mk-rule);
-}
-
-.mk-recent__heading {
-  font-family: var(--mk-font-ui);
-  font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--mk-ink-soft);
-  margin: 1.75rem 0 0.5rem;
-  padding-bottom: 0.45rem;
-  border-bottom: 2px solid var(--mk-blue-900);
-}
-.mk-recent__heading + .mk-recent { border-top: none; margin-top: 0; }
+.mk-recent { margin: 0.5rem 0 0; }
 
 .mk-recent__item {
   display: grid;
-  grid-template-columns: 9.5rem 1fr auto;
-  column-gap: 1.5rem;
+  grid-template-columns: 8.5rem 1fr auto;
+  column-gap: 1.75rem;
   align-items: baseline;
-  padding: 0.95rem 0;
+  padding: 1.25rem 1rem;           /* highlight sits wider than the text via padding, */
+  border-radius: 4px;              /* contained within the row so it never overflows   */
   border-bottom: 1px solid var(--mk-rule);
   text-decoration: none;
   color: inherit;
+  transition: background 0.18s;
 }
-.mk-recent__item:hover { text-decoration: none; }
+.mk-recent__item:hover { background: rgba(58, 110, 165, 0.10); text-decoration: none; }
 
 .mk-recent__date {
   font-family: var(--mk-font-ui);
@@ -558,58 +565,56 @@ body:has(.mk-now-archive) .mk-content {
   font-size: 0.78rem;
   letter-spacing: 0.04em;
   color: var(--mk-mute);
-  text-transform: uppercase;
   white-space: nowrap;
 }
 
-.mk-recent__body {
-  min-width: 0;
-}
+.mk-recent__body { min-width: 0; }
 
 .mk-recent__title {
-  font-size: 0.875rem;
-  line-height: 1.45;
-  color: var(--mk-ink);
-  text-decoration: none;
-  font-weight: 500;
+  font-family: var(--mk-font-serif);
+  font-size: 1.4rem;
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--mk-blue-900);
+  display: block;
   text-wrap: pretty;
 }
-.mk-recent__title:hover {
-  color: var(--mk-accent-dk);
-  text-decoration: underline;
-  text-decoration-thickness: 1px;
-  text-underline-offset: 3px;
-}
+.mk-recent__item:hover .mk-recent__title { color: var(--mk-blue-700); }
 
 .mk-recent__meta {
-  margin-top: 0.2rem;
-  font-size: 0.85rem;
-  color: var(--mk-ink-soft);
+  margin-top: 0.25rem;
+  font-size: 0.9rem;
+  color: var(--mk-mute);
 }
 .mk-recent__outlet { font-style: italic; }
-.mk-recent__sep {
-  display: inline-block;
-  margin: 0 0.45rem;
-  color: var(--mk-mute);
-}
 
+/* kind → filled accent pill (highlight reel) */
 .mk-recent__type {
   font-family: var(--mk-font-ui);
-  font-size: 0.68rem;
-  letter-spacing: 0.1em;
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--mk-mute);
+  color: var(--mk-blue-700);
+  background: rgba(58, 110, 165, 0.13);
+  padding: 0.3rem 0.65rem;
+  border-radius: 999px;
   white-space: nowrap;
-  padding-top: 0.15rem;
+  align-self: center;
 }
 
 @media (max-width: 640px) {
   .mk-recent__item {
-    grid-template-columns: 1fr;
-    row-gap: 0.25rem;
-    padding: 0.85rem 0;
+    grid-template-columns: 1fr auto;
+    grid-template-areas: "date kind" "body body";
+    row-gap: 0.4rem;
+    column-gap: 1rem;
+    padding: 1rem;
   }
-  .mk-recent__type { padding-top: 0; }
+  .mk-recent__date { grid-area: date; }
+  .mk-recent__type { grid-area: kind; justify-self: end; }
+  .mk-recent__body { grid-area: body; }
+  .mk-recent__title { font-size: 1.2rem; }
 }
 
 /* ==========================================================================
@@ -675,7 +680,7 @@ body:has(.mk-now-archive) .mk-content {
 
 /* Wrapper added in the qmd via class names */
 .mk-table {
-  --row-pad-y: 0.85rem;
+  --row-pad-y: 0.95rem;
   --row-pad-x: 0.25rem;
   margin-top: 1.25rem;
 }
@@ -747,7 +752,7 @@ body:has(.mk-now-archive) .mk-content {
   color: var(--mk-mute);
 }
 
-/* Hide the noisy "Showing X of Y" line */
+/* The "X–Y of N" line below the table */
 .mk-table .dataTables_wrapper .dataTables_info {
   font-size: 0.8rem;
   color: var(--mk-mute);
@@ -805,7 +810,9 @@ body:has(.mk-now-archive) .mk-content {
   line-height: 1.45;
 }
 .mk-table table.dataTable tbody tr:first-child td { border-top: none; }
-.mk-table table.dataTable tbody tr:hover { background: var(--mk-bg-soft); }
+/* Row hover highlight (carried over from the redesign) */
+.mk-table table.dataTable tbody tr { transition: background 0.15s; }
+.mk-table table.dataTable tbody tr:hover { background: rgba(58, 110, 165, 0.10); }
 .mk-table table.dataTable.no-footer { border-bottom: 1px solid var(--mk-rule); }
 
 /* Year column — big, sticky-feeling left rail */
@@ -827,13 +834,14 @@ body:has(.mk-now-archive) .mk-content {
   font-size: 0.85rem;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  padding-top: calc(var(--row-pad-y) + 0.15rem);
+  padding-top: calc(var(--row-pad-y) + 0.2rem);
 }
 
 /* Type column → pill */
 .mk-table td.mk-col-type {
   width: 7.5rem;
   white-space: nowrap;
+  padding-top: calc(var(--row-pad-y) + 0.15rem);
 }
 .mk-pill {
   display: inline-block;
@@ -859,23 +867,26 @@ body:has(.mk-now-archive) .mk-content {
 .mk-pill[data-type="Quote"]       { color: #525a64; border-color: #dde2e7; background: #f3f5f7; }
 .mk-pill[data-type="Press"]       { color: #525a64; border-color: #dde2e7; background: #f3f5f7; }
 
-/* Title column — link styling */
-.mk-table td.mk-col-title { line-height: 1.5; }
+/* Title column — bigger serif title (carried over from the redesign) + outlet */
+.mk-table td.mk-col-title { line-height: 1.4; }
 .mk-table td.mk-col-title a {
-  color: var(--mk-ink);
+  font-family: var(--mk-font-serif);
+  font-size: 1.18rem;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--mk-blue-900);
   text-decoration: none;
-  font-weight: 500;
   border-bottom: 1px solid transparent;
   transition: color 0.15s, border-color 0.15s;
 }
 .mk-table td.mk-col-title a:hover {
-  color: var(--mk-accent-dk);
+  color: var(--mk-blue-700);
   border-bottom-color: var(--mk-accent);
 }
 .mk-table td.mk-col-title .mk-outlet {
   display: block;
-  margin-top: 0.15rem;
-  font-size: 0.82rem;
+  margin-top: 0.2rem;
+  font-size: 0.85rem;
   color: var(--mk-mute);
   font-style: italic;
 }
@@ -939,5 +950,6 @@ body:has(.mk-now-archive) .mk-content {
   .mk-table table.dataTable tbody tr:first-child { border-top: none; }
   .mk-table td.mk-col-year { font-size: 0.8rem; color: var(--mk-mute); font-weight: 600; }
   .mk-table td.mk-col-month { padding-top: 0; }
+  .mk-table td.mk-col-type { padding-top: 0.35rem; }
   .mk-table td.mk-col-title { padding-top: 0.35rem !important; }
 }
