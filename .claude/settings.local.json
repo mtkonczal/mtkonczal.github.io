@@ -8,7 +8,9 @@
       "WebSearch",
       "Bash(awk -F, '{print $NF}')",
       "Bash(quarto --version)",
-      "Bash(quarto render *)"
+      "Bash(quarto render *)",
+      "Read(//Applications/Google Chrome.app/Contents/MacOS/**)",
+      "Bash(npm ls *)"
     ]
   }
 }

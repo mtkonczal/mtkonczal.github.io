@@ -25,6 +25,11 @@
   --mk-accent-dk:  var(--mk-blue-900);
   --mk-radius:     6px;
 
+  /* Section bands (homepage alternating backgrounds) */
+  --mk-band-tint:  #eaf1f9;   /* soft Prussian tint for the alternate bands */
+  --mk-band-pad-y: 3.75rem;   /* vertical breathing room inside each band */
+  --mk-band-max:   1140px;    /* width of the centered inner content column */
+
   --mk-font-serif: "Newsreader", Georgia, "Iowan Old Style", "Times New Roman", serif;
   --mk-font-ui:    "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
@@ -168,6 +173,99 @@ a:hover { color: var(--mk-blue-900); border-bottom-color: var(--mk-blue-700); }
   .mk-content { padding: 1.5rem 1.25rem 3rem; }
 }
 
+/* ==========================================================================
+   Section bands — full-bleed alternating backgrounds down the homepage.
+   Each top-level block (the title header, the .mk-hero, and every
+   <section class="level2">) becomes a horizontal band. The background fills
+   the whole content column; the content itself sits in a centered column of
+   --mk-band-max via the `padding-inline: max()` trick, so no extra wrapper
+   markup is needed. To re-order or recolor a band, edit the id rules below.
+
+   Scoped to the home page only with :has(.mk-hero): only index.qmd has the
+   hero, so other pages keep the normal .mk-content padding above. */
+.mk-content:has(.mk-hero) {
+  padding: 0;          /* bands own their spacing so backgrounds run edge to edge */
+}
+/* Quarto lays #quarto-content out as a grid whose first track is a wide 5fr
+   margin column before `page-start` (where <main> begins). On a white page that
+   gutter is invisible; with colored bands it shows as white space between the
+   sidebar and the band. Collapse the grid on the home page so the content runs
+   flush to the fixed sidebar on the left and the viewport edge on the right. */
+body:has(.mk-hero) #quarto-content.page-columns { display: block; }
+body:has(.mk-hero) main#quarto-document-content.column-page {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.mk-content:has(.mk-hero) > #title-block-header,
+.mk-content:has(.mk-hero) > .mk-hero,
+.mk-content:has(.mk-hero) > section.level2 {
+  margin: 0;
+  padding-top: var(--mk-band-pad-y);
+  padding-bottom: var(--mk-band-pad-y);
+  padding-inline: max(3rem, calc((100% - var(--mk-band-max)) / 2));
+}
+
+/* The auto title block sits in the same white band directly above the hero. */
+.mk-content:has(.mk-hero) > #title-block-header { padding-bottom: 0.5rem; }
+.mk-content:has(.mk-hero) > #title-block-header .quarto-title h1 { margin: 0; }
+.mk-content:has(.mk-hero) > .mk-hero { padding-top: 1.5rem; }
+
+/* Band fills. Targeted by id so the rhythm is explicit and reorderable.
+   The book is the deep-blue "feature" band (see overrides below); everything
+   else alternates white / soft tint. */
+.mk-content:has(.mk-hero) > #title-block-header,
+.mk-content:has(.mk-hero) > .mk-hero   { background: #fff; }
+.mk-content:has(.mk-hero) > #latest    { background: var(--mk-band-tint); }
+.mk-content:has(.mk-hero) > #portfolio { background: #fff; }
+.mk-content:has(.mk-hero) > #book      { background: var(--mk-blue-900); }
+.mk-content:has(.mk-hero) > #now       { background: #fff; }
+
+/* --- Heading accent: short rule under each section H2 --------------------- */
+.mk-content:has(.mk-hero) > section.level2 > h2:first-child {
+  margin-top: 0;          /* band top padding already supplies the space */
+  margin-bottom: 1.1rem;
+}
+.mk-content:has(.mk-hero) > section.level2 > h2:first-child::after {
+  content: "";
+  display: block;
+  width: 2.5rem;
+  height: 3px;
+  margin-top: 0.65rem;
+  border-radius: 2px;
+  background: var(--mk-blue-500);
+}
+
+/* --- Feature band: the book section on deep Prussian blue ----------------- */
+.mk-content:has(.mk-hero) > #book { color: #cdd9e6; }
+.mk-content:has(.mk-hero) > #book h2,
+.mk-content:has(.mk-hero) > #book h3 { color: #fff; }
+.mk-content:has(.mk-hero) > #book p,
+.mk-content:has(.mk-hero) > #book li { color: #cdd9e6; }
+.mk-content:has(.mk-hero) > #book h2::after { background: var(--mk-blue-300); }
+.mk-content:has(.mk-hero) > #book a {
+  color: #bcd6f0;
+  border-bottom-color: rgba(188, 214, 240, 0.35);
+}
+.mk-content:has(.mk-hero) > #book a:hover {
+  color: #fff;
+  border-bottom-color: #fff;
+}
+.mk-content:has(.mk-hero) > #book .mk-book__cover {
+  box-shadow: 0 10px 34px rgba(0, 0, 0, 0.45);
+}
+
+@media (max-width: 1000px) {
+  .mk-content:has(.mk-hero) > #title-block-header,
+  .mk-content:has(.mk-hero) > .mk-hero,
+  .mk-content:has(.mk-hero) > section.level2 {
+    padding-top: 2.5rem;
+    padding-bottom: 2.5rem;
+    padding-inline: 1.25rem;
+  }
+}
+
 /* Smooth in-page scrolling for the sidebar section links */
 html { scroll-behavior: smooth; }
 body { margin: 0; padding-left: 240px; }
@@ -179,8 +277,7 @@ body { margin: 0; padding-left: 240px; }
   grid-template-columns: 2fr 3fr;
   gap: 2.5rem;
   align-items: center;
-  max-width: 1100px;
-  margin: 0 0 2rem;
+  /* width + spacing now come from the section-band rules above */
 }
 .mk-hero > p {            /* Pandoc wraps the raw <img> in a paragraph */
   margin: 0;
@@ -208,8 +305,7 @@ body { margin: 0; padding-left: 240px; }
   grid-template-columns: 260px 1fr;
   gap: 2.5rem;
   align-items: start;
-  max-width: 1100px;
-  margin: 0 0 2rem;
+  margin: 1.5rem 0 0;   /* sits below the section heading; band supplies the rest */
 }
 .mk-book > p { margin: 0; }   /* Pandoc wraps the raw <img> in a paragraph */
 .mk-book__cover {
