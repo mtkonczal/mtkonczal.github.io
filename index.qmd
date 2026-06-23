@@ -240,26 +240,26 @@ I maintain the [tidyusmacro](tidyusmacro.html) R library. You can [check out my 
 [Commonweal](https://www.commonwealmagazine.org/polanyi-ish) ·
 [Liberal Currents](https://www.liberalcurrents.com/freedom-and-the-common-good-mike-konczals-emfreedom-from-the-market-em/) ·
 [Democracy Journal](https://democracyjournal.org/magazine/61/freedoms-just-another-word/) ·
-[the Financial Times](https://www.ft.com/content/239f31cb-57a3-43d3-ab3d-d18d068f4994) ·
+[Financial Times](https://www.ft.com/content/239f31cb-57a3-43d3-ab3d-d18d068f4994) ·
 [Foreign Affairs](https://www.foreignaffairs.com/reviews/review-essay/2021-02-16/market-value) ·
 [Foreign Policy](https://foreignpolicy.com/2021/02/06/social-welfare-is-as-american-as-apple-pie/) ·
-[the Los Angeles Review of Books](https://lareviewofbooks.org/article/resisting-market-rule/) ·
-[the Wall Street Journal](https://www.wsj.com/articles/politics-of-markets-and-morals-11611961820) ·
+[Los Angeles Review of Books](https://lareviewofbooks.org/article/resisting-market-rule/) ·
+[Wall Street Journal](https://www.wsj.com/articles/politics-of-markets-and-morals-11611961820) ·
 [The Week](https://theweek.com/articles/963196/america-forgotten-how-free) ·
 [Crooked Timber](https://crookedtimber.org/2021/01/26/freedom-from-the-market/) ·
-[the Karl Polanyi Project](https://karlpolanyiproject.blogspot.com/2021/01/polanyi-goes-to-america.html) ·
+[Karl Polanyi Project](https://karlpolanyiproject.blogspot.com/2021/01/polanyi-goes-to-america.html) ·
 [National Review](https://www.nationalreview.com/2021/01/americas-supposedly-socialist-history/)
 :::
 
 ::: {.column width="49%"}
 ### Media Appearances
 
-[Majority Report Podcast](https://majorityreportradio.com/2021/01/27/1-27-americas-fight-to-liberate-itself-from-the-grip-of-the-market-w-mike-konczal) ([YouTube](https://www.youtube.com/watch?v=6i9XRNUNx8c)) ·
-[Left Anchor podcast](https://leftanchor.podbean.com/e/episode-175-americas-tradition-of-egalitarian-freedom-with-mike-konczal/) ·
-[Vox's The Weeds podcast](https://www.stitcher.com/show/voxs-the-weeds/episode/freedom-from-markets-81017167) ·
-[Gin and Tacos podcast Mass for Shut-Ins](https://massforshutins.libsyn.com/030-mike-konczal-freedom-from-the-market-2021) ·
-[Lawyers, Guns and Money podcast](https://www.lawyersgunsmoneyblog.com/2021/01/lgm-podcast-market) ·
-[Dissent Interview](https://www.dissentmagazine.org/online_articles/life-beyond-markets-mike-konczal)
+[Majority Report](https://majorityreportradio.com/2021/01/27/1-27-americas-fight-to-liberate-itself-from-the-grip-of-the-market-w-mike-konczal) ([YouTube](https://www.youtube.com/watch?v=6i9XRNUNx8c)) ·
+[Left Anchor](https://leftanchor.podbean.com/e/episode-175-americas-tradition-of-egalitarian-freedom-with-mike-konczal/) ·
+[Vox's The Weeds](https://www.stitcher.com/show/voxs-the-weeds/episode/freedom-from-markets-81017167) ·
+[Mass for Shut-Ins](https://massforshutins.libsyn.com/030-mike-konczal-freedom-from-the-market-2021) ·
+[Lawyers, Guns and Money](https://www.lawyersgunsmoneyblog.com/2021/01/lgm-podcast-market) ·
+[Dissent](https://www.dissentmagazine.org/online_articles/life-beyond-markets-mike-konczal)
 
 ### Excerpts and other Resources
 
