@@ -27,7 +27,7 @@
 
   /* Section bands (homepage alternating backgrounds) */
   --mk-band-tint:  #eaf1f9;   /* soft Prussian tint for the alternate bands */
-  --mk-band-pad-y: 2.5rem;    /* vertical breathing room inside each band */
+  --mk-band-pad-y: 1.25rem;    /* vertical breathing room inside each band */
   --mk-band-max:   1140px;    /* width of the centered inner content column */
 
   --mk-font-serif: "Newsreader", Georgia, "Iowan Old Style", "Times New Roman", serif;
