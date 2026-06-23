@@ -9,35 +9,9 @@ website:
     right: |
       <span class="container">Made with [Quarto](https://quarto.org/){target="_blank"} ([This Site's Repo](https://github.com/mtkonczal/mtkonczal.github.io){target="_blank"})</span>
 
-  sidebar:
-    style: docked
-    search: true
-    tools:
-      - icon: twitter
-        text: Twitter
-        href: https://twitter.com/mtkonczal
-      - icon: github
-        text: GitHub
-        href: https://github.com/mtkonczal
-      - icon: envelope
-        text: Contact me
-        href: mailto:konczal@gmail.com
-    contents:
-      - href: index.qmd
-        text: Home
-      - href: now.qmd
-        text: Now
-      - href: portfolio.qmd
-        text: Portfolio
-      - href: freedom_from_the_market.qmd
-        text: Book
-      - href: https://newsletter.mikekonczal.com/
-        text: Newsletter
-        target: _blank
-        rel: noopener
-  search:
-    location: sidebar
-    type: overlay
+  # Site navigation is a custom sidebar injected via the includes below
+  # (see _includes/before-body.html). Quarto's built-in navbar/sidebar and
+  # search are intentionally disabled.
 
 format:
   html:
@@ -45,3 +19,5 @@ format:
     css: styles.css
     toc: false
     page-layout: full
+    include-before-body: _includes/before-body.html
+    include-after-body: _includes/after-body.html

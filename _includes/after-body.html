@@ -1,0 +1,61 @@
+</div><!-- /.mk-content -->
+</div><!-- /.mk-layout -->
+<script>
+(function () {
+  // Quarto injects before-body inside <main>; lift the fixed sidebar to the
+  // body root so it pins to the viewport regardless of ancestor transforms.
+  var sb = document.querySelector('.mk-sidebar');
+  if (sb && sb.parentNode !== document.body) {
+    document.body.insertBefore(sb, document.body.firstChild);
+  }
+
+  var nav = document.querySelector('.mk-sidebar__nav');
+  if (!nav) return;
+
+  var path = (location.pathname.split('/').pop() || 'index.html');
+  var isIndex = (path === '' || path === 'index.html');
+  var hashLinks = Array.prototype.slice.call(nav.querySelectorAll('a[href^="#"]'));
+
+  // On pages other than the index, the in-page section links can't resolve,
+  // so repoint them at the index and just highlight the current page.
+  if (!isIndex) {
+    hashLinks.forEach(function (a) {
+      a.setAttribute('href', 'index.html' + a.getAttribute('href'));
+    });
+    nav.querySelectorAll('a').forEach(function (a) {
+      if (a.getAttribute('href') === path) a.classList.add('is-active');
+    });
+    return;
+  }
+
+  // Index page: scrollspy that highlights the section currently in view.
+  var entries = hashLinks
+    .map(function (a) {
+      var el = document.getElementById(a.getAttribute('href').slice(1));
+      return el ? { link: a, el: el, visible: false } : null;
+    })
+    .filter(Boolean);
+  if (!entries.length) return;
+
+  function setActive(link) {
+    hashLinks.forEach(function (a) { a.classList.toggle('is-active', a === link); });
+  }
+
+  var current = null;
+  var io = new IntersectionObserver(function (obs) {
+    obs.forEach(function (o) {
+      entries.forEach(function (e) { if (e.el === o.target) e.visible = o.isIntersecting; });
+    });
+    var visible = entries.filter(function (e) { return e.visible; });
+    if (visible.length) {
+      visible.sort(function (a, b) {
+        return a.el.getBoundingClientRect().top - b.el.getBoundingClientRect().top;
+      });
+      if (visible[0].link !== current) { current = visible[0].link; setActive(current); }
+    }
+  }, { rootMargin: '-15% 0px -75% 0px', threshold: 0 });
+
+  entries.forEach(function (e) { io.observe(e.el); });
+  setActive(entries[0].link); // default: Home highlighted at the top
+})();
+</script>

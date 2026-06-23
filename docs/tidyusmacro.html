@@ -24,7 +24,6 @@ ul.task-list li input[type="checkbox"] {
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
 <script src="site_libs/clipboard/clipboard.min.js"></script>
 <script src="site_libs/quarto-search/autocomplete.umd.js"></script>
 <script src="site_libs/quarto-search/fuse.min.js"></script>
@@ -38,19 +37,20 @@ ul.task-list li input[type="checkbox"] {
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-9a72e21b71d0a144d3287e70d692211f.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-d1b12f2568ecbe55642fee6aa00bd082.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
   "collapse-after": 3,
   "panel-placement": "start",
-  "type": "overlay",
+  "type": "textbox",
   "limit": 50,
   "keyboard-shortcut": [
     "f",
     "/",
     "s"
   ],
+  "show-item-context": false,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -70,80 +70,34 @@ ul.task-list li input[type="checkbox"] {
 <link rel="stylesheet" href="styles.css">
 </head>
 
-<body class="nav-sidebar docked">
+<body>
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top">
-  <nav class="quarto-secondary-nav">
-    <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
-        <i class="bi bi-layout-text-sidebar-reverse"></i>
-      </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">
-      Mike Konczal
-      </li></ol></nav>
-        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-        </a>
-      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
-        <i class="bi bi-search"></i>
-      </button>
-    </div>
-  </nav>
-</header>
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
-    <div class="pt-lg-2 mt-2 text-left sidebar-header">
-    <div class="sidebar-title mb-0 py-0">
-      <a href="./">Mike Konczal</a> 
-    </div>
-      </div>
-        <div class="mt-2 flex-shrink-0 align-items-center">
-        <div class="sidebar-search">
-        <div id="quarto-search" class="" title="Search"></div>
-        </div>
-        </div>
-    <div class="sidebar-menu-container"> 
-    <ul class="list-unstyled mt-1">
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Home</span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./now.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Now</span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./portfolio.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Portfolio</span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./freedom_from_the_market.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Book</span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="https://newsletter.mikekonczal.com/" class="sidebar-item-text sidebar-link" rel="noopener" target="_blank">
- <span class="menu-text">Newsletter</span></a>
-  </div>
-</li>
-    </ul>
-    </div>
-</nav>
-<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     
 <!-- main -->
-<main class="content column-page-right" id="quarto-document-content">
+<main class="content column-page" id="quarto-document-content">
+<div class="mk-layout">
+<nav class="mk-sidebar" aria-label="Site navigation">
+  <div class="mk-sidebar__brand"><a href="index.html">Mike Konczal</a></div>
+  <ul class="mk-sidebar__nav">
+    <li><a href="#top">Home</a></li>
+    <li><a href="#latest">Latest Things</a></li>
+    <li><a href="#portfolio">Portfolio</a></li>
+    <li><a href="#book">Book</a></li>
+    <li><a href="now.html">Now</a></li>
+  </ul>
+  <a class="mk-sidebar__cta" href="https://newsletter.mikekonczal.com/" target="_blank" rel="noopener">Newsletter</a>
+  <div class="mk-sidebar__social">
+    <a href="https://twitter.com/mtkonczal" target="_blank" rel="noopener" aria-label="Twitter"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 16 16" aria-hidden="true"><path d="M5.026 15c6.038 0 9.341-5.003 9.341-9.334 0-.14 0-.282-.006-.422A6.685 6.685 0 0 0 16 3.542a6.658 6.658 0 0 1-1.889.518 3.301 3.301 0 0 0 1.447-1.817 6.533 6.533 0 0 1-2.087.793A3.286 3.286 0 0 0 7.875 6.03a9.325 9.325 0 0 1-6.767-3.429 3.289 3.289 0 0 0 1.018 4.382A3.323 3.323 0 0 1 .64 6.575v.045a3.288 3.288 0 0 0 2.632 3.218 3.203 3.203 0 0 1-.865.115 3.23 3.23 0 0 1-.614-.057 3.283 3.283 0 0 0 3.067 2.277A6.588 6.588 0 0 1 .78 13.58a6.32 6.32 0 0 1-.78-.045A9.344 9.344 0 0 0 5.026 15z"></path></svg></a>
+    <a href="https://github.com/mtkonczal" target="_blank" rel="noopener" aria-label="GitHub"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 16 16" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg></a>
+    <a href="mailto:konczal@gmail.com" aria-label="Email"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 16 16" aria-hidden="true"><path d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414.05 3.555ZM0 4.697v7.104l5.803-3.558L0 4.697ZM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586l-1.239-.757ZM16 11.801V4.697l-5.803 3.546L16 11.801Z"></path></svg></a>
+  </div>
+</nav>
+<div class="mk-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
@@ -152,7 +106,7 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-<div class="quarto-title-meta column-page-right">
+<div class="quarto-title-meta column-page">
 
     
   
@@ -169,7 +123,68 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-</main> <!-- /main -->
+</div></div></main> <!-- /main -->
+</div><!-- /.mk-content -->
+<!-- /.mk-layout -->
+<script>
+(function () {
+  // Quarto injects before-body inside <main>; lift the fixed sidebar to the
+  // body root so it pins to the viewport regardless of ancestor transforms.
+  var sb = document.querySelector('.mk-sidebar');
+  if (sb && sb.parentNode !== document.body) {
+    document.body.insertBefore(sb, document.body.firstChild);
+  }
+
+  var nav = document.querySelector('.mk-sidebar__nav');
+  if (!nav) return;
+
+  var path = (location.pathname.split('/').pop() || 'index.html');
+  var isIndex = (path === '' || path === 'index.html');
+  var hashLinks = Array.prototype.slice.call(nav.querySelectorAll('a[href^="#"]'));
+
+  // On pages other than the index, the in-page section links can't resolve,
+  // so repoint them at the index and just highlight the current page.
+  if (!isIndex) {
+    hashLinks.forEach(function (a) {
+      a.setAttribute('href', 'index.html' + a.getAttribute('href'));
+    });
+    nav.querySelectorAll('a').forEach(function (a) {
+      if (a.getAttribute('href') === path) a.classList.add('is-active');
+    });
+    return;
+  }
+
+  // Index page: scrollspy that highlights the section currently in view.
+  var entries = hashLinks
+    .map(function (a) {
+      var el = document.getElementById(a.getAttribute('href').slice(1));
+      return el ? { link: a, el: el, visible: false } : null;
+    })
+    .filter(Boolean);
+  if (!entries.length) return;
+
+  function setActive(link) {
+    hashLinks.forEach(function (a) { a.classList.toggle('is-active', a === link); });
+  }
+
+  var current = null;
+  var io = new IntersectionObserver(function (obs) {
+    obs.forEach(function (o) {
+      entries.forEach(function (e) { if (e.el === o.target) e.visible = o.isIntersecting; });
+    });
+    var visible = entries.filter(function (e) { return e.visible; });
+    if (visible.length) {
+      visible.sort(function (a, b) {
+        return a.el.getBoundingClientRect().top - b.el.getBoundingClientRect().top;
+      });
+      if (visible[0].link !== current) { current = visible[0].link; setActive(current); }
+    }
+  }, { rootMargin: '-15% 0px -75% 0px', threshold: 0 });
+
+  entries.forEach(function (e) { io.observe(e.el); });
+  setActive(entries[0].link); // default: Home highlighted at the top
+})();
+</script>
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
@@ -587,7 +602,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script>
-</div> <!-- /content -->
+ <!-- /content -->
 <footer class="footer">
   <div class="nav-footer">
     <div class="nav-footer-left">

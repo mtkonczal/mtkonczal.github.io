@@ -52,21 +52,23 @@ a { color: var(--mk-blue-500); text-decoration: none; border-bottom: 1px solid r
 a:hover { color: var(--mk-blue-900); border-bottom-color: var(--mk-blue-700); }
 
 /* --- Layout: sidebar + content -------------------------------------------- */
-.mk-layout {
-  display: grid;
-  grid-template-columns: 240px 1fr;
-  min-height: 100vh;
-  background: #fff;
-}
+/* The custom sidebar is injected via _includes/before-body.html and pinned to
+   the viewport with position:fixed; the page is offset with body padding so
+   content clears it. The .mk-layout/.mk-content wrappers are passthrough. */
+.mk-layout { display: block; }
 
 .mk-sidebar {
   background: var(--mk-blue-900);
   color: #e6edf4;
   padding: 1.75rem 1.5rem;
   font-family: var(--mk-font-ui);
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
+  width: 240px;
   height: 100vh;
+  overflow-y: auto;
+  z-index: 100;
   display: flex;
   flex-direction: column;
 }
@@ -109,13 +111,15 @@ a:hover { color: var(--mk-blue-900); border-bottom-color: var(--mk-blue-700); }
   flex-direction: column;
   gap: 0.1rem;
 }
+.mk-sidebar__nav { gap: 0.15rem; }
+.mk-sidebar__nav li { margin: 0; }
 .mk-sidebar__nav a {
   display: block;
-  padding: 0.45rem 0.6rem;
-  margin-left: -0.6rem;
+  padding: 0.5rem 0.65rem;
+  margin-left: -0.65rem;
   border-radius: 4px;
   color: rgba(255,255,255,0.78);
-  font-size: 0.92rem;
+  font-size: 1.1rem;
   font-weight: 500;
   border: none;
   letter-spacing: 0;
@@ -138,12 +142,35 @@ a:hover { color: var(--mk-blue-900); border-bottom-color: var(--mk-blue-700); }
   padding-top: 1rem;
   margin-top: 0.75rem;
 }
+.mk-sidebar__social {
+  border-top: 1px solid rgba(255,255,255,0.1);
+}
 .mk-sidebar__social a {
   color: rgba(255,255,255,0.55);
   border: none;
-  font-size: 0.85rem;
+  display: inline-flex;
 }
 .mk-sidebar__social a:hover { color: #fff; }
+.mk-sidebar__social svg {
+  width: 19px;
+  height: 19px;
+  fill: currentColor;
+  display: block;
+}
+
+/* Content column (wraps all Quarto output, beside the sidebar) */
+.mk-content {
+  min-width: 0;                /* let wide tables scroll instead of stretching the grid */
+  padding: 2.25rem 3rem 4rem;
+  background: #fff;
+}
+@media (max-width: 1000px) {
+  .mk-content { padding: 1.5rem 1.25rem 3rem; }
+}
+
+/* Smooth in-page scrolling for the sidebar section links */
+html { scroll-behavior: smooth; }
+body { margin: 0; padding-left: 240px; }
 
 /* Home page hero: photo and bio split 50/50 across the section.
    Two equal columns; "Latest Things" below stays full width. */
@@ -190,10 +217,14 @@ a:hover { color: var(--mk-blue-900); border-bottom-color: var(--mk-blue-700); }
 .mk-profile { display: none; }
 
 @media (max-width: 1000px) {
+  /* Sidebar collapses to a top bar; drop the desktop left offset. */
+  body { padding-left: 0; }
   .mk-layout { grid-template-columns: 1fr; }
   .mk-sidebar {
     position: static;
+    width: auto;
     height: auto;
+    overflow: visible;
     flex-direction: row;
     align-items: center;
     flex-wrap: wrap;
