@@ -17,11 +17,12 @@
 ::: {#now-2026-06 .mk-now-entry data-date="2026-06"}
 ### Working on
 
-We released the housing report I'd been wrapping up: [Building Affordability: The Policy Agenda for America's Housing Crisis](https://economicsecurityproject.org/resource/building-affordability/?utm_campaign=a-roadmap-for-u-s-housing-policy), my paper with Becky Chao and [Ned Resnikoff](https://www.resnikoffconsulting.com/). It is a roadmap for U.S. housing policy, read through the lens of broken markets and broken incomes.
+We released the housing report I'd been wrapping up: [Building Affordability: The Policy Agenda for America's Housing Crisis](https://economicsecurityproject.org/resource/building-affordability/?utm_campaign=a-roadmap-for-u-s-housing-policy), my paper with Becky Chao and [Ned Resnikoff](https://www.resnikoffconsulting.com/). It is a roadmap for U.S. housing policy, read through the lens of broken markets and broken incomes. Check out the [launch event!](https://www.youtube.com/watch?v=gXNRV58yJKg)
 
 ### Thinking about
 
-How much I appreciate expectations now that Kevin Warsh is Fed chair.
+Trying to understand Kevin Warsh's theory of expectations and communication as he becomes the newest Fed chair.
+
 :::
 
 ::: {#now-2026-05 .mk-now-entry data-date="2026-05"}

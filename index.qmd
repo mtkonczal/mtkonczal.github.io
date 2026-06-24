@@ -26,7 +26,7 @@ Specializing in economic data analysis and policy research, Mike is a respected 
 
 ## Latest Things {#latest}
 
-A running shortlist of my most recent and notable work: new writing, research, and media as it comes out. For the complete record, see the [Portfolio](#portfolio) below.
+A running shortlist of my most recent work.
 
 ```{r recent_work, echo=FALSE, message=FALSE, warning=FALSE}
 library(tidyverse)
