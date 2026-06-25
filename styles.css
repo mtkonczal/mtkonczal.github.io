@@ -598,13 +598,13 @@ body:has(.mk-now-archive) .mk-content {
 }
 .mk-recent__outlet { font-style: italic; }
 
-/* kind → filled accent pill (highlight reel) */
+/* kind → filled accent pill (highlight reel). Sentence case (not uppercase):
+   the label reads the way it's written in the markup; the pill shape stays. */
 .mk-recent__type {
   font-family: var(--mk-font-ui);
-  font-size: 0.66rem;
+  font-size: 0.74rem;
   font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  letter-spacing: 0.005em;
   color: var(--mk-blue-700);
   background: rgba(58, 110, 165, 0.13);
   padding: 0.3rem 0.65rem;
@@ -631,54 +631,74 @@ body:has(.mk-now-archive) .mk-content {
    Portfolio — segmented tab control above the combined table
    ========================================================================== */
 
+/* Underline tabs: the active tab carries the same 3px blue rule that sits under
+   every section heading, so the control reuses an existing motif instead of the
+   segmented-pill shape it replaced. */
 .mk-tabs {
-  display: inline-flex;
-  gap: 0.2rem;
-  padding: 0.25rem;
+  display: flex;
+  width: 100%;            /* full-width tab bar: four equal segments span the table */
+  gap: 0;
+  padding: 0;
   margin: 1.5rem 0 0;
-  background: var(--mk-bg-soft);
-  border: 1px solid var(--mk-rule);
-  border-radius: 999px;
+  background: none;
+  border: none;
+  border-bottom: 1px solid var(--mk-rule);
+  border-radius: 0;
   font-family: var(--mk-font-ui);
 }
+/* Pandoc wraps the R-emitted buttons in a <p>; dissolve it so the buttons
+   become direct flex children and the equal-width segments take effect. */
+.mk-tabs > p { display: contents; }
 .mk-tab {
   appearance: none;
   border: none;
   background: transparent;
   color: var(--mk-ink-soft);
   font-family: var(--mk-font-ui);
-  font-size: 0.78rem;
+  font-size: 0.95rem;
   font-weight: 600;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
-  padding: 0.5rem 1.15rem;
-  border-radius: 999px;
+  letter-spacing: 0;
+  padding: 0.5rem 0 0.65rem;
+  border-radius: 0;
   cursor: pointer;
   display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  transition: background 0.18s, color 0.18s, box-shadow 0.18s;
+  flex: 1 1 0;              /* equal-width segments */
+  justify-content: center; /* centered label within each segment */
+  align-items: baseline;
+  gap: 0.3rem;              /* tight: binds the count to its own label */
+  position: relative;
+  margin-bottom: -1px;      /* overlap the container's bottom rule */
+  transition: color 0.18s;
 }
 .mk-tab:hover { color: var(--mk-blue-900); }
 .mk-tab:focus-visible { outline: 2px solid var(--mk-blue-500); outline-offset: 2px; }
-.mk-tab.is-active {
-  background: var(--mk-blue-900);
-  color: #fff;
-  box-shadow: 0 1px 3px rgba(29, 58, 91, 0.28);
+.mk-tab.is-active { color: var(--mk-blue-900); }
+/* Active tab carries the full blue rule; hover previews it in a faint grey. */
+.mk-tab::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 3px;
+  border-radius: 2px;
+  background: transparent;
+  transition: background 0.15s;
 }
+.mk-tab:hover:not(.is-active)::after { background: var(--mk-rule); }
+.mk-tab.is-active::after { background: var(--mk-blue-500); }
+/* Count rendered as a parenthetical so the number reads as a count, not a stray figure */
 .mk-tab__count {
   font-variant-numeric: tabular-nums;
-  font-size: 0.68rem;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  padding: 0.05rem 0.4rem;
-  border-radius: 999px;
-  background: rgba(29, 58, 91, 0.08);
+  font-size: 0.82rem;
+  font-weight: 500;
+  letter-spacing: 0;
   color: var(--mk-mute);
 }
+.mk-tab__count::before { content: "("; }
+.mk-tab__count::after  { content: ")"; }
 .mk-tab.is-active .mk-tab__count {
-  background: rgba(255, 255, 255, 0.18);
-  color: #fff;
+  color: var(--mk-blue-500);
 }
 
 /* Snug the combined table up under the tabs */
@@ -856,11 +876,10 @@ body:has(.mk-now-archive) .mk-content {
 .mk-pill {
   display: inline-block;
   font-family: var(--mk-font-ui);
-  font-size: 0.68rem;
+  font-size: 0.74rem;
   font-weight: 600;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  padding: 0.2rem 0.55rem;
+  letter-spacing: 0.005em;
+  padding: 0.2rem 0.6rem;
   border-radius: 999px;
   border: 1px solid var(--mk-rule);
   background: #fff;
