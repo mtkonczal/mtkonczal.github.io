@@ -14,7 +14,8 @@
       "Bash(Rscript -e 'cat\\(R.version.string, \"\\\\n\"\\); for \\(p in c\\(\"tidyverse\",\"lubridate\",\"htmltools\"\\)\\) cat\\(p, as.character\\(packageVersion\\(p\\)\\), \"\\\\n\"\\)')",
       "Bash(echo \"quarto: $\\(quarto --version\\)\")",
       "Skill(artifact-design)",
-      "Artifact"
+      "Artifact",
+      "Bash(python3 -)"
     ]
   }
 }

@@ -8,25 +8,33 @@
 
 /* --- Design tokens ------------------------------------------------------- */
 :root {
-  /* Prussian blue palette */
-  --mk-blue-900:   #1d3a5b;  /* sidebar bg, primary ink-blue */
-  --mk-blue-700:   #2c4a6b;  /* primary accent */
-  --mk-blue-500:   #3a6ea5;  /* link blue */
-  --mk-blue-300:   #6f9bc4;
-  --mk-blue-50:    #eef3f8;
+  /* Petrol & Copper palette — deep teal-blue structure with a warm copper accent.
+     The --mk-blue-* names are kept so the whole cascade keeps resolving; only the
+     values move from Prussian blue to petrol. Copper is the new interactive accent. */
+  --mk-blue-900:   #0e2c33;  /* petrol: sidebar bg, book band, headings, dark ink */
+  --mk-blue-700:   #163e47;  /* deeper petrol: heading/link hover */
+  --mk-blue-500:   #2c6e73;  /* mid petrol: focus rings, cool secondary */
+  --mk-blue-300:   #6fa3a6;  /* light petrol */
+  --mk-blue-50:    #eef3f3;
 
-  --mk-ink:        #1a2733;
-  --mk-ink-soft:   #4a5a6a;
-  --mk-mute:       #7e8a96;
-  --mk-rule:       #e6e9ed;
-  --mk-rule-soft:  #f0f2f5;
-  --mk-bg-soft:    #f8f9fb;
-  --mk-accent:     var(--mk-blue-500);
+  /* Copper accent — links, CTA, accent rules, active states, sorting/pagination.
+     #aa5a28 clears WCAG AA (~4.8:1) both as link text on paper and under white CTA text. */
+  --mk-copper:     #aa5a28;
+  --mk-copper-dk:  #8f461c;  /* darker copper for text sitting on tinted chips */
+
+  --mk-ink:        #16242a;
+  --mk-ink-soft:   #45555b;
+  --mk-mute:       #7e8a8c;
+  --mk-rule:       #e0e5e4;
+  --mk-rule-soft:  #eef1f0;
+  --mk-bg-soft:    #f7f9f8;
+  --mk-paper:      #fbfaf7;  /* warm white for the content + light bands (was pure #fff) */
+  --mk-accent:     var(--mk-copper);
   --mk-accent-dk:  var(--mk-blue-900);
   --mk-radius:     6px;
 
   /* Section bands (homepage alternating backgrounds) */
-  --mk-band-tint:  #eaf1f9;   /* soft Prussian tint for the alternate bands */
+  --mk-band-tint:  #eaeeed;   /* cool petrol-grey tint for the alternate bands */
   --mk-band-pad-y: 1.25rem;    /* vertical breathing room inside each band */
   --mk-band-max:   1140px;    /* width of the centered inner content column */
 
@@ -53,7 +61,7 @@ h2 { font-size: 1.5rem; line-height: 1.25; }
 h3 { font-size: 1.2rem; }
 p  { text-wrap: pretty; }
 
-a { color: var(--mk-blue-500); text-decoration: none; border-bottom: 1px solid rgba(58,110,165,0.25); transition: color .15s, border-color .15s; }
+a { color: var(--mk-accent); text-decoration: none; border-bottom: 1px solid rgba(170,90,40,0.30); transition: color .15s, border-color .15s; }
 a:hover { color: var(--mk-blue-900); border-bottom-color: var(--mk-blue-700); }
 
 /* --- Layout: sidebar + content -------------------------------------------- */
@@ -96,7 +104,7 @@ a:hover { color: var(--mk-blue-900); border-bottom-color: var(--mk-blue-700); }
 }
 .mk-sidebar__cta {
   display: block;
-  background: var(--mk-blue-500);
+  background: var(--mk-accent);
   color: #fff;
   padding: 0.5rem 0.85rem;
   border-radius: 4px;
@@ -134,7 +142,7 @@ a:hover { color: var(--mk-blue-900); border-bottom-color: var(--mk-blue-700); }
 .mk-sidebar__nav a.is-active {
   background: rgba(255,255,255,0.1);
   color: #fff;
-  box-shadow: inset 2px 0 0 var(--mk-blue-300);
+  box-shadow: inset 2px 0 0 var(--mk-accent);
 }
 .mk-sidebar__nav .mk-sidebar__divider {
   height: 1px;
@@ -167,7 +175,7 @@ a:hover { color: var(--mk-blue-900); border-bottom-color: var(--mk-blue-700); }
 .mk-content {
   min-width: 0;                /* let wide tables scroll instead of stretching the grid */
   padding: 2.25rem 3rem 4rem;
-  background: #fff;
+  background: var(--mk-paper);
 }
 @media (max-width: 1000px) {
   .mk-content { padding: 1.5rem 1.25rem 3rem; }
@@ -216,11 +224,11 @@ body:has(.mk-hero) main#quarto-document-content.column-page {
    The book is the deep-blue "feature" band (see overrides below); everything
    else alternates white / soft tint. */
 .mk-content:has(.mk-hero) > #title-block-header,
-.mk-content:has(.mk-hero) > .mk-hero   { background: #fff; }
+.mk-content:has(.mk-hero) > .mk-hero   { background: var(--mk-paper); }
 .mk-content:has(.mk-hero) > #latest    { background: var(--mk-band-tint); }
-.mk-content:has(.mk-hero) > #portfolio { background: #fff; }
+.mk-content:has(.mk-hero) > #portfolio { background: var(--mk-paper); }
 .mk-content:has(.mk-hero) > #book      { background: var(--mk-blue-900); }
-.mk-content:has(.mk-hero) > #now       { background: #fff; }
+.mk-content:has(.mk-hero) > #now       { background: var(--mk-paper); }
 
 /* --- Heading accent: short rule under each section H2 --------------------- */
 .mk-content:has(.mk-hero) > section.level2 > h2:first-child {
@@ -234,7 +242,7 @@ body:has(.mk-hero) main#quarto-document-content.column-page {
   height: 3px;
   margin-top: 0.65rem;
   border-radius: 2px;
-  background: var(--mk-blue-500);
+  background: var(--mk-accent);
 }
 
 /* --- Section openers -------------------------------------------------------
@@ -263,15 +271,15 @@ body:has(.mk-hero) main#quarto-document-content.column-page {
 }
 
 /* --- Feature band: the book section on deep Prussian blue ----------------- */
-.mk-content:has(.mk-hero) > #book { color: #cdd9e6; }
+.mk-content:has(.mk-hero) > #book { color: #bcd0d0; }
 .mk-content:has(.mk-hero) > #book h2,
 .mk-content:has(.mk-hero) > #book h3 { color: #fff; }
 .mk-content:has(.mk-hero) > #book p,
-.mk-content:has(.mk-hero) > #book li { color: #cdd9e6; }
-.mk-content:has(.mk-hero) > #book h2::after { background: var(--mk-blue-300); }
+.mk-content:has(.mk-hero) > #book li { color: #bcd0d0; }
+.mk-content:has(.mk-hero) > #book h2::after { background: var(--mk-accent); }
 .mk-content:has(.mk-hero) > #book a {
-  color: #bcd6f0;
-  border-bottom-color: rgba(188, 214, 240, 0.35);
+  color: #e0a06a;
+  border-bottom-color: rgba(224, 160, 106, 0.35);
 }
 .mk-content:has(.mk-hero) > #book a:hover {
   color: #fff;
@@ -338,7 +346,7 @@ body { margin: 0; padding-left: 240px; }
   height: auto;
   border-radius: 4px;
   display: block;
-  box-shadow: 0 2px 14px rgba(29, 58, 91, 0.18);
+  box-shadow: 0 2px 14px rgba(14, 44, 51, 0.18);
 }
 .mk-book__praise > :first-child { margin-top: 0; }
 @media (max-width: 640px) {
@@ -455,14 +463,14 @@ main h2 {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 1px 3px rgba(29, 58, 91, 0.10);
+  box-shadow: 0 1px 3px rgba(14, 44, 51, 0.12);
   transition: background 0.15s, color 0.15s, border-color 0.15s, box-shadow 0.15s, transform 0.1s;
 }
 .mk-now-arrow:hover:not(:disabled) {
   background: var(--mk-blue-900);
   color: #fff;
   border-color: var(--mk-blue-900);
-  box-shadow: 0 3px 11px rgba(29, 58, 91, 0.22);
+  box-shadow: 0 3px 11px rgba(14, 44, 51, 0.22);
 }
 .mk-now-arrow:active:not(:disabled) { transform: translateY(1px); }
 .mk-now-arrow:disabled { opacity: 0.3; cursor: default; box-shadow: none; }
@@ -564,7 +572,7 @@ body:has(.mk-now-archive) .mk-content {
   color: inherit;
   transition: background 0.18s;
 }
-.mk-recent__item:hover { background: rgba(58, 110, 165, 0.10); text-decoration: none; }
+.mk-recent__item:hover { background: rgba(170, 90, 40, 0.08); text-decoration: none; }
 
 .mk-recent__date {
   font-family: var(--mk-font-ui);
@@ -605,8 +613,8 @@ body:has(.mk-now-archive) .mk-content {
   font-size: 0.74rem;
   font-weight: 600;
   letter-spacing: 0.005em;
-  color: var(--mk-blue-700);
-  background: rgba(58, 110, 165, 0.13);
+  color: var(--mk-copper-dk);
+  background: rgba(170, 90, 40, 0.12);
   padding: 0.3rem 0.65rem;
   border-radius: 999px;
   white-space: nowrap;
@@ -686,7 +694,7 @@ body:has(.mk-now-archive) .mk-content {
   transition: background 0.15s;
 }
 .mk-tab:hover:not(.is-active)::after { background: var(--mk-rule); }
-.mk-tab.is-active::after { background: var(--mk-blue-500); }
+.mk-tab.is-active::after { background: var(--mk-accent); }
 /* Count rendered as a parenthetical so the number reads as a count, not a stray figure */
 .mk-tab__count {
   font-variant-numeric: tabular-nums;
@@ -698,7 +706,7 @@ body:has(.mk-now-archive) .mk-content {
 .mk-tab__count::before { content: "("; }
 .mk-tab__count::after  { content: ")"; }
 .mk-tab.is-active .mk-tab__count {
-  color: var(--mk-blue-500);
+  color: var(--mk-accent);
 }
 
 /* Snug the combined table up under the tabs */
@@ -776,7 +784,7 @@ body:has(.mk-now-archive) .mk-content {
 .mk-table .dataTables_wrapper input[type="search"]:focus,
 .mk-table .dataTables_wrapper select:focus {
   border-color: var(--mk-accent);
-  box-shadow: 0 0 0 3px rgba(40, 116, 166, 0.15);
+  box-shadow: 0 0 0 3px rgba(170, 90, 40, 0.18);
 }
 .mk-table .dataTables_wrapper input[type="search"]::placeholder {
   color: var(--mk-mute);
@@ -842,7 +850,7 @@ body:has(.mk-now-archive) .mk-content {
 .mk-table table.dataTable tbody tr:first-child td { border-top: none; }
 /* Row hover highlight (carried over from the redesign) */
 .mk-table table.dataTable tbody tr { transition: background 0.15s; }
-.mk-table table.dataTable tbody tr:hover { background: rgba(58, 110, 165, 0.10); }
+.mk-table table.dataTable tbody tr:hover { background: rgba(170, 90, 40, 0.08); }
 .mk-table table.dataTable.no-footer { border-bottom: 1px solid var(--mk-rule); }
 
 /* Year column — big, sticky-feeling left rail */
