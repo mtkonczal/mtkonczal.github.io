@@ -2,7 +2,9 @@
 title: "tidyusmacro"
 format:
   html:
-    include-in-header: _includes/minimal-sidebar.html
+    include-in-header:
+      - _includes/minimal-sidebar.html
+      - _includes/back-sidebar.html
 ---
 
 An R package providing utilities to retrieve and tidy U.S. macroeconomic data series from public government data providers. Install from [GitHub](https://github.com/mtkonczal/tidyusmacro).

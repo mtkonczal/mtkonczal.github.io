@@ -10,6 +10,9 @@ My resume and longer CV, with links to downloadable PDFs.
 **[tidyusmacro:](tidyusmacro.qmd)**
 An R package providing utilities to retrieve and tidy U.S. macroeconomic data series from public government data providers.
 
+**[Draftwatch:](draftwatch.qmd)**
+A lightweight IDE for writers to review an AI agent's edits like a pull request, with git-backed word diffs.
+
 **[Inflation Distribution:](inflation_distribution.qmd)**
 A tool to visualize the distribution of price inflation for CPI and PCE, with seasonally-adjusted and annualized values.
 

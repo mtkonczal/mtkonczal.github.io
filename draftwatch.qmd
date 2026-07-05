@@ -1,0 +1,66 @@
+---
+title: "Draftwatch"
+format:
+  html:
+    include-in-header:
+      - _includes/minimal-sidebar.html
+      - _includes/back-sidebar.html
+---
+
+::: {.mk-page-narrow}
+
+**Review an AI's edits to your writing the way you'd review a pull request.**
+
+```{=html}
+<p class="mk-btn-row">
+  <a class="mk-btn" href="https://github.com/mtkonczal/Draftwatch" target="_blank" rel="noopener">View on GitHub</a>
+  <a class="mk-btn mk-btn--ghost" href="#install">Install</a>
+</p>
+```
+
+AI agents are good at editing prose and bad at telling you what they did. Ask one to tighten a draft and you get back a wall of new text plus a summary of changes that may or may not be complete. Draftwatch closes that gap: it is a lightweight IDE for writers that shows the exact, git-backed word diff of what changed in a file, lets you keep or revert each change, and commits when you're done.
+
+The diff comes from git on your machine, not from the AI vendor and not from a JavaScript approximation. You get independent verification of what the agent actually did.
+
+![Draftwatch reviewing an agent's edits: your working text on the left in a real editor, the word diff against your baseline on the right. Click any change to revert it.](images/draftwatch_image.png){.mk-dw-shot}
+
+## How it works
+
+Run Draftwatch from inside any git repository you write in, pointed at the file your agent is editing:
+
+```bash
+draftwatch draft.md
+```
+
+It opens a two-panel review window: your source on the left (with markdown highlighting, search, and a live preview), the diff against your baseline on the right. The baseline is switchable, so you can diff against your last push, HEAD, or an earlier commit. Review the changes, revert the ones you don't want, apply, then commit. Committing advances the baseline, so the next agent pass starts clean.
+
+You and the agent can both edit at the same time; your unsaved work is never clobbered when the file changes on disk. For long documents you can jump between changes or collapse to a changes-only view.
+
+## Install {#install}
+
+Python 3.9+ and git are the only requirements. Install straight from GitHub, no clone needed:
+
+```bash
+# uv (recommended): run without installing
+uvx --from git+https://github.com/mtkonczal/Draftwatch.git draftwatch draft.md
+
+# pipx: install the `draftwatch` command onto your PATH
+pipx install git+https://github.com/mtkonczal/Draftwatch.git
+
+# pip
+pip install git+https://github.com/mtkonczal/Draftwatch.git
+```
+
+For a native app window instead of a browser tab, add the `app` extra:
+
+```bash
+pipx install "draftwatch[app] @ git+https://github.com/mtkonczal/Draftwatch.git"
+```
+
+## Built for trust
+
+Draftwatch binds to localhost only, validates every request against a per-session token, and sanitizes the markdown preview before rendering. The front-end libraries are vendored and served locally, so it works offline. The tool never talks to any LLM: it watches your files and reads your git history, nothing else.
+
+Draftwatch is open source under the MIT license. Code, issues, and releases are on [GitHub](https://github.com/mtkonczal/Draftwatch).
+
+:::

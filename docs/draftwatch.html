@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>IEA Presentation – Mike Konczal</title>
+<title>Draftwatch – Mike Konczal</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -19,6 +19,40 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -65,6 +99,24 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+<style>
+  /* Utility pages (resume, tidyusmacro): show only the brand at the top and
+     the newsletter + social block at the bottom. Hide the section nav, and
+     move the flex auto-spacer (normally on the nav) onto the CTA so the
+     bottom block stays pinned to the bottom.
+
+     Note: this is injected into <head> BEFORE styles.css, so the descendant
+     selector (.mk-sidebar ...) is used to out-specify the base rules rather
+     than relying on source order. */
+  .mk-sidebar .mk-sidebar__nav { display: none; }
+  .mk-sidebar .mk-sidebar__cta { margin-top: auto; }
+</style>
+<style>
+  /* Project pages (tidyusmacro, draftwatch): show the explicit back link
+     that ships hidden in the shared sidebar markup (before-body.html).
+     Pair this include with minimal-sidebar.html, which hides the section nav. */
+  .mk-sidebar .mk-sidebar__back { display: inline-block; }
+</style>
 
 
 <link rel="stylesheet" href="styles.css">
@@ -103,7 +155,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">IEA Presentation</h1>
+<h1 class="title">Draftwatch</h1>
 </div>
 
 
@@ -120,21 +172,53 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>Click <a href="https://github.com/mtkonczal/Blog-Posts-Presentations-and-Testimony/blob/main/IEA_presentation_Dec_2023_inflation/IEA_presentation_Dec_2023.pdf">here to download my IEA presentation</a>. The code is <a href="https://github.com/mtkonczal/Blog-Posts-Presentations-and-Testimony/tree/main/IEA_presentation_Dec_2023_inflation">here</a>.</p>
-<iframe width="100%" height="800" src="files/IEA_presentation_Dec_2023.pdf">
-<div id="quarto-navigation-envelope" class="hidden">
-<p><span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLWludC1zaWRlYmFyLXRpdGxl">Mike Konczal</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLWludC1uYXZiYXItdGl0bGU=">Mike Konczal</span></p>
-<div class="hidden quarto-markdown-envelope-contents" data-render-id="Zm9vdGVyLXJpZ2h0">
-<p><span class="container">Made with <a href="https://quarto.org/" target="_blank">Quarto</a> (<a href="https://github.com/mtkonczal/mtkonczal.github.io" target="_blank">This Site’s Repo</a>)</span></p>
+<div class="mk-page-narrow">
+<p><strong>Review an AI’s edits to your writing the way you’d review a pull request.</strong></p>
+<p class="mk-btn-row">
+  <a class="mk-btn" href="https://github.com/mtkonczal/Draftwatch" target="_blank" rel="noopener">View on GitHub</a>
+  <a class="mk-btn mk-btn--ghost" href="#install">Install</a>
+</p>
+<p>AI agents are good at editing prose and bad at telling you what they did. Ask one to tighten a draft and you get back a wall of new text plus a summary of changes that may or may not be complete. Draftwatch closes that gap: it is a lightweight IDE for writers that shows the exact, git-backed word diff of what changed in a file, lets you keep or revert each change, and commits when you’re done.</p>
+<p>The diff comes from git on your machine, not from the AI vendor and not from a JavaScript approximation. You get independent verification of what the agent actually did.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/draftwatch_image.png" class="mk-dw-shot img-fluid figure-img"></p>
+<figcaption>Draftwatch reviewing an agent’s edits: your working text on the left in a real editor, the word diff against your baseline on the right. Click any change to revert it.</figcaption>
+</figure>
 </div>
-</div>
-<div id="quarto-meta-markdown" class="hidden">
-<p><span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLW1ldGF0aXRsZQ==">IEA Presentation – Mike Konczal</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLXR3aXR0ZXJjYXJkdGl0bGU=">IEA Presentation – Mike Konczal</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLW9nY2FyZHRpdGxl">IEA Presentation – Mike Konczal</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLW1ldGFzaXRlbmFtZQ==">Mike Konczal</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLXR3aXR0ZXJjYXJkZGVzYw=="></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLW9nY2FyZGRkZXNj"></span></p>
+<section id="how-it-works" class="level2">
+<h2 class="anchored" data-anchor-id="how-it-works">How it works</h2>
+<p>Run Draftwatch from inside any git repository you write in, pointed at the file your agent is editing:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">draftwatch</span> draft.md</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>It opens a two-panel review window: your source on the left (with markdown highlighting, search, and a live preview), the diff against your baseline on the right. The baseline is switchable, so you can diff against your last push, HEAD, or an earlier commit. Review the changes, revert the ones you don’t want, apply, then commit. Committing advances the baseline, so the next agent pass starts clean.</p>
+<p>You and the agent can both edit at the same time; your unsaved work is never clobbered when the file changes on disk. For long documents you can jump between changes or collapse to a changes-only view.</p>
+</section>
+<section id="install" class="level2">
+<h2 class="anchored" data-anchor-id="install">Install</h2>
+<p>Python 3.9+ and git are the only requirements. Install straight from GitHub, no clone needed:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># uv (recommended): run without installing</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">uvx</span> <span class="at">--from</span> git+https://github.com/mtkonczal/Draftwatch.git draftwatch draft.md</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># pipx: install the `draftwatch` command onto your PATH</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="ex">pipx</span> install git+https://github.com/mtkonczal/Draftwatch.git</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># pip</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install git+https://github.com/mtkonczal/Draftwatch.git</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>For a native app window instead of a browser tab, add the <code>app</code> extra:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pipx</span> install <span class="st">"draftwatch[app] @ git+https://github.com/mtkonczal/Draftwatch.git"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="built-for-trust" class="level2">
+<h2 class="anchored" data-anchor-id="built-for-trust">Built for trust</h2>
+<p>Draftwatch binds to localhost only, validates every request against a per-session token, and sanitizes the markdown preview before rendering. The front-end libraries are vendored and served locally, so it works offline. The tool never talks to any LLM: it watches your files and reads your git history, nothing else.</p>
+<p>Draftwatch is open source under the MIT license. Code, issues, and releases are on <a href="https://github.com/mtkonczal/Draftwatch">GitHub</a>.</p>
+</section>
 </div>
 
-</main> <!-- /main -->
+
+
+</div></div></main> <!-- /main -->
 </div><!-- /.mk-content -->
-</div><!-- /.mk-layout -->
+<!-- /.mk-layout -->
 <script>
 (function () {
   // Quarto injects before-body inside <main>; lift the fixed sidebar to the
@@ -194,7 +278,7 @@ ul.task-list li input[type="checkbox"] {
   setActive(entries[0].link); // default: Home highlighted at the top
 })();
 </script>
-<script id = "quarto-html-after-body" type="application/javascript">
+<script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
     const mode = bsSheetEl.getAttribute("data-mode");
@@ -611,7 +695,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script>
-</div> <!-- /content -->
+ <!-- /content -->
 <footer class="footer">
   <div class="nav-footer">
     <div class="nav-footer-left">
@@ -621,13 +705,12 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       &nbsp;
     </div>
     <div class="nav-footer-right">
-      <div class='footer-contents'><span class="container">Made with [Quarto](https://quarto.org/){target="_blank"} ([This Site's Repo](https://github.com/mtkonczal/mtkonczal.github.io){target="_blank"})</span>
-</div>  
-    </div>
+<p><span class="container">Made with <a href="https://quarto.org/" target="_blank">Quarto</a> (<a href="https://github.com/mtkonczal/mtkonczal.github.io" target="_blank">This Site’s Repo</a>)</span></p>
+</div>
   </div>
 </footer>
 
-</body>
 
-</html>
-</iframe></div></div></main></div></body></html>
+
+
+</body></html>
