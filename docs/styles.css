@@ -261,7 +261,7 @@ body:has(.mk-hero) main#quarto-document-content.column-page {
 
 /* --- Section openers -------------------------------------------------------
    The primary sections previously carried numbered eyebrow labels
-   ("01 — Latest Things" / "02 — Portfolio") that simply restated the heading
+   ("01 — Latest" / "02 — Portfolio") that simply restated the heading
    directly beneath them. With the eyebrows gone, the headings carry the
    section on their own: a larger, tighter-set serif title sitting above the
    shared blue accent rule (the ::after defined above now shows through).
@@ -568,7 +568,7 @@ body:has(.mk-now-archive) .mk-content {
 .mk-now-archive .mk-now-entry section.level3:first-of-type > h3 { margin-top: 0; }
 
 /* ==========================================================================
-   Latest Things — homepage highlight reel (index.qmd)
+   Latest — homepage highlight reel (index.qmd)
    3-column grid rows (date · serif title/outlet · filled kind pill). Same row
    shape as the Portfolio index below, but the kind reads as a filled accent
    pill rather than quiet text — this is the one place the two lists differ.
