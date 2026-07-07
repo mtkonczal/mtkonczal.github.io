@@ -1,6 +1,7 @@
 project:
   type: website
   output-dir: docs
+  pre-render: scripts/sync-draftwatch-readme.sh
 
 website:
   title: "Mike Konczal"

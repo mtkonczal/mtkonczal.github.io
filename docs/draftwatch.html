@@ -178,48 +178,92 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <a class="mk-btn" href="https://github.com/mtkonczal/Draftwatch" target="_blank" rel="noopener">View on GitHub</a>
   <a class="mk-btn mk-btn--ghost" href="#install">Install</a>
 </p>
-<p>AI agents are good at editing prose and bad at telling you what they did. Ask one to tighten a draft and you get back a wall of new text plus a summary of changes that may or may not be complete. Draftwatch closes that gap: it is a lightweight IDE for writers that shows the exact, git-backed word diff of what changed in a file, lets you keep or revert each change, and commits when you’re done.</p>
-<p>The diff comes from git on your machine, not from the AI vendor and not from a JavaScript approximation. You get independent verification of what the agent actually did.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="images/draftwatch_image.png" class="mk-dw-shot img-fluid figure-img"></p>
 <figcaption>Draftwatch reviewing an agent’s edits: your working text on the left in a real editor, the word diff against your baseline on the right. Click any change to revert it.</figcaption>
 </figure>
 </div>
-<section id="how-it-works" class="level2">
-<h2 class="anchored" data-anchor-id="how-it-works">How it works</h2>
-<p>Run Draftwatch from inside any git repository you write in, pointed at the file your agent is editing:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">draftwatch</span> draft.md</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>It opens a two-panel review window: your source on the left (with markdown highlighting, search, and a live preview), the diff against your baseline on the right. The baseline is switchable, so you can diff against your last push, HEAD, or an earlier commit. Review the changes, revert the ones you don’t want, apply, then commit. Committing advances the baseline, so the next agent pass starts clean.</p>
-<p>You and the agent can both edit at the same time; your unsaved work is never clobbered when the file changes on disk. For long documents you can jump between changes or collapse to a changes-only view.</p>
-</section>
-<section id="install" class="level2">
-<h2 class="anchored" data-anchor-id="install">Install</h2>
-</section>
-<section id="draftwatch" class="level1">
-<h1>Draftwatch</h1>
+<div class="mk-readme">
 <p>Draftwatch is a lightweight IDE for writers. You can use it to create and format new Markdown documents from scratch, or use it to review an AI agent’s edits to your writing exactly the way a developer reviews a pull request.</p>
 <p>When reviewing AI edits, instead of guessing what an LLM changed in your document, Draftwatch shows you the exact, git-backed word-diff. You can step through, keep or revert each change individually, and commit when you’re done.</p>
 <p>Crucially, the diff comes from your local git—not from the AI vendor and not from a JavaScript approximation. You get absolute, independent verification of what the agent or script actually did.</p>
-<p>Python 3.9+ and git are the only requirements. The front-end libraries (CodeMirror 6, marked, DOMPurify, Turndown) are vendored and served locally, so Draftwatch works completely offline and binds to localhost only.</p>
-<section id="install-1" class="level2">
-<h2 class="anchored" data-anchor-id="install-1">Install</h2>
+<p>Python 3.9+ and git are the only requirements. The front-end libraries (CodeMirror 6, marked, DOMPurify, Turndown, xterm.js) are vendored and served locally, so Draftwatch works completely offline and binds to localhost only.</p>
+<section id="install" class="level2">
+<h2 class="anchored" data-anchor-id="install">Install</h2>
 <p>Draftwatch is available on PyPI. You can install or run it using your preferred Python package manager:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># pipx</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">pipx</span> install draftwatch</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># uv </span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> tool install draftwatch</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># standard pip</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install draftwatch</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># pipx</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">pipx</span> install draftwatch</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># uv </span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> tool install draftwatch</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># standard pip</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install draftwatch</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
-<section id="built-for-trust" class="level2">
-<h2 class="anchored" data-anchor-id="built-for-trust">Built for trust</h2>
-<p>Draftwatch binds to localhost only, validates every request against a per-session token, and sanitizes the markdown preview before rendering. The front-end libraries are vendored and served locally, so it works offline. The tool never talks to any LLM: it watches your files and reads your git history, nothing else.</p>
-<p>Draftwatch is open source under the MIT license. Code, issues, and releases are on <a href="https://github.com/mtkonczal/Draftwatch">GitHub</a>.</p>
+<section id="usage" class="level2">
+<h2 class="anchored" data-anchor-id="usage">Usage</h2>
+<p>Run it from inside a git repository you write in:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">draftwatch</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Or to start with a specific file:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">draftwatch</span> draft.md</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>You can also run it outside any git repository. Draftwatch starts in <strong>write-only mode</strong> — the editor, preview, and saving all work, but the review loop (diffs, revert, commit) is off because there’s no git to compare against. The right panel offers a one-click <strong>initialize git here</strong> to turn the folder into a repo and switch on the full review loop.</p>
+<p>Starting a second instance while one is already running just works: if the default port is busy, Draftwatch picks a free one and prints the URL.</p>
+<p>Draftwatch opens a two-panel review window: your source on the left (a real editor with markdown highlighting, search, and a live preview), the diff against your baseline on the right. Review the changes, revert the ones you don’t want, apply, then commit. Committing advances the baseline, so the next agent pass starts clean.</p>
+<p>Start without a file (<code>draftwatch</code>) to pick one in the window.</p>
+<section id="options" class="level3">
+<h3 class="anchored" data-anchor-id="options">Options</h3>
+<pre><code>draftwatch [target] [--port 8787] [--no-open] [--no-terminal] [--app | --no-app]</code></pre>
+<ul>
+<li><code>target</code>: file to watch. Optional; omit it to pick one in the UI.</li>
+<li><code>--port</code>: default <code>8787</code>. If omitted and the default is busy, Draftwatch picks a free port automatically; pass <code>--port</code> to pin an exact one (it then fails loudly if that port is taken).</li>
+<li><code>--no-open</code>: don’t auto-open a window (useful headless or over SSH).</li>
+<li><code>--no-terminal</code>: disable the embedded terminal panel entirely (its routes are removed from the server, not just hidden in the UI).</li>
+<li><code>--app</code> / <code>--no-app</code>: force or disable the native window. It is on by default when pywebview is installed and falls back to the browser otherwise.</li>
+</ul>
 </section>
 </section>
+<section id="the-terminal-panel" class="level2">
+<h2 class="anchored" data-anchor-id="the-terminal-panel">The terminal panel</h2>
+<p>Click <strong>terminal</strong> in the toolbar to open a third panel running a real shell in your repo (macOS/Linux). Launch <code>claude</code>, <code>codex</code>, or any command there: when the agent edits the file you’re watching, the diff panel lights up live — prompt on the right, review in the middle, write on the left. <strong>hide</strong> collapses the panel and leaves the shell running (an agent mid-task keeps working); <strong>end session</strong> kills the shell and everything it started. No snapshots are taken when you run commands — edits accumulate against whatever baseline you’ve selected, and you review them on your schedule. On Windows the panel is unavailable and Draftwatch simply runs without it.</p>
+</section>
+<section id="features" class="level2">
+<h2 class="anchored" data-anchor-id="features">Features</h2>
+<ul>
+<li>Real git word-diffs, so what you see is exactly what git sees.</li>
+<li>Keep or revert changes one hunk at a time, or all at once, then commit from the UI.</li>
+<li>Switchable baseline: last push, HEAD, or an earlier commit.</li>
+<li>Jump between changes or collapse to a changes-only view for long documents.</li>
+<li>Editable markdown preview alongside the raw source.</li>
+<li>You and the agent can both edit; your unsaved work is never clobbered when the file changes on disk.</li>
+<li>Embedded terminal panel (macOS/Linux): run your agent next to the diff without leaving the window.</li>
+<li>Resizable panels: drag the dividers to change the split (double-click to reset).</li>
+</ul>
+</section>
+<section id="security" class="level2">
+<h2 class="anchored" data-anchor-id="security">Security</h2>
+<p>Draftwatch binds <code>127.0.0.1</code> only — there is deliberately no option to bind another interface, so the tool is never exposed on your network. Every request carries a per-session token, the Host and Origin headers are validated to defeat DNS-rebinding, and the markdown preview is sanitized with DOMPurify before rendering. The tool never talks to any LLM.</p>
+<p>The terminal panel is a real shell, so it gets extra care: its input routes accept the session token <strong>only</strong> as a request header (keystrokes never appear in URLs, browser history, or logs), the server pipes bytes to the PTY without ever parsing them, ending a session kills the shell’s whole process group, and no shell outlives Draftwatch. <code>--no-terminal</code> removes the feature from the server entirely.</p>
+</section>
+<section id="tests" class="level2">
+<h2 class="anchored" data-anchor-id="tests">Tests</h2>
+<div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> testing/test_reconstruct.py   <span class="co"># reconstruction invariants</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> testing/test_acceptance.py    <span class="co"># end-to-end server tests</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="development" class="level2">
+<h2 class="anchored" data-anchor-id="development">Development</h2>
+<p>The front-end libraries are vendored into <code>draftwatch/assets/</code> and committed, so end users never need Node. To rebuild them: <code>npm install &amp;&amp; npm run build:vendor</code>.</p>
+</section>
+<section id="author" class="level2">
+<h2 class="anchored" data-anchor-id="author">Author</h2>
+<p>Built by Mike Konczal. Vibe-coded with Fable 5.</p>
+</section>
+<section id="license" class="level2">
+<h2 class="anchored" data-anchor-id="license">License</h2>
+<p>MIT. See <code>LICENSE</code>.</p>
+</section>
+</div>
+<p class="mk-readme__source">This section is the project <a href="https://github.com/mtkonczal/Draftwatch#readme">README</a>, synced from GitHub — run <code>scripts/sync-draftwatch-readme.sh</code> to refresh it.</p>
 </div>
 
 
