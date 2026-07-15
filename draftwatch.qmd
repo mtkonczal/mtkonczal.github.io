@@ -18,8 +18,6 @@ format:
 </p>
 ```
 
-![Draftwatch reviewing an agent's edits: your working text on the left in a real editor, the word diff against your baseline on the right. Click any change to revert it.](images/draftwatch_image.png){.mk-dw-shot}
-
 ::: {.mk-readme}
 {{< include _includes/draftwatch-readme.md >}}
 :::

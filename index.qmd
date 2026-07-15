@@ -224,7 +224,7 @@ Open-source tools I build and maintain, for economic data analysis and for writi
     </div>
     <div class="mk-project__body">
       <div class="mk-project__title">tidyusmacro</div>
-      <p class="mk-project__desc">An R package that downloads and tidies U.S. macroeconomic data from BLS, BEA, and FRED flat files, returning consistent data frames ready for modeling and graphics minutes after a release goes live.</p>
+      <p class="mk-project__desc">An R package that downloads and tidies U.S. macroeconomic data from BLS, BEA, and FRED flat files, returning consistent data frames ready for modeling and graphics seconds after a release goes live.</p>
       <span class="mk-project__cta">Package site &amp; function reference</span>
     </div>
   </a>
