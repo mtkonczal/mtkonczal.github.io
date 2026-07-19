@@ -46,7 +46,7 @@ fix_title_case <- function(x) {
 recent <- read_csv("data/mywork.csv", show_col_types = FALSE) %>%
   mutate(
     Title = fix_title_case(`Original Title`),
-    Date  = as.Date(Date, "%m/%d/%y"),
+    Date  = as.Date(Date),  # ISO YYYY-MM-DD in the CSV
     Type  = str_replace_all(Format, "White Paper", "Research")
   ) %>%
   filter(Highlight == "X") %>%
@@ -96,7 +96,7 @@ fix_title_case <- function(x) {
 raw <- read_csv("data/mywork.csv", show_col_types = FALSE) %>%
   mutate(
     Title = fix_title_case(`Original Title`),
-    Date  = as.Date(Date, "%m/%d/%y")
+    Date  = as.Date(Date)  # ISO YYYY-MM-DD in the CSV
   ) %>%
   arrange(desc(Date))
 
