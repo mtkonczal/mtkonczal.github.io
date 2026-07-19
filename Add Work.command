@@ -1,5 +1,5 @@
 #!/bin/bash
-# Double-click to open the mywork.csv entry/review app in your browser.
+# Double-click to open the Site Manager app in your browser.
 # Always restarts the app so it serves the current code, then opens the tab.
 # The app keeps running in the background after this window closes; stop it
 # with the "Quit app" link on the page.

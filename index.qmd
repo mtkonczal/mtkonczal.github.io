@@ -43,7 +43,7 @@ fix_title_case <- function(x) {
   x
 }
 
-recent <- read_csv("data/mywork.csv", show_col_types = FALSE) %>%
+recent <- read_csv("data/work_database.csv", show_col_types = FALSE) %>%
   mutate(
     Title = fix_title_case(`Original Title`),
     Date  = as.Date(Date),  # ISO YYYY-MM-DD in the CSV
@@ -93,7 +93,7 @@ fix_title_case <- function(x) {
   str_remove_all(x, "[ÔÕ]")
 }
 
-raw <- read_csv("data/mywork.csv", show_col_types = FALSE) %>%
+raw <- read_csv("data/work_database.csv", show_col_types = FALSE) %>%
   mutate(
     Title = fix_title_case(`Original Title`),
     Date  = as.Date(Date)  # ISO YYYY-MM-DD in the CSV

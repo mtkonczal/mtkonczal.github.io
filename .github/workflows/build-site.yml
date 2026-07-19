@@ -1,7 +1,7 @@
 # Renders the Quarto site on GitHub's servers whenever source files change,
 # and commits the regenerated docs/ back to main (which GitHub Pages serves).
 #
-# You no longer need to run `quarto render` locally: edit data/mywork.csv
+# You no longer need to run `quarto render` locally: edit data/work_database.csv
 # (or any .qmd) from anywhere, push, and the site updates in a few minutes.
 #
 # Loop prevention: the workflow's own commit only touches docs/ and the
@@ -30,8 +30,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Validate mywork.csv
-        run: python3 scripts/validate_mywork.py
+      - name: Validate work_database.csv
+        run: python3 scripts/validate_work_database.py
 
       - name: Set up R
         uses: r-lib/actions/setup-r@v2

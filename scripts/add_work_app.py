@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-"""Local entry/review app for data/mywork.csv. Stdlib only.
+"""Local entry/review app for data/work_database.csv. Stdlib only.
 
 Launch by double-clicking "Add Work.command" (or: python3 scripts/add_work_app.py).
 Opens a browser tab at http://localhost:4747. Two tabs:
 
   Add by URL   -- paste a link, Fetch pre-fills fields from the page's
-                  metadata, correct anything, Add appends to mywork.csv,
+                  metadata, correct anything, Add appends to work_database.csv,
                   commits, and pushes. GitHub Actions then renders the site.
   Review queue -- candidates the weekly discovery task wrote to
                   data/pending.csv. Approve publishes; Reject adds the URL
@@ -28,7 +28,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parent.parent
-WORK_CSV = REPO / "data" / "mywork.csv"
+WORK_CSV = REPO / "data" / "work_database.csv"
 PENDING_CSV = REPO / "data" / "pending.csv"
 SKIP_CSV = REPO / "data" / "skiplist.csv"
 NOW_QMD = REPO / "_now-entries.qmd"
@@ -58,7 +58,7 @@ OUTLET_MAP = {
 }
 
 PORT = 4747
-VERSION = "2026-07-19e"  # bump when editing; shown in the page footer
+VERSION = "2026-07-19g"  # bump when editing; shown in the page footer
 UA = ("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
       "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36")
 
@@ -88,6 +88,15 @@ def append_work_row(row):
     with open(WORK_CSV, "a", newline="", encoding="utf-8") as f:
         csv.writer(f, lineterminator="\n").writerow(
             [row[c] for c in HEADER])
+
+
+def write_work(rows):
+    """Rewrite the whole database, preserving row order."""
+    with open(WORK_CSV, "w", newline="", encoding="utf-8") as f:
+        w = csv.writer(f, lineterminator="\n")
+        w.writerow(HEADER)
+        for r in rows:
+            w.writerow([r[c] for c in HEADER])
 
 
 def write_pending(rows):
@@ -175,7 +184,7 @@ def validate(fields):
     except ValueError:
         probs.append("Date must be YYYY-MM-DD.")
     if norm_url(fields.get("link")) in existing_links():
-        probs.append("This URL is already in mywork.csv.")
+        probs.append("This URL is already in work_database.csv.")
     return probs
 
 
@@ -304,7 +313,7 @@ def fetch_metadata(url):
 # the browser as-is; a normal string would let Python convert them into real
 # line breaks, which is a JS syntax error that kills every click handler.
 PAGE = r"""<!doctype html>
-<html><head><meta charset="utf-8"><title>mywork.csv</title>
+<html><head><meta charset="utf-8"><title>Mike Konczal — Site Manager</title>
 <style>
   body { font: 15px -apple-system, sans-serif; max-width: 720px;
          margin: 0 auto; padding: 20px 14px 60px; color: #222; }
@@ -352,11 +361,14 @@ _diag('pageload v%VERSION% ua=' + navigator.userAgent);
 <noscript><p style="color:#b3261e; font-weight:bold">JavaScript is disabled
 or blocked in this browser, so nothing on this page will work. Check content
 blockers / browser settings for localhost.</p></noscript>
-<h1>mywork.csv</h1>
+<h1>Site Manager <span class="muted" style="font-weight:400; font-size:14px">
+mikekonczal.com — work database, highlights &amp; Now page</span></h1>
 <div class="tabs">
   <button id="tab-add" class="on" onclick="show('add')">Add by URL</button>
   <button id="tab-queue" onclick="show('queue')">Review queue
     <span id="qcount"></span></button>
+  <button id="tab-db" onclick="show('db')">Database</button>
+  <button id="tab-hl" onclick="show('hl')">Highlights</button>
   <button id="tab-now" onclick="show('now')">Now page</button>
 </div>
 
@@ -397,6 +409,43 @@ blockers / browser settings for localhost.</p></noscript>
   v%VERSION% &nbsp;·&nbsp;
   <a href="#" onclick="quitApp(); return false">Quit app</a></p>
 
+<div class="panel" id="panel-db" style="display:none">
+  <input type="text" id="dbsearch" placeholder="Filter by title, outlet, year, format..."
+    oninput="renderDb()">
+  <div id="dbeditor" style="display:none" class="card">
+    <div class="row">
+      <div><label>Date</label><input type="date" id="d_date"></div>
+      <div><label>Format</label><select id="d_format"></select></div>
+    </div>
+    <label>Title</label><input type="text" id="d_title">
+    <label>Outlet</label><input type="text" id="d_outlet">
+    <label>Link</label><input type="text" id="d_link">
+    <label>Excerpt</label><textarea id="d_excerpt"></textarea>
+    <div class="row">
+      <div><label>Author (NA = you)</label><input type="text" id="d_author"></div>
+      <div><label>&nbsp;</label><label style="font-weight:400">
+        <input type="checkbox" id="d_highlight"> Highlight</label></div>
+    </div>
+    <button class="act success" onclick="saveDb()">Save &amp; publish</button>
+    <button class="act" style="background:#eee" onclick="closeDb()">Cancel</button>
+    <button class="act danger" style="float:right" onclick="deleteDb()">Delete row</button>
+    <div id="dblog"></div>
+  </div>
+  <div id="dbtable" class="muted">Loading…</div>
+</div>
+
+<div class="panel" id="panel-hl" style="display:none">
+  <p class="muted">The homepage "Latest" list shows the <b>five most recent
+  highlighted</b> items. Click any row below to toggle its highlight, then Save.</p>
+  <div class="card"><b>Currently shown in Latest</b><div id="hltop"></div></div>
+  <button class="act success" onclick="saveHl()">Save &amp; publish</button>
+  <span id="hlcount" class="muted"></span>
+  <div id="hllog"></div>
+  <input type="text" id="hlsearch" placeholder="Filter..." oninput="renderHl()"
+    style="margin-top:12px">
+  <div id="hllist" class="muted">Loading…</div>
+</div>
+
 <div class="panel" id="panel-now" style="display:none">
   <p class="muted">Entries in <b>_now-entries.qmd</b> (one per month).
      Click a date to edit it, or start a new month.</p>
@@ -419,13 +468,15 @@ const sel = document.getElementById('f_format');
 FORMATS.forEach(f => sel.add(new Option(f, f)));
 
 function show(which) {
-  for (const t of ['add', 'queue', 'now']) {
+  for (const t of ['add', 'queue', 'db', 'hl', 'now']) {
     document.getElementById('panel-' + t).style.display =
       t === which ? '' : 'none';
     document.getElementById('tab-' + t).classList.toggle('on', t === which);
   }
   if (which === 'queue') loadQueue();
   if (which === 'now') loadNow();
+  if (which === 'db') loadDb();
+  if (which === 'hl') loadHl();
 }
 
 async function api(path, body) {
@@ -464,7 +515,7 @@ async function doFetch() {
   document.getElementById('f_outlet').value = m.outlet || '';
   document.getElementById('f_excerpt').value = m.excerpt || '';
   document.getElementById('dupwarn').innerHTML = m.duplicate
-    ? '<p class="warn">Already in mywork.csv — adding would duplicate it.</p>' : '';
+    ? '<p class="warn">Already in work_database.csv — adding would duplicate it.</p>' : '';
 }
 
 function fields(prefix) {
@@ -549,6 +600,133 @@ async function approve(i, encLink) {
 async function reject(encLink) {
   await api('/api/reject', {link: decodeURIComponent(encLink)});
   loadQueue();
+}
+
+// ---- Database tab ----
+
+let dbRows = [], dbEditing = null;
+const dsel = document.getElementById('d_format');
+FORMATS.forEach(f => dsel.add(new Option(f, f)));
+
+function rowMatches(r, term) {
+  if (!term) return true;
+  const hay = (r.Date + ' ' + r['Original Title'] + ' ' + r.Outlet + ' ' +
+               r.Format).toLowerCase();
+  return term.toLowerCase().split(/\s+/).every(t => hay.includes(t));
+}
+
+async function loadDb() {
+  const r = await api('/api/db/state');
+  if (deadNotice('dbtable', r)) return;
+  dbRows = (r.rows || []).slice().sort((a, b) => b.Date.localeCompare(a.Date));
+  renderDb();
+}
+
+function renderDb() {
+  const term = document.getElementById('dbsearch').value;
+  const rows = dbRows.filter(r => rowMatches(r, term));
+  document.getElementById('dbtable').innerHTML =
+    '<p class="muted">' + rows.length + ' of ' + dbRows.length +
+    ' rows — click one to edit</p>' +
+    rows.map(r => `<div style="padding:6px 4px; border-bottom:1px solid #eee;
+        cursor:pointer" onclick="editDb(${r._idx})">
+      <span class="muted">${esc(r.Date)}</span> ·
+      ${r.Highlight === 'X' ? '★ ' : ''}<b>${esc(r['Original Title'])}</b>
+      <span class="muted">— ${esc(r.Outlet)} (${esc(r.Format)})</span>
+    </div>`).join('');
+}
+
+function editDb(idx) {
+  const r = dbRows.find(x => x._idx === idx);
+  if (!r) return;
+  dbEditing = r;
+  const g = id => document.getElementById(id);
+  g('d_date').value = r.Date; g('d_title').value = r['Original Title'];
+  g('d_outlet').value = r.Outlet; g('d_format').value = r.Format;
+  g('d_link').value = r.Link;
+  g('d_excerpt').value = r.Excerpt === 'NA' ? '' : r.Excerpt;
+  g('d_author').value = r.Author || 'NA';
+  g('d_highlight').checked = r.Highlight === 'X';
+  g('dblog').innerHTML = '';
+  g('dbeditor').style.display = '';
+  if (g('dbeditor').scrollIntoView) g('dbeditor').scrollIntoView({block: 'nearest'});
+}
+
+function closeDb() {
+  document.getElementById('dbeditor').style.display = 'none';
+  dbEditing = null;
+}
+
+async function saveDb() {
+  if (!dbEditing) return;
+  const g = id => document.getElementById(id).value;
+  const r = await api('/api/db/save', {
+    idx: dbEditing._idx, orig_link: dbEditing.Link,
+    date: g('d_date'), title: g('d_title'), outlet: g('d_outlet'),
+    format: g('d_format'), link: g('d_link'), excerpt: g('d_excerpt'),
+    author: g('d_author'),
+    highlight: document.getElementById('d_highlight').checked });
+  document.getElementById('dblog').innerHTML =
+    '<div class="log' + (r.ok ? '' : ' warn') + '">' + r.message + '</div>';
+  if (r.ok) { closeDb(); loadDb(); }
+}
+
+async function deleteDb() {
+  if (!dbEditing) return;
+  if (!confirm('Delete this row from the database?')) return;
+  const r = await api('/api/db/delete',
+                      {idx: dbEditing._idx, orig_link: dbEditing.Link});
+  document.getElementById('dblog').innerHTML =
+    '<div class="log' + (r.ok ? '' : ' warn') + '">' + r.message + '</div>';
+  if (r.ok) { closeDb(); loadDb(); }
+}
+
+// ---- Highlights tab ----
+
+let hlRows = [], hlSet = new Set();
+
+async function loadHl() {
+  const r = await api('/api/db/state');
+  if (deadNotice('hllist', r)) return;
+  hlRows = (r.rows || []).slice().sort((a, b) => b.Date.localeCompare(a.Date));
+  hlSet = new Set(hlRows.filter(x => x.Highlight === 'X').map(x => x._idx));
+  document.getElementById('hllog').innerHTML = '';
+  renderHl();
+}
+
+function renderHl() {
+  const top = hlRows.filter(r => hlSet.has(r._idx)).slice(0, 5);
+  document.getElementById('hltop').innerHTML = top.length
+    ? top.map(r => `<div style="padding:4px 0">★
+        <b>${esc(r['Original Title'])}</b>
+        <span class="muted">— ${esc(r.Outlet)}, ${esc(r.Date)}</span></div>`).join('')
+    : '<p class="muted">Nothing highlighted.</p>';
+  document.getElementById('hlcount').textContent =
+    ' ' + hlSet.size + ' highlighted in total';
+  const term = document.getElementById('hlsearch').value;
+  document.getElementById('hllist').innerHTML =
+    hlRows.filter(r => rowMatches(r, term)).map(r => {
+      const on = hlSet.has(r._idx);
+      return `<div style="padding:6px 4px; border-bottom:1px solid #eee;
+          cursor:pointer; ${on ? 'background:#fdf6e3' : ''}"
+          onclick="toggleHl(${r._idx})">
+        <span style="width:1.4em; display:inline-block">${on ? '★' : '☆'}</span>
+        <span class="muted">${esc(r.Date)}</span> ·
+        <b>${esc(r['Original Title'])}</b>
+        <span class="muted">— ${esc(r.Outlet)}</span></div>`;
+    }).join('');
+}
+
+function toggleHl(idx) {
+  if (hlSet.has(idx)) hlSet.delete(idx); else hlSet.add(idx);
+  renderHl();
+}
+
+async function saveHl() {
+  const r = await api('/api/highlights/save', {idxs: [...hlSet]});
+  document.getElementById('hllog').innerHTML =
+    '<div class="log' + (r.ok ? '' : ' warn') + '">' + r.message + '</div>';
+  if (r.ok) loadHl();
 }
 
 // ---- Now page tab ----
@@ -656,6 +834,61 @@ class Handler(BaseHTTPRequestHandler):
         if self.path == "/api/state":
             return self._json({"pending": read_rows(PENDING_CSV)})
 
+        if self.path == "/api/db/state":
+            rows = read_rows(WORK_CSV)
+            for i, r in enumerate(rows):
+                r["_idx"] = i
+            return self._json({"rows": rows})
+
+        if self.path == "/api/db/save":
+            rows = read_rows(WORK_CSV)
+            i = data.get("idx", -1)
+            if not (0 <= i < len(rows)) or rows[i]["Link"] != data.get("orig_link"):
+                return self._json({"ok": False, "message":
+                                   "Row changed on disk — reopen the tab and retry."})
+            probs = []
+            for field, label in (("title", "Title"), ("outlet", "Outlet")):
+                if not squish(data.get(field)):
+                    probs.append(f"{label} is empty.")
+            if not (data.get("link") or "").startswith(("http://", "https://")):
+                probs.append("Link must start with http(s)://.")
+            if data.get("format") not in FORMATS:
+                probs.append("Unknown format.")
+            try:
+                datetime.datetime.strptime(data.get("date", ""), "%Y-%m-%d")
+            except ValueError:
+                probs.append("Date must be YYYY-MM-DD.")
+            others = {norm_url(r["Link"]) for j, r in enumerate(rows) if j != i}
+            if (norm_url(data.get("link")) != norm_url(data["orig_link"])
+                    and norm_url(data.get("link")) in others):
+                probs.append("That URL already exists in another row.")
+            if probs:
+                return self._json({"ok": False, "message": " ".join(probs)})
+            rows[i] = make_row(data)
+            write_work(rows)
+            log = git_publish(f"Edit: {rows[i]['Original Title']}")
+            return self._json({"ok": True, "message": "Saved and pushed.\n" + log})
+
+        if self.path == "/api/db/delete":
+            rows = read_rows(WORK_CSV)
+            i = data.get("idx", -1)
+            if not (0 <= i < len(rows)) or rows[i]["Link"] != data.get("orig_link"):
+                return self._json({"ok": False, "message":
+                                   "Row changed on disk — reopen the tab and retry."})
+            gone = rows.pop(i)
+            write_work(rows)
+            log = git_publish(f"Remove: {gone['Original Title']}")
+            return self._json({"ok": True, "message": "Deleted and pushed.\n" + log})
+
+        if self.path == "/api/highlights/save":
+            chosen = set(data.get("idxs", []))
+            rows = read_rows(WORK_CSV)
+            for i, r in enumerate(rows):
+                r["Highlight"] = "X" if i in chosen else ""
+            write_work(rows)
+            log = git_publish("Update Latest highlights")
+            return self._json({"ok": True, "message": "Saved and pushed.\n" + log})
+
         if self.path == "/api/now/state":
             _, entries = read_now()
             return self._json({"entries": entries})
@@ -716,7 +949,7 @@ def main():
         print(f"App already running at {url} — opening browser.")
         webbrowser.open(url)
         return
-    print(f"mywork.csv app v{VERSION} running at {url}  (use the page's "
+    print(f"Site Manager v{VERSION} running at {url}  (use the page's "
           "Quit link, or Ctrl-C here, to stop)", flush=True)
     threading.Timer(0.4, lambda: webbrowser.open(url)).start()
     try:

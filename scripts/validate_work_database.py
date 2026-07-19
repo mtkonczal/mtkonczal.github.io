@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Validate data/mywork.csv before the site renders.
+"""Validate data/work_database.csv before the site renders.
 
 Run by .github/workflows/build-site.yml on every push, and available
-locally: python3 scripts/validate_mywork.py
+locally: python3 scripts/validate_work_database.py
 
 Errors (exit 1, blocks the render): bad schema, unparseable/future dates,
 unknown Format values, malformed links, wrong field counts.
@@ -15,7 +15,7 @@ import sys
 from collections import Counter
 from pathlib import Path
 
-CSV_PATH = Path(__file__).resolve().parent.parent / "data" / "mywork.csv"
+CSV_PATH = Path(__file__).resolve().parent.parent / "data" / "work_database.csv"
 
 EXPECTED_HEADER = [
     "Date", "Original Title", "Outlet", "Format",
@@ -77,7 +77,7 @@ for e in errors:
     print(f"ERROR: {e}")
 
 if errors:
-    print(f"\n{len(errors)} error(s) — fix data/mywork.csv before the site will build.")
+    print(f"\n{len(errors)} error(s) — fix data/work_database.csv before the site will build.")
     sys.exit(1)
 
 print(f"OK: {len(body)} rows validated.")
