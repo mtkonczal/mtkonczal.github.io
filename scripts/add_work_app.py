@@ -58,7 +58,7 @@ OUTLET_MAP = {
 }
 
 PORT = 4747
-VERSION = "2026-07-19d"  # bump when editing; shown in the page footer
+VERSION = "2026-07-19e"  # bump when editing; shown in the page footer
 UA = ("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
       "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36")
 
@@ -299,7 +299,11 @@ def fetch_metadata(url):
 
 # ---------- web app -----------------------------------------------------------
 
-PAGE = """<!doctype html>
+# NOTE: raw string (r""") is load-bearing. The JS below contains literal
+# backslash sequences (e.g. '\n' in the Now-entry template) that must reach
+# the browser as-is; a normal string would let Python convert them into real
+# line breaks, which is a JS syntax error that kills every click handler.
+PAGE = r"""<!doctype html>
 <html><head><meta charset="utf-8"><title>mywork.csv</title>
 <style>
   body { font: 15px -apple-system, sans-serif; max-width: 720px;
