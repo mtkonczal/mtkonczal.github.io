@@ -58,7 +58,7 @@ OUTLET_MAP = {
 }
 
 PORT = 4747
-VERSION = "2026-07-19g"  # bump when editing; shown in the page footer
+VERSION = "2026-07-19h"  # bump when editing; shown in the page footer
 UA = ("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
       "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36")
 
@@ -201,11 +201,23 @@ def make_row(fields):
     }
 
 
+# Files the app is allowed to stage. Nothing commits automatically: edits
+# only touch the working tree, and the page's "Publish" button runs
+# git_publish() once, when Mike decides.
+APP_FILES = [str(WORK_CSV), str(PENDING_CSV), str(SKIP_CSV), str(NOW_QMD)]
+
+
+def git_status():
+    """Porcelain status for the app-managed files."""
+    p = subprocess.run(["git", "status", "--porcelain", "--", *APP_FILES],
+                       cwd=REPO, capture_output=True, text=True)
+    return [ln for ln in p.stdout.splitlines() if ln.strip()]
+
+
 def git_publish(message):
     """add/commit/pull --rebase/push; returns a combined log, never raises."""
     log = []
-    for args in (["add", str(WORK_CSV), str(PENDING_CSV), str(SKIP_CSV),
-                  str(NOW_QMD)],
+    for args in (["add", "--", *APP_FILES],
                  ["commit", "-m", message],
                  ["pull", "--rebase", "origin", "main"],
                  ["push", "origin", "main"]):
@@ -219,8 +231,8 @@ def git_publish(message):
             # the sequence so pull/push don't pile more errors on top.
             if args[0] == "commit" and "nothing to commit" in out:
                 continue
-            log.append("!! git step failed — the row IS saved in the CSV; "
-                       "fix the git issue and push manually.")
+            log.append("!! git step failed — your edits ARE saved in the "
+                       "files; fix the git issue and publish again.")
             break
     return "\n".join(log)
 
@@ -371,6 +383,14 @@ mikekonczal.com — work database, highlights &amp; Now page</span></h1>
   <button id="tab-hl" onclick="show('hl')">Highlights</button>
   <button id="tab-now" onclick="show('now')">Now page</button>
 </div>
+
+<div style="display:flex; align-items:center; gap:12px; padding:8px 0;
+     border-bottom:1px solid #eee; margin-bottom:4px">
+  <button class="act primary" style="margin:0" onclick="publish()">
+    Publish to site</button>
+  <span id="pubstatus" class="muted"></span>
+</div>
+<div id="publog"></div>
 
 <div class="panel" id="panel-add">
   <label>URL</label>
@@ -535,6 +555,7 @@ async function doAdd() {
   if (r.ok) {
     document.getElementById('form').style.display = 'none';
     document.getElementById('url').value = '';
+    pubStatus();
   }
 }
 
@@ -592,14 +613,14 @@ async function approve(i, encLink) {
   const body = fields('q' + i + '_');
   body.link = decodeURIComponent(encLink);
   const r = await api('/api/approve', body);
-  if (r.ok) loadQueue();
+  if (r.ok) { loadQueue(); pubStatus(); }
   else document.getElementById('q' + i + '_log').innerHTML =
     '<div class="log warn">' + r.message + '</div>';
 }
 
 async function reject(encLink) {
   await api('/api/reject', {link: decodeURIComponent(encLink)});
-  loadQueue();
+  loadQueue(); pubStatus();
 }
 
 // ---- Database tab ----
@@ -668,7 +689,7 @@ async function saveDb() {
     highlight: document.getElementById('d_highlight').checked });
   document.getElementById('dblog').innerHTML =
     '<div class="log' + (r.ok ? '' : ' warn') + '">' + r.message + '</div>';
-  if (r.ok) { closeDb(); loadDb(); }
+  if (r.ok) { closeDb(); loadDb(); pubStatus(); }
 }
 
 async function deleteDb() {
@@ -678,7 +699,7 @@ async function deleteDb() {
                       {idx: dbEditing._idx, orig_link: dbEditing.Link});
   document.getElementById('dblog').innerHTML =
     '<div class="log' + (r.ok ? '' : ' warn') + '">' + r.message + '</div>';
-  if (r.ok) { closeDb(); loadDb(); }
+  if (r.ok) { closeDb(); loadDb(); pubStatus(); }
 }
 
 // ---- Highlights tab ----
@@ -726,7 +747,7 @@ async function saveHl() {
   const r = await api('/api/highlights/save', {idxs: [...hlSet]});
   document.getElementById('hllog').innerHTML =
     '<div class="log' + (r.ok ? '' : ' warn') + '">' + r.message + '</div>';
-  if (r.ok) loadHl();
+  if (r.ok) { loadHl(); pubStatus(); }
 }
 
 // ---- Now page tab ----
@@ -767,7 +788,28 @@ async function saveNow() {
     orig_date: nowOrig });
   document.getElementById('nowlog').innerHTML =
     '<div class="log' + (r.ok ? '' : ' warn') + '">' + r.message + '</div>';
-  if (r.ok) { document.getElementById('noweditor').style.display = 'none'; loadNow(); }
+  if (r.ok) { document.getElementById('noweditor').style.display = 'none';
+              loadNow(); pubStatus(); }
+}
+
+// ---- Publish bar ----
+
+async function pubStatus() {
+  const r = await api('/api/gitstatus');
+  const n = (r.changes || []).length;
+  document.getElementById('pubstatus').textContent = r.unreachable
+    ? 'app not running'
+    : n ? n + ' unpublished change' + (n > 1 ? 's' : '')
+        : 'everything published';
+}
+
+async function publish() {
+  document.getElementById('publog').innerHTML =
+    '<div class="log">Publishing…</div>';
+  const r = await api('/api/publish', {});
+  document.getElementById('publog').innerHTML =
+    '<div class="log' + (r.ok ? '' : ' warn') + '">' + r.message + '</div>';
+  pubStatus();
 }
 
 async function quitApp() {
@@ -777,6 +819,8 @@ async function quitApp() {
 }
 
 loadQueue();
+pubStatus();
+setInterval(pubStatus, 30000);
 </script></body></html>
 """
 
@@ -825,6 +869,19 @@ class Handler(BaseHTTPRequestHandler):
             print(f"[browser] {data.get('msg', '')}", flush=True)
             return self._json({"ok": True})
 
+        if self.path == "/api/gitstatus":
+            return self._json({"changes": git_status()})
+
+        if self.path == "/api/publish":
+            changes = git_status()
+            if not changes:
+                return self._json({"ok": True,
+                                   "message": "Nothing to publish."})
+            msg = squish(data.get("message")) or "Update site content"
+            log = git_publish(msg)
+            return self._json({"ok": True, "message":
+                               "Published. Site rebuilds in ~2 min.\n" + log})
+
         if self.path == "/api/quit":
             self._json({"ok": True})
             threading.Thread(target=self.server.shutdown,
@@ -866,8 +923,8 @@ class Handler(BaseHTTPRequestHandler):
                 return self._json({"ok": False, "message": " ".join(probs)})
             rows[i] = make_row(data)
             write_work(rows)
-            log = git_publish(f"Edit: {rows[i]['Original Title']}")
-            return self._json({"ok": True, "message": "Saved and pushed.\n" + log})
+            return self._json({"ok": True, "message":
+                               "Saved. Hit Publish to push to the site."})
 
         if self.path == "/api/db/delete":
             rows = read_rows(WORK_CSV)
@@ -875,10 +932,10 @@ class Handler(BaseHTTPRequestHandler):
             if not (0 <= i < len(rows)) or rows[i]["Link"] != data.get("orig_link"):
                 return self._json({"ok": False, "message":
                                    "Row changed on disk — reopen the tab and retry."})
-            gone = rows.pop(i)
+            rows.pop(i)
             write_work(rows)
-            log = git_publish(f"Remove: {gone['Original Title']}")
-            return self._json({"ok": True, "message": "Deleted and pushed.\n" + log})
+            return self._json({"ok": True, "message":
+                               "Deleted. Hit Publish to push to the site."})
 
         if self.path == "/api/highlights/save":
             chosen = set(data.get("idxs", []))
@@ -886,8 +943,8 @@ class Handler(BaseHTTPRequestHandler):
             for i, r in enumerate(rows):
                 r["Highlight"] = "X" if i in chosen else ""
             write_work(rows)
-            log = git_publish("Update Latest highlights")
-            return self._json({"ok": True, "message": "Saved and pushed.\n" + log})
+            return self._json({"ok": True, "message":
+                               "Saved. Hit Publish to push to the site."})
 
         if self.path == "/api/now/state":
             _, entries = read_now()
@@ -898,10 +955,8 @@ class Handler(BaseHTTPRequestHandler):
                                  data.get("orig_date"))
             if err:
                 return self._json({"ok": False, "message": err})
-            log = git_publish(f"Now update: {data['date']}")
             return self._json({"ok": True, "message":
-                               "Saved and pushed. Site rebuilds in ~2 min.\n"
-                               + log})
+                               "Saved. Hit Publish to push to the site."})
 
         if self.path == "/api/fetch":
             try:
@@ -923,10 +978,9 @@ class Handler(BaseHTTPRequestHandler):
                 write_pending(keep)
             threading.Thread(target=archive_wayback,
                              args=(row["Link"],), daemon=True).start()
-            log = git_publish(f"Add: {row['Original Title']}")
             return self._json({"ok": True, "message":
-                               "Added and pushed. Site rebuilds in ~2 min.\n"
-                               + log})
+                               "Saved. Hit Publish when you're ready to "
+                               "push it to the site."})
 
         if self.path == "/api/reject":
             link = data["link"]
@@ -934,7 +988,6 @@ class Handler(BaseHTTPRequestHandler):
             keep = [r for r in read_rows(PENDING_CSV)
                     if norm_url(r["Link"]) != norm_url(link)]
             write_pending(keep)
-            git_publish("Reject discovery candidate")
             return self._json({"ok": True})
 
         self.send_error(404)
