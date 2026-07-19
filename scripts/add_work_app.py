@@ -368,6 +368,9 @@ PAGE = """<!doctype html>
   <div id="queue" class="muted">Loading…</div>
 </div>
 
+<p class="muted" style="position:fixed; bottom:8px; right:14px; font-size:12px">
+  <a href="#" onclick="quitApp(); return false">Quit app</a></p>
+
 <div class="panel" id="panel-now" style="display:none">
   <p class="muted">Entries in <b>_now-entries.qmd</b> (one per month).
      Click a date to edit it, or start a new month.</p>
@@ -400,10 +403,23 @@ function show(which) {
 }
 
 async function api(path, body) {
-  const r = await fetch(path, {
-    method: 'POST', headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify(body || {})});
-  return r.json();
+  try {
+    const r = await fetch(path, {
+      method: 'POST', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(body || {})});
+    return await r.json();
+  } catch (e) {
+    return { ok: false, unreachable: true, pending: [], entries: [],
+      message: 'Cannot reach the app — it is no longer running. ' +
+               'Double-click "Add Work.command" to restart it.' };
+  }
+}
+
+function deadNotice(elId, r) {
+  if (!r.unreachable) return false;
+  document.getElementById(elId).innerHTML =
+    '<div class="log warn">' + r.message + '</div>';
+  return true;
 }
 
 async function doFetch() {
@@ -452,7 +468,8 @@ function esc(s) {
 
 async function loadQueue() {
   const r = await api('/api/state');
-  const q = r.pending;
+  if (deadNotice('queue', r)) return;
+  const q = r.pending || [];
   document.getElementById('qcount').textContent =
     q.length ? '(' + q.length + ')' : '';
   const el = document.getElementById('queue');
@@ -514,7 +531,8 @@ let nowEntries = [], nowOrig = null;
 
 async function loadNow() {
   const r = await api('/api/now/state');
-  nowEntries = r.entries;
+  if (deadNotice('nowlist', r)) return;
+  nowEntries = r.entries || [];
   document.getElementById('nowlist').innerHTML = nowEntries.map((e, i) =>
     `<button class="act" style="margin:0 8px 8px 0; background:#eee"
        onclick="editNow(${i})">${esc(e.date)}</button>`).join('');
@@ -546,6 +564,12 @@ async function saveNow() {
   document.getElementById('nowlog').innerHTML =
     '<div class="log' + (r.ok ? '' : ' warn') + '">' + r.message + '</div>';
   if (r.ok) { document.getElementById('noweditor').style.display = 'none'; loadNow(); }
+}
+
+async function quitApp() {
+  await api('/api/quit');
+  document.body.innerHTML =
+    '<h1>App stopped.</h1><p>Double-click "Add Work.command" to start it again.</p>';
 }
 
 loadQueue();
@@ -589,6 +613,12 @@ class Handler(BaseHTTPRequestHandler):
                                "message": f"App error: {e!r}"}, 500)
 
     def _route(self, data):
+
+        if self.path == "/api/quit":
+            self._json({"ok": True})
+            threading.Thread(target=self.server.shutdown,
+                             daemon=True).start()
+            return
 
         if self.path == "/api/state":
             return self._json({"pending": read_rows(PENDING_CSV)})
@@ -645,15 +675,23 @@ class Handler(BaseHTTPRequestHandler):
 
 
 def main():
-    server = ThreadingHTTPServer(("127.0.0.1", PORT), Handler)
     url = f"http://localhost:{PORT}"
-    print(f"mywork.csv app running at {url}  (Ctrl-C to stop)")
+    try:
+        server = ThreadingHTTPServer(("127.0.0.1", PORT), Handler)
+    except OSError:
+        # Another instance already owns the port: just open its page.
+        print(f"App already running at {url} — opening browser.")
+        webbrowser.open(url)
+        return
+    print(f"mywork.csv app running at {url}  (use the page's Quit link, "
+          "or Ctrl-C here, to stop)")
     threading.Timer(0.4, lambda: webbrowser.open(url)).start()
     try:
         server.serve_forever()
     except KeyboardInterrupt:
-        print("\nStopped.")
-        sys.exit(0)
+        pass
+    print("Stopped.")
+    sys.exit(0)
 
 
 if __name__ == "__main__":
