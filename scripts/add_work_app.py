@@ -58,7 +58,7 @@ OUTLET_MAP = {
 }
 
 PORT = 4747
-VERSION = "2026-07-19h"  # bump when editing; shown in the page footer
+VERSION = "2026-07-19i"  # bump when editing; shown in the page footer
 UA = ("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
       "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36")
 
@@ -333,6 +333,8 @@ PAGE = r"""<!doctype html>
   .tabs button { font-size: 15px; padding: 8px 18px; border: none;
                  background: #eee; cursor: pointer; border-radius: 6px 6px 0 0; }
   .tabs button.on { background: #2c5f8a; color: #fff; }
+  #pubbtn:disabled { background: #ddd !important; color: #999 !important;
+                     cursor: default; }
   .panel { border-top: 3px solid #2c5f8a; padding-top: 16px; }
   label { display: block; margin: 10px 0 3px; font-weight: 600; font-size: 13px; }
   input[type=text], input[type=date], select, textarea {
@@ -382,13 +384,8 @@ mikekonczal.com — work database, highlights &amp; Now page</span></h1>
   <button id="tab-db" onclick="show('db')">Database</button>
   <button id="tab-hl" onclick="show('hl')">Highlights</button>
   <button id="tab-now" onclick="show('now')">Now page</button>
-</div>
-
-<div style="display:flex; align-items:center; gap:12px; padding:8px 0;
-     border-bottom:1px solid #eee; margin-bottom:4px">
-  <button class="act primary" style="margin:0" onclick="publish()">
-    Publish to site</button>
-  <span id="pubstatus" class="muted"></span>
+  <button id="pubbtn" disabled onclick="publish()"
+    style="float:right; background:#2e7d32; color:#fff">Publish</button>
 </div>
 <div id="publog"></div>
 
@@ -796,11 +793,11 @@ async function saveNow() {
 
 async function pubStatus() {
   const r = await api('/api/gitstatus');
-  const n = (r.changes || []).length;
-  document.getElementById('pubstatus').textContent = r.unreachable
-    ? 'app not running'
-    : n ? n + ' unpublished change' + (n > 1 ? 's' : '')
-        : 'everything published';
+  const n = r.unreachable ? 0 : (r.changes || []).length;
+  const b = document.getElementById('pubbtn');
+  b.disabled = n === 0;
+  b.textContent = n ? 'Publish' : 'Published';
+  b.title = n ? n + ' unpublished change' + (n > 1 ? 's' : '') : '';
 }
 
 async function publish() {
