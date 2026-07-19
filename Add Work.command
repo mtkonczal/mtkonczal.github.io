@@ -4,6 +4,12 @@
 # stop it with the "Quit app" link on the page. Double-clicking again when
 # it's already running just reopens the browser tab.
 cd "$(dirname "$0")"
-nohup python3 scripts/add_work_app.py >> /tmp/addwork.log 2>&1 &
+LOG=".addwork.log"
+echo "=== launch $(date) ===" >> "$LOG"
+echo "Starting the app... (log: $LOG)"
+nohup python3 scripts/add_work_app.py >> "$LOG" 2>&1 &
 sleep 1
+tail -n 3 "$LOG"
+echo "If no browser tab opened, send Mike the contents of $LOG"
+sleep 2
 exit 0
