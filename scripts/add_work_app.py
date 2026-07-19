@@ -58,7 +58,7 @@ OUTLET_MAP = {
 }
 
 PORT = 4747
-VERSION = "2026-07-19c"  # bump when editing; shown in the page footer
+VERSION = "2026-07-19d"  # bump when editing; shown in the page footer
 UA = ("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
       "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36")
 
@@ -327,7 +327,27 @@ PAGE = """<!doctype html>
   .warn { color: #b3261e; font-weight: 600; }
   .muted { color: #777; }
   a { color: #2c5f8a; }
-</style></head><body>
+</style>
+<script>
+/* Diagnostic block: parses independently of the main script below, so it
+   still runs (and reports) even if the main script fails to parse. */
+function _diag(msg) {
+  try { fetch('/api/jslog', {method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({msg: String(msg).slice(0, 500)})}); } catch (e) {}
+}
+window.onerror = function (msg, src, line, col) {
+  _diag('JS ERROR: ' + msg + ' @' + line + ':' + col);
+};
+window.addEventListener('unhandledrejection', function (e) {
+  _diag('PROMISE ERROR: ' + (e.reason && e.reason.message || e.reason));
+});
+_diag('pageload v%VERSION% ua=' + navigator.userAgent);
+</script>
+</head><body>
+<noscript><p style="color:#b3261e; font-weight:bold">JavaScript is disabled
+or blocked in this browser, so nothing on this page will work. Check content
+blockers / browser settings for localhost.</p></noscript>
 <h1>mywork.csv</h1>
 <div class="tabs">
   <button id="tab-add" class="on" onclick="show('add')">Add by URL</button>
@@ -580,8 +600,9 @@ loadQueue();
 
 
 class Handler(BaseHTTPRequestHandler):
-    def log_message(self, *args):
-        pass  # keep the terminal quiet
+    def log_message(self, fmt, *args):
+        # one line per request, flushed so the launcher log is live
+        print(f"[req] {fmt % args}", flush=True)
 
     def _json(self, obj, code=200):
         body = json.dumps(obj).encode()
@@ -617,6 +638,10 @@ class Handler(BaseHTTPRequestHandler):
                                "message": f"App error: {e!r}"}, 500)
 
     def _route(self, data):
+
+        if self.path == "/api/jslog":
+            print(f"[browser] {data.get('msg', '')}", flush=True)
+            return self._json({"ok": True})
 
         if self.path == "/api/quit":
             self._json({"ok": True})
@@ -687,8 +712,8 @@ def main():
         print(f"App already running at {url} — opening browser.")
         webbrowser.open(url)
         return
-    print(f"mywork.csv app running at {url}  (use the page's Quit link, "
-          "or Ctrl-C here, to stop)")
+    print(f"mywork.csv app v{VERSION} running at {url}  (use the page's "
+          "Quit link, or Ctrl-C here, to stop)", flush=True)
     threading.Timer(0.4, lambda: webbrowser.open(url)).start()
     try:
         server.serve_forever()
