@@ -31,6 +31,7 @@ REPO = Path(__file__).resolve().parent.parent
 WORK_CSV = REPO / "data" / "mywork.csv"
 PENDING_CSV = REPO / "data" / "pending.csv"
 SKIP_CSV = REPO / "data" / "skiplist.csv"
+NOW_QMD = REPO / "_now-entries.qmd"
 
 HEADER = ["Date", "Original Title", "Outlet", "Format",
           "Link", "Highlight", "Author", "Excerpt"]
@@ -105,6 +106,59 @@ def append_skiplist(link):
         w.writerow([link, datetime.date.today().isoformat()])
 
 
+# ---------- Now section (_now-entries.qmd) -----------------------------------
+#
+# The file is a Quarto partial: an explanatory comment block at the top, then
+# entries newest-first, each shaped as
+#   ::: {#now-YYYY-MM .mk-now-entry data-date="YYYY-MM"}
+#   ...markdown...
+#   :::
+# It is spliced into index.qmd and now.qmd via {{< include >}}.
+
+NOW_ENTRY_RE = re.compile(
+    r'^::: \{#now-(\d{4}-\d{2}) \.mk-now-entry data-date="\1"\}\n'
+    r'(.*?)\n:::\s*$',
+    re.MULTILINE | re.DOTALL)
+
+
+def read_now():
+    """Returns (header_comment, [{"date": "YYYY-MM", "content": md}, ...])."""
+    text = NOW_QMD.read_text(encoding="utf-8")
+    first = text.find("::: {#now-")
+    header = text[:first].rstrip("\n") if first > 0 else ""
+    entries = [{"date": m.group(1), "content": m.group(2).strip()}
+               for m in NOW_ENTRY_RE.finditer(text)]
+    entries.sort(key=lambda e: e["date"], reverse=True)
+    return header, entries
+
+
+def write_now(header, entries):
+    entries = sorted(entries, key=lambda e: e["date"], reverse=True)
+    blocks = [
+        f'::: {{#now-{e["date"]} .mk-now-entry data-date="{e["date"]}"}}\n\n'
+        f'{e["content"].strip()}\n\n:::'
+        for e in entries
+    ]
+    NOW_QMD.write_text(header + "\n\n" + "\n\n".join(blocks) + "\n",
+                       encoding="utf-8")
+
+
+def save_now_entry(date, content, orig_date=None):
+    """Insert or update one entry; returns an error string or None."""
+    if not re.fullmatch(r"\d{4}-\d{2}", date or ""):
+        return "Date must be YYYY-MM."
+    mm = int(date[5:7])
+    if not 1 <= mm <= 12:
+        return "Month must be 01-12."
+    if not (content or "").strip():
+        return "Entry is empty."
+    header, entries = read_now()
+    entries = [e for e in entries if e["date"] not in (orig_date, date)]
+    entries.append({"date": date, "content": content})
+    write_now(header, entries)
+    return None
+
+
 def validate(fields):
     probs = []
     if not squish(fields.get("title")):
@@ -140,7 +194,8 @@ def make_row(fields):
 def git_publish(message):
     """add/commit/pull --rebase/push; returns a combined log, never raises."""
     log = []
-    for args in (["add", str(WORK_CSV), str(PENDING_CSV), str(SKIP_CSV)],
+    for args in (["add", str(WORK_CSV), str(PENDING_CSV), str(SKIP_CSV),
+                  str(NOW_QMD)],
                  ["commit", "-m", message],
                  ["pull", "--rebase", "origin", "main"],
                  ["push", "origin", "main"]):
@@ -277,6 +332,7 @@ PAGE = """<!doctype html>
   <button id="tab-add" class="on" onclick="show('add')">Add by URL</button>
   <button id="tab-queue" onclick="show('queue')">Review queue
     <span id="qcount"></span></button>
+  <button id="tab-now" onclick="show('now')">Now page</button>
 </div>
 
 <div class="panel" id="panel-add">
@@ -312,18 +368,35 @@ PAGE = """<!doctype html>
   <div id="queue" class="muted">Loading…</div>
 </div>
 
+<div class="panel" id="panel-now" style="display:none">
+  <p class="muted">Entries in <b>_now-entries.qmd</b> (one per month).
+     Click a date to edit it, or start a new month.</p>
+  <div id="nowlist"></div>
+  <button class="act primary" onclick="newNow()">New entry</button>
+  <div id="noweditor" style="display:none">
+    <label>Month (YYYY-MM)</label>
+    <input type="text" id="n_date" style="max-width:140px">
+    <label>Entry (markdown: ### Working on, ### Reading, links, etc.)</label>
+    <textarea id="n_content" style="height:260px; font-family: monospace;
+      font-size: 13px;"></textarea>
+    <button class="act success" onclick="saveNow()">Save &amp; publish</button>
+  </div>
+  <div id="nowlog"></div>
+</div>
+
 <script>
 const FORMATS = %FORMATS%;
 const sel = document.getElementById('f_format');
 FORMATS.forEach(f => sel.add(new Option(f, f)));
 
 function show(which) {
-  for (const t of ['add', 'queue']) {
+  for (const t of ['add', 'queue', 'now']) {
     document.getElementById('panel-' + t).style.display =
       t === which ? '' : 'none';
     document.getElementById('tab-' + t).classList.toggle('on', t === which);
   }
   if (which === 'queue') loadQueue();
+  if (which === 'now') loadNow();
 }
 
 async function api(path, body) {
@@ -435,6 +508,46 @@ async function reject(encLink) {
   loadQueue();
 }
 
+// ---- Now page tab ----
+
+let nowEntries = [], nowOrig = null;
+
+async function loadNow() {
+  const r = await api('/api/now/state');
+  nowEntries = r.entries;
+  document.getElementById('nowlist').innerHTML = nowEntries.map((e, i) =>
+    `<button class="act" style="margin:0 8px 8px 0; background:#eee"
+       onclick="editNow(${i})">${esc(e.date)}</button>`).join('');
+}
+
+function editNow(i) {
+  nowOrig = nowEntries[i].date;
+  document.getElementById('n_date').value = nowEntries[i].date;
+  document.getElementById('n_content').value = nowEntries[i].content;
+  document.getElementById('noweditor').style.display = '';
+  document.getElementById('nowlog').innerHTML = '';
+}
+
+function newNow() {
+  nowOrig = null;
+  document.getElementById('n_date').value =
+    new Date().toISOString().slice(0, 7);
+  document.getElementById('n_content').value =
+    '### Working on\n\n\n\n### Reading\n\n';
+  document.getElementById('noweditor').style.display = '';
+  document.getElementById('nowlog').innerHTML = '';
+}
+
+async function saveNow() {
+  const r = await api('/api/now/save', {
+    date: document.getElementById('n_date').value.trim(),
+    content: document.getElementById('n_content').value,
+    orig_date: nowOrig });
+  document.getElementById('nowlog').innerHTML =
+    '<div class="log' + (r.ok ? '' : ' warn') + '">' + r.message + '</div>';
+  if (r.ok) { document.getElementById('noweditor').style.display = 'none'; loadNow(); }
+}
+
 loadQueue();
 </script></body></html>
 """
@@ -469,9 +582,30 @@ class Handler(BaseHTTPRequestHandler):
             data = json.loads(self.rfile.read(n) or b"{}")
         except json.JSONDecodeError:
             return self._json({"ok": False, "message": "bad request"}, 400)
+        try:
+            return self._route(data)
+        except Exception as e:  # noqa: BLE001 - always answer with JSON
+            return self._json({"ok": False,
+                               "message": f"App error: {e!r}"}, 500)
+
+    def _route(self, data):
 
         if self.path == "/api/state":
             return self._json({"pending": read_rows(PENDING_CSV)})
+
+        if self.path == "/api/now/state":
+            _, entries = read_now()
+            return self._json({"entries": entries})
+
+        if self.path == "/api/now/save":
+            err = save_now_entry(data.get("date"), data.get("content"),
+                                 data.get("orig_date"))
+            if err:
+                return self._json({"ok": False, "message": err})
+            log = git_publish(f"Now update: {data['date']}")
+            return self._json({"ok": True, "message":
+                               "Saved and pushed. Site rebuilds in ~2 min.\n"
+                               + log})
 
         if self.path == "/api/fetch":
             try:
