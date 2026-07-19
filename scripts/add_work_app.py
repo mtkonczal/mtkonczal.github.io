@@ -58,7 +58,7 @@ OUTLET_MAP = {
 }
 
 PORT = 4747
-VERSION = "2026-07-19i"  # bump when editing; shown in the page footer
+VERSION = "2026-07-19j"  # bump when editing; shown in the page footer
 UA = ("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
       "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36")
 
@@ -335,6 +335,15 @@ PAGE = r"""<!doctype html>
   .tabs button.on { background: #2c5f8a; color: #fff; }
   #pubbtn:disabled { background: #ddd !important; color: #999 !important;
                      cursor: default; }
+  .lrow { display: grid; grid-template-columns: 88px 1fr 150px 92px;
+          gap: 10px; padding: 6px 4px; border-bottom: 1px solid #eee;
+          cursor: pointer; align-items: baseline; }
+  .lrow.star { grid-template-columns: 24px 88px 1fr 150px 92px; }
+  .lhead { font-weight: 700; font-size: 12px; color: #666;
+           text-transform: uppercase; letter-spacing: .04em;
+           cursor: default; border-bottom: 2px solid #ccc; }
+  .lrow > span { overflow: hidden; text-overflow: ellipsis;
+                 white-space: nowrap; }
   .panel { border-top: 3px solid #2c5f8a; padding-top: 16px; }
   label { display: block; margin: 10px 0 3px; font-weight: 600; font-size: 13px; }
   input[type=text], input[type=date], select, textarea {
@@ -646,11 +655,14 @@ function renderDb() {
   document.getElementById('dbtable').innerHTML =
     '<p class="muted">' + rows.length + ' of ' + dbRows.length +
     ' rows — click one to edit</p>' +
-    rows.map(r => `<div style="padding:6px 4px; border-bottom:1px solid #eee;
-        cursor:pointer" onclick="editDb(${r._idx})">
-      <span class="muted">${esc(r.Date)}</span> ·
-      ${r.Highlight === 'X' ? '★ ' : ''}<b>${esc(r['Original Title'])}</b>
-      <span class="muted">— ${esc(r.Outlet)} (${esc(r.Format)})</span>
+    `<div class="lrow lhead"><span>Date</span><span>Name</span>
+       <span>Where</span><span>What</span></div>` +
+    rows.map(r => `<div class="lrow" onclick="editDb(${r._idx})">
+      <span class="muted">${esc(r.Date)}</span>
+      <span title="${esc(r['Original Title'])}">
+        ${r.Highlight === 'X' ? '★ ' : ''}<b>${esc(r['Original Title'])}</b></span>
+      <span class="muted" title="${esc(r.Outlet)}">${esc(r.Outlet)}</span>
+      <span class="muted">${esc(r.Format)}</span>
     </div>`).join('');
 }
 
@@ -723,15 +735,18 @@ function renderHl() {
     ' ' + hlSet.size + ' highlighted in total';
   const term = document.getElementById('hlsearch').value;
   document.getElementById('hllist').innerHTML =
+    `<div class="lrow star lhead"><span></span><span>Date</span>
+       <span>Name</span><span>Where</span><span>What</span></div>` +
     hlRows.filter(r => rowMatches(r, term)).map(r => {
       const on = hlSet.has(r._idx);
-      return `<div style="padding:6px 4px; border-bottom:1px solid #eee;
-          cursor:pointer; ${on ? 'background:#fdf6e3' : ''}"
+      return `<div class="lrow star" ${on ? 'style="background:#fdf6e3"' : ''}
           onclick="toggleHl(${r._idx})">
-        <span style="width:1.4em; display:inline-block">${on ? '★' : '☆'}</span>
-        <span class="muted">${esc(r.Date)}</span> ·
-        <b>${esc(r['Original Title'])}</b>
-        <span class="muted">— ${esc(r.Outlet)}</span></div>`;
+        <span>${on ? '★' : '☆'}</span>
+        <span class="muted">${esc(r.Date)}</span>
+        <span title="${esc(r['Original Title'])}"><b>${esc(
+          r['Original Title'])}</b></span>
+        <span class="muted" title="${esc(r.Outlet)}">${esc(r.Outlet)}</span>
+        <span class="muted">${esc(r.Format)}</span></div>`;
     }).join('');
 }
 
