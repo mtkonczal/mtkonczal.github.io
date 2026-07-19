@@ -1,11 +1,20 @@
 #!/bin/bash
 # Double-click to open the mywork.csv entry/review app in your browser.
-# The app keeps running in the background even if you close this window;
-# stop it with the "Quit app" link on the page. Double-clicking again when
-# it's already running just reopens the browser tab.
+# Always restarts the app so it serves the current code, then opens the tab.
+# The app keeps running in the background after this window closes; stop it
+# with the "Quit app" link on the page.
 cd "$(dirname "$0")"
 LOG=".addwork.log"
 echo "=== launch $(date) ===" >> "$LOG"
+
+# Replace any instance already holding the port (stale code otherwise).
+OLD=$(lsof -ti tcp:4747)
+if [ -n "$OLD" ]; then
+  echo "stopping old instance (pid $OLD)" >> "$LOG"
+  kill $OLD 2>/dev/null
+  sleep 1
+fi
+
 echo "Starting the app... (log: $LOG)"
 nohup python3 scripts/add_work_app.py >> "$LOG" 2>&1 &
 sleep 1

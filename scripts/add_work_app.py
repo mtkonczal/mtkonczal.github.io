@@ -58,6 +58,7 @@ OUTLET_MAP = {
 }
 
 PORT = 4747
+VERSION = "2026-07-19c"  # bump when editing; shown in the page footer
 UA = ("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
       "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36")
 
@@ -369,6 +370,7 @@ PAGE = """<!doctype html>
 </div>
 
 <p class="muted" style="position:fixed; bottom:8px; right:14px; font-size:12px">
+  v%VERSION% &nbsp;·&nbsp;
   <a href="#" onclick="quitApp(); return false">Quit app</a></p>
 
 <div class="panel" id="panel-now" style="display:none">
@@ -591,9 +593,11 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_GET(self):
         if self.path in ("/", "/index.html"):
-            body = PAGE.replace("%FORMATS%", json.dumps(FORMATS)).encode()
+            body = (PAGE.replace("%FORMATS%", json.dumps(FORMATS))
+                        .replace("%VERSION%", VERSION).encode())
             self.send_response(200)
             self.send_header("Content-Type", "text/html; charset=utf-8")
+            self.send_header("Cache-Control", "no-store")
             self.send_header("Content-Length", str(len(body)))
             self.end_headers()
             self.wfile.write(body)
