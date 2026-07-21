@@ -426,11 +426,12 @@ items <- pmap(sh, function(Link, Title, Outlet, Year, Desc, ...) {
     href   = Link,
     target = if (!internal) "_blank",
     rel    = if (!internal) "noopener",
-    tags$div(class = "mk-start__body",
-      tags$div(class = "mk-start__title", Title),
-      if (!is.na(Desc)) tags$div(class = "mk-start__impact", HTML(Desc))),
+    # Direct grid children: title (row 1, col 1) and meta (row 1, col 2) share
+    # the top row; the description spans the full width on row 2 (see CSS).
+    tags$div(class = "mk-start__title", Title),
     tags$div(class = "mk-start__meta",
-      tags$span(class = "mk-start__outlet", paste0(Outlet, ", ", Year)))
+      tags$span(class = "mk-start__outlet", paste0(Outlet, ", ", Year))),
+    if (!is.na(Desc)) tags$div(class = "mk-start__impact", HTML(Desc))
   )
 })
 
