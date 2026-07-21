@@ -379,6 +379,23 @@ body { margin: 0; padding-left: 240px; }
 }
 
 /* Book section: cover on the left, praise quotes on the right (mirrors hero) */
+/* "Praise for…" heading with the publication byline (publisher + year) sitting
+   next to it on the same baseline; wraps below on narrow widths. */
+.mk-book__praise-head {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.75rem;
+}
+.mk-book__praise-head h3 { margin: 0; }
+.mk-book__byline {
+  font-family: var(--mk-font-ui);
+  font-size: 0.95rem;
+  color: var(--mk-mute);
+}
+.mk-book__byline a { color: inherit; text-decoration: underline; }
+.mk-book__byline a:hover { color: var(--mk-blue-700); }
+
 .mk-book {
   display: grid;
   grid-template-columns: 260px 1fr;
@@ -1324,6 +1341,15 @@ img.mk-dw-shot {
   background: var(--mk-blue-900);
   padding: 0 3px 0 1px;
   pointer-events: none;
+}
+/* Axis units caption under a sparkline (the two job-change charts), naming what
+   the y-axis measures. Sits just below the chart, above the legend. */
+.mk-macro__unit {
+  font-family: var(--mk-font-ui);
+  font-size: 0.66rem;
+  line-height: 1.2;
+  color: rgba(255, 255, 255, 0.5);
+  margin-top: 0.3rem;
 }
 /* Two-line chart legend (Taylor rule vs. fed funds): a short colour bar keyed
    to each line, sitting between the sparkline and the date row. */

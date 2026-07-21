@@ -20,6 +20,13 @@
 #                  over 12-month change in PAYEMS (total nonfarm), percent.
 #   HEALTH_SHARE   Same, for health care (CES6562000101) over total nonfarm
 #                  (PAYEMS), percent.
+#   WOMEN_CHG      12-month change in women employees (CES0000000010), the raw
+#                  level in thousands of jobs (numerator of WOMEN_SHARE).
+#   HEALTH_CHG     12-month change in health care employees (CES6562000101),
+#                  thousands of jobs (numerator of HEALTH_SHARE).
+#   TOTAL_CHG      12-month change in total nonfarm (PAYEMS), thousands of jobs
+#                  (the shared denominator). Plotted against WOMEN_CHG/HEALTH_CHG
+#                  as the "total" line in those two cells.
 #   LABOR_SHARE    Nonfarm business sector labor share (PRS85006173), rescaled
 #                  from the 2017=100 index to an actual percent of output using
 #                  the hard-coded 2017 level of 56.5%; quarterly.
@@ -82,22 +89,32 @@ build_macro <- function() {
   #    percent. Both series are SA levels in thousands, so the ratio is the share
   #    of net new jobs over the past year that went to women.
   #    (Total nonfarm is PAYEMS on FRED, not the raw BLS id CES0000000001.)
+  #    CES6562000101 is All Employees, Health Care (a subsector of health care &
+  #    social assistance) — health care alone, not the broader eds-and-meds.
+  #    From one pull we derive both the SHARE (headline) and the raw 12-month
+  #    CHANGE levels (thousands of jobs) that the two cells now plot as lines.
   jobs <- getFRED(c("CES0000000010", "PAYEMS", "CES6562000101")) %>%
-    arrange(date)
+    arrange(date) %>%
+    mutate(
+      women_chg  = ces0000000010 - lag(ces0000000010, 12),
+      health_chg = ces6562000101 - lag(ces6562000101, 12),
+      total_chg  = payems        - lag(payems, 12)
+    )
+
   women <- jobs %>%
-    transmute(date, series_id = "WOMEN_SHARE",
-              value = 100 * (ces0000000010 - lag(ces0000000010, 12)) /
-                            (payems - lag(payems, 12))) %>%
+    transmute(date, series_id = "WOMEN_SHARE",  value = 100 * women_chg  / total_chg) %>%
     filter(!is.na(value))
 
   # 6. Health care share of net job growth, trailing 12 months --------------
-  #    CES6562000101 is All Employees, Health Care (a subsector of health care &
-  #    social assistance) — health care alone, not the broader eds-and-meds.
   health <- jobs %>%
-    transmute(date, series_id = "HEALTH_SHARE",
-              value = 100 * (ces6562000101 - lag(ces6562000101, 12)) /
-                            (payems - lag(payems, 12))) %>%
+    transmute(date, series_id = "HEALTH_SHARE", value = 100 * health_chg / total_chg) %>%
     filter(!is.na(value))
+
+  # 5b/6b. Raw 12-month change levels (thousands of jobs), plotted as the two
+  #        lines in the women's and health care cells against a zero reference.
+  women_chg  <- jobs %>% transmute(date, series_id = "WOMEN_CHG",  value = women_chg)  %>% filter(!is.na(value))
+  health_chg <- jobs %>% transmute(date, series_id = "HEALTH_CHG", value = health_chg) %>% filter(!is.na(value))
+  total_chg  <- jobs %>% transmute(date, series_id = "TOTAL_CHG",  value = total_chg)  %>% filter(!is.na(value))
 
   # 7. Labor share, nonfarm business sector (PRS85006173, index 2017=100) ----
   #    Quarterly. Rescaled from the index to an actual percent share by anchoring
@@ -126,7 +143,8 @@ build_macro <- function() {
   taylor   <- tr %>% transmute(date, series_id = "TAYLOR",   value = 100 * taylor)
   fedfunds <- tr %>% transmute(date, series_id = "FEDFUNDS", value = 100 * fed_funds)
 
-  bind_rows(u, sc, vu, di, women, health, lshare, taylor, fedfunds) %>%
+  bind_rows(u, sc, vu, di, women, health, women_chg, health_chg, total_chg,
+            lshare, taylor, fedfunds) %>%
     filter(date >= Sys.Date() - years(5)) %>%
     arrange(series_id, date) %>%
     mutate(vintage = format(Sys.time(), "%Y-%m-%d %H:%M:%S %Z"))
