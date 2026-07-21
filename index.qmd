@@ -669,10 +669,7 @@ Open-source tools I build and maintain, for economic data analysis and for writi
 
 ::: {.mk-book__praise}
 ```{=html}
-<div class="mk-book__praise-head">
-<h3>Praise for <em>Freedom from the Market</em></h3>
-<span class="mk-book__byline"><a href="https://thenewpress.org/books/freedom-from-the-market/" target="_blank" rel="noopener">New Press</a>, 2021</span>
-</div>
+<h3 class="mk-book__praise-h">Praise for <em>Freedom from the Market</em> <span class="mk-book__byline">(<a href="https://thenewpress.org/books/freedom-from-the-market/" target="_blank" rel="noopener">New Press</a>, 2021)</span></h3>
 ```
 
 "Konczal is one of the warriors in this fight, arguing fiercely for the need to set much narrower limits on what is left to markets than has been the case in recent decades. A powerful polemic."\

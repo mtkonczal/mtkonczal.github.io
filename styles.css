@@ -379,19 +379,10 @@ body { margin: 0; padding-left: 240px; }
 }
 
 /* Book section: cover on the left, praise quotes on the right (mirrors hero) */
-/* "Praise for…" heading with the publication byline (publisher + year) sitting
-   next to it on the same baseline; wraps below on narrow widths. */
-.mk-book__praise-head {
-  display: flex;
-  align-items: baseline;
-  flex-wrap: wrap;
-  gap: 0.35rem 0.75rem;
-}
-.mk-book__praise-head h3 { margin: 0; }
+/* Publication byline (publisher + year), shown in parentheses inline after the
+   book title in the "Praise for…" heading; muted and smaller than the heading. */
 .mk-book__byline {
-  font-family: var(--mk-font-ui);
-  font-size: 0.95rem;
-  color: var(--mk-mute);
+  white-space: nowrap;
 }
 .mk-book__byline a { color: inherit; text-decoration: underline; }
 .mk-book__byline a:hover { color: var(--mk-blue-700); }
