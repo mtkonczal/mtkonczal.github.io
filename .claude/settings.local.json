@@ -15,7 +15,9 @@
       "Bash(echo \"quarto: $\\(quarto --version\\)\")",
       "Skill(artifact-design)",
       "Artifact",
-      "Bash(python3 -)"
+      "Bash(python3 -)",
+      "Bash(curl -sSL --max-time 15 -o /tmp/fred_test.csv -w \"HTTP %{http_code}  size=%{size_download}\\\\n\" \"https://fred.stlouisfed.org/graph/fredgraph.csv?id=UNRATE&cosd=2021-01-01\")",
+      "Read(//tmp/**)"
     ]
   }
 }

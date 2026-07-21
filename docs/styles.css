@@ -8,33 +8,35 @@
 
 /* --- Design tokens ------------------------------------------------------- */
 :root {
-  /* Petrol & Copper palette — deep teal-blue structure with a warm copper accent.
-     The --mk-blue-* names are kept so the whole cascade keeps resolving; only the
-     values move from Prussian blue to petrol. Copper is the new interactive accent. */
+  /* Petrol & Chart Ink palette — deep teal-blue structure with a chart-blue
+     working accent, drawn from statistical-graphics vernacular. The --mk-blue-*
+     and --mk-copper-* names are kept so the whole cascade keeps resolving; only
+     the values move. Copper itself survives in one place: the #book band links,
+     where it echoes the earlier identity against the dark petrol. */
   --mk-blue-900:   #0e2c33;  /* petrol: sidebar bg, book band, headings, dark ink */
   --mk-blue-700:   #163e47;  /* deeper petrol: heading/link hover */
   --mk-blue-500:   #2c6e73;  /* mid petrol: focus rings, cool secondary */
   --mk-blue-300:   #6fa3a6;  /* light petrol */
   --mk-blue-50:    #eef3f3;
 
-  /* Copper accent — links, CTA, accent rules, active states, sorting/pagination.
-     #aa5a28 clears WCAG AA (~4.8:1) both as link text on paper and under white CTA text. */
-  --mk-copper:     #aa5a28;
-  --mk-copper-dk:  #8f461c;  /* darker copper for text sitting on tinted chips */
+  /* Chart-blue accent — links, CTA, accent rules, active states, sorting/pagination.
+     #3067a8 clears WCAG AA (~5.2:1) both as link text on paper and under white CTA text. */
+  --mk-copper:     #3067a8;  /* chart blue (name kept for the cascade) */
+  --mk-copper-dk:  #24507f;  /* darker chart blue for text sitting on tinted chips */
 
   --mk-ink:        #16242a;
   --mk-ink-soft:   #45555b;
   --mk-mute:       #7e8a8c;
-  --mk-rule:       #e0e5e4;
-  --mk-rule-soft:  #eef1f0;
-  --mk-bg-soft:    #f7f9f8;
-  --mk-paper:      #fbfaf7;  /* warm white for the content + light bands (was pure #fff) */
+  --mk-rule:       #e0e5e6;
+  --mk-rule-soft:  #eef1f2;
+  --mk-bg-soft:    #f8fafb;
+  --mk-paper:      #fbfcfc;  /* cool near-white for the content + light bands */
   --mk-accent:     var(--mk-copper);
   --mk-accent-dk:  var(--mk-blue-900);
   --mk-radius:     6px;
 
   /* Section bands (homepage alternating backgrounds) */
-  --mk-band-tint:  #eaeeed;   /* cool petrol-grey tint for the alternate bands */
+  --mk-band-tint:  #edf1f2;   /* cool petrol-grey tint for the alternate bands */
   --mk-band-pad-y: 1.25rem;    /* vertical breathing room inside each band */
   --mk-band-max:   1140px;    /* width of the centered inner content column */
 
@@ -61,7 +63,7 @@ h2 { font-size: 1.5rem; line-height: 1.25; }
 h3 { font-size: 1.2rem; }
 p  { text-wrap: pretty; }
 
-a { color: var(--mk-accent); text-decoration: none; border-bottom: 1px solid rgba(170,90,40,0.30); transition: color .15s, border-color .15s; }
+a { color: var(--mk-accent); text-decoration: none; border-bottom: 1px solid rgba(48,103,168,0.30); transition: color .15s, border-color .15s; }
 a:hover { color: var(--mk-blue-900); border-bottom-color: var(--mk-blue-700); }
 
 /* --- Layout: sidebar + content -------------------------------------------- */
@@ -221,6 +223,8 @@ body:has(.mk-hero) main#quarto-document-content.column-page {
 
 .mk-content:has(.mk-hero) > #title-block-header,
 .mk-content:has(.mk-hero) > .mk-hero,
+.mk-content:has(.mk-hero) > #macro-heading,
+.mk-content:has(.mk-hero) > #macro-strip,
 .mk-content:has(.mk-hero) > section.level2 {
   margin: 0;
   padding-top: var(--mk-band-pad-y);
@@ -238,6 +242,25 @@ body:has(.mk-hero) main#quarto-document-content.column-page {
    else alternates white / soft tint. */
 .mk-content:has(.mk-hero) > #title-block-header,
 .mk-content:has(.mk-hero) > .mk-hero   { background: var(--mk-paper); }
+/* "Data I'm watching" label sits on the paper band, snug above the dark macro
+   strip: no top padding (the hero's bottom padding already separates it from
+   the bio), a small gap below before the dark box. */
+.mk-content:has(.mk-hero) > #macro-heading {
+  background: var(--mk-paper);
+  padding-top: 0;
+  padding-bottom: 0.75rem;
+}
+.mk-content:has(.mk-hero) > #macro-strip {
+  background-color: var(--mk-blue-900);
+  /* faint gridline motif: the strip reads as a chart, not just a dark band */
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 22px 22px;
+  padding-top: 1.15rem;
+  padding-bottom: 1.15rem;
+}
+.mk-content:has(.mk-hero) > #start-here  { background: var(--mk-paper); }
 .mk-content:has(.mk-hero) > #latest    { background: var(--mk-band-tint); }
 .mk-content:has(.mk-hero) > #portfolio { background: var(--mk-paper); }
 .mk-content:has(.mk-hero) > #projects  { background: var(--mk-band-tint); }
@@ -267,6 +290,7 @@ body:has(.mk-hero) main#quarto-document-content.column-page {
    shared blue accent rule (the ::after defined above now shows through).
    All four section openers share this treatment so they read at one size.
    (#book sets its own white heading color below for the dark band.) */
+#start-here > h2:first-child,
 #latest > h2:first-child,
 #portfolio > h2:first-child,
 #projects > h2:first-child,
@@ -277,6 +301,7 @@ body:has(.mk-hero) main#quarto-document-content.column-page {
   letter-spacing: -0.02em;
   color: var(--mk-blue-900);
 }
+#start-here > h2:first-child::after,
 #latest > h2:first-child::after,
 #portfolio > h2:first-child::after,
 #projects > h2:first-child::after,
@@ -292,7 +317,10 @@ body:has(.mk-hero) main#quarto-document-content.column-page {
 .mk-content:has(.mk-hero) > #book h3 { color: #fff; }
 .mk-content:has(.mk-hero) > #book p,
 .mk-content:has(.mk-hero) > #book li { color: #bcd0d0; }
-.mk-content:has(.mk-hero) > #book h2::after { background: var(--mk-accent); }
+/* Copper survives only on this band: light copper reads against the dark
+   petrol where the chart-blue accent would sink, and it keeps a thread of
+   the earlier identity on the book feature. */
+.mk-content:has(.mk-hero) > #book h2::after { background: #e0a06a; }
 .mk-content:has(.mk-hero) > #book a {
   color: #e0a06a;
   border-bottom-color: rgba(224, 160, 106, 0.35);
@@ -308,11 +336,13 @@ body:has(.mk-hero) main#quarto-document-content.column-page {
 @media (max-width: 1000px) {
   .mk-content:has(.mk-hero) > #title-block-header,
   .mk-content:has(.mk-hero) > .mk-hero,
+  .mk-content:has(.mk-hero) > #macro-strip,
   .mk-content:has(.mk-hero) > section.level2 {
     padding-top: 1.75rem;
     padding-bottom: 1.75rem;
     padding-inline: 1.25rem;
   }
+  .mk-content:has(.mk-hero) > #macro-strip { padding-top: 1.15rem; padding-bottom: 1.15rem; }
 }
 
 /* Smooth in-page scrolling for the sidebar section links */
@@ -384,30 +414,9 @@ body { margin: 0; padding-left: 240px; }
 }
 .mk-profile { display: none; }
 
-@media (max-width: 1000px) {
-  /* Sidebar collapses to a top bar; drop the desktop left offset. */
-  body { padding-left: 0; }
-  .mk-layout { grid-template-columns: 1fr; }
-  .mk-sidebar {
-    position: static;
-    width: auto;
-    height: auto;
-    overflow: visible;
-    flex-direction: row;
-    align-items: center;
-    flex-wrap: wrap;
-    padding: 1rem 1.25rem;
-    gap: 1rem;
-  }
-  .mk-sidebar__brand,
-  .mk-sidebar__tagline { margin: 0; flex: 0 0 auto; }
-  .mk-sidebar__tagline { display: none; }
-  .mk-sidebar__nav { flex-direction: row; flex-wrap: wrap; gap: 0.25rem; margin: 0; }
-  .mk-sidebar__social { padding: 0; border: none; margin: 0 0 0 auto; }
-  .mk-main { padding: 1.5rem 1.25rem 4rem; }
-  .mk-home { grid-template-columns: 1fr; }
-  .mk-profile { position: static; max-width: 320px; }
-}
+/* The sidebar stays a fixed 240px left rail at every width (no top-bar mode).
+   Content keeps its `padding-left: 240px` offset; narrow-screen content padding
+   is handled by the .mk-content rule in the max-width:1000px block above. */
 
 /* Clips intro: photo + text side-by-side */
 .mk-clips-intro {
@@ -588,7 +597,7 @@ body:has(.mk-now-archive) .mk-content {
   color: inherit;
   transition: background 0.18s;
 }
-.mk-recent__item:hover { background: rgba(170, 90, 40, 0.08); text-decoration: none; }
+.mk-recent__item:hover { background: rgba(48, 103, 168, 0.07); text-decoration: none; }
 
 .mk-recent__date {
   font-family: var(--mk-font-ui);
@@ -630,7 +639,7 @@ body:has(.mk-now-archive) .mk-content {
   font-weight: 600;
   letter-spacing: 0.005em;
   color: var(--mk-copper-dk);
-  background: rgba(170, 90, 40, 0.12);
+  background: rgba(48, 103, 168, 0.12);
   padding: 0.3rem 0.65rem;
   border-radius: 999px;
   white-space: nowrap;
@@ -800,7 +809,7 @@ body:has(.mk-now-archive) .mk-content {
 .mk-table .dataTables_wrapper input[type="search"]:focus,
 .mk-table .dataTables_wrapper select:focus {
   border-color: var(--mk-accent);
-  box-shadow: 0 0 0 3px rgba(170, 90, 40, 0.18);
+  box-shadow: 0 0 0 3px rgba(48, 103, 168, 0.18);
 }
 .mk-table .dataTables_wrapper input[type="search"]::placeholder {
   color: var(--mk-mute);
@@ -866,7 +875,7 @@ body:has(.mk-now-archive) .mk-content {
 .mk-table table.dataTable tbody tr:first-child td { border-top: none; }
 /* Row hover highlight (carried over from the redesign) */
 .mk-table table.dataTable tbody tr { transition: background 0.15s; }
-.mk-table table.dataTable tbody tr:hover { background: rgba(170, 90, 40, 0.08); }
+.mk-table table.dataTable tbody tr:hover { background: rgba(48, 103, 168, 0.07); }
 .mk-table table.dataTable.no-footer { border-bottom: 1px solid var(--mk-rule); }
 
 /* Year column — big, sticky-feeling left rail */
@@ -1200,4 +1209,224 @@ img.mk-dw-shot {
   font-size: 0.85rem;
   color: var(--mk-mute);
   margin-top: 0.5rem;
+}
+
+/* ==========================================================================
+   Macro strip — live headline indicators on a thin petrol band under the
+   hero (index.qmd #macro-strip). Values are UI-font tabular numerals; the
+   sparklines are inline SVG emitted by the R chunk (light chart-blue line,
+   white end dot marking the latest observation).
+   ========================================================================== */
+
+/* Section label above the strip. Now on the paper band (not the dark box), so
+   it takes dark ink rather than translucent white. */
+#macro-heading {
+  font-family: var(--mk-font-ui);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--mk-mute);
+}
+.mk-macro__cells {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.75rem;
+}
+/* Transparent per-observation hit targets carry a data-tip; the script under
+   the strip shows that month's date and value as a floating tooltip on hover. */
+.mk-macro__pt { cursor: pointer; }
+.mk-macro__pt:hover { fill: rgba(255, 255, 255, 0.9); }
+.mk-macro__tip {
+  position: fixed;
+  transform: translate(-50%, calc(-100% - 12px));
+  pointer-events: none;
+  z-index: 50;
+  background: rgba(15, 34, 45, 0.96);
+  color: #fff;
+  font-family: var(--mk-font-ui);
+  font-size: 0.72rem;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  text-align: center;
+  line-height: 1.25;
+  padding: 4px 9px;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+/* Second line of the tooltip — the value — sits under the date, emphasised. */
+.mk-macro__tip-val { font-weight: 600; }
+.mk-macro__cell {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+.mk-macro__label {
+  font-family: var(--mk-font-ui);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.6);
+}
+.mk-macro__value {
+  font-family: var(--mk-font-ui);
+  font-variant-numeric: tabular-nums;
+  font-size: 1.7rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: #fff;
+}
+/* Dual headline (Taylor rule vs. fed funds): two colour-keyed numbers, so the
+   font is a touch smaller to fit both plus the "vs" on one line. */
+.mk-macro__value--dual { font-size: 1.25rem; }
+.mk-macro__vs {
+  margin: 0 0.35rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.45);
+}
+/* Wrapper is the positioning context for the reference-line label; the top
+   margin lives here (not on the SVG) so the label's `top` px lines up with the
+   SVG's own coordinate origin. */
+.mk-macro__spark-wrap {
+  position: relative;
+  margin-top: 0.45rem;
+}
+.mk-macro__spark {
+  display: block;
+  width: 100%;
+  height: 100px;
+}
+/* Muted dotted horizontal reference line (v/u = 1, diffusion = 50). The dots
+   are kept crisp under the SVG's non-uniform horizontal stretch by
+   vector-effect:non-scaling-stroke (set on the element), so the dash pattern is
+   measured in screen pixels, not stretched viewBox units. */
+.mk-macro__ref {
+  stroke: rgba(255, 255, 255, 0.35);
+  stroke-width: 2.2;
+  stroke-dasharray: 2 6;
+  stroke-linecap: round;
+}
+/* Value label for the reference line: an HTML chip (not SVG text, which the
+   stretch would distort), vertically centred on the line, with a band-coloured
+   backing so the line does not run through the digits. */
+.mk-macro__ref-label {
+  position: absolute;
+  left: 0;
+  transform: translateY(-50%);
+  font-family: var(--mk-font-ui);
+  font-variant-numeric: tabular-nums;
+  font-size: 0.62rem;
+  font-weight: 600;
+  line-height: 1;
+  color: rgba(255, 255, 255, 0.5);
+  background: var(--mk-blue-900);
+  padding: 0 3px 0 1px;
+  pointer-events: none;
+}
+/* Two-line chart legend (Taylor rule vs. fed funds): a short colour bar keyed
+   to each line, sitting between the sparkline and the date row. */
+.mk-macro__legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.85rem;
+  margin-top: 0.35rem;
+}
+.mk-macro__leg {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-family: var(--mk-font-ui);
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+.mk-macro__swatch {
+  display: inline-block;
+  width: 12px;
+  height: 2.5px;
+  border-radius: 2px;
+}
+/* Date row under each sparkline: window start (left) to latest (right). */
+.mk-macro__dates {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.25rem;
+}
+.mk-macro__date {
+  font-family: var(--mk-font-ui);
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+.mk-macro__date--start { color: rgba(255, 255, 255, 0.4); }
+.mk-macro__date--end   { color: rgba(255, 255, 255, 0.6); font-weight: 600; }
+@media (max-width: 900px) {
+  .mk-macro__cells { grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+}
+@media (max-width: 420px) {
+  .mk-macro__cells { grid-template-columns: 1fr; }
+}
+
+/* ==========================================================================
+   Start here — curated, annotated shortlist (index.qmd #start-here).
+   Title-led rows with the impact line carrying the persuasion; the pill
+   reuses .mk-recent__type so the two lists share one motif. Row shape and
+   hover mirror the Latest list for cohesion.
+   ========================================================================== */
+
+.mk-start { margin: 0.5rem 0 0; }
+
+.mk-start__item {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  column-gap: 2rem;
+  align-items: start;
+  padding: 1.15rem 1rem;
+  border-radius: 4px;
+  border-bottom: 1px solid var(--mk-rule);
+  text-decoration: none;
+  color: inherit;
+  transition: background 0.18s;
+}
+.mk-start__item:hover { background: rgba(48, 103, 168, 0.07); text-decoration: none; }
+
+.mk-start__body { min-width: 0; }
+
+.mk-start__title {
+  font-family: var(--mk-font-serif);
+  font-size: 1.3rem;
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--mk-blue-900);
+  text-wrap: pretty;
+}
+.mk-start__item:hover .mk-start__title { color: var(--mk-blue-700); }
+
+.mk-start__impact {
+  margin-top: 0.3rem;
+  font-size: 1.02rem;
+  line-height: 1.5;
+  color: var(--mk-ink-soft);
+  max-width: 68ch;
+}
+
+.mk-start__meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.45rem;
+  text-align: right;
+}
+.mk-start__outlet {
+  font-family: var(--mk-font-ui);
+  font-size: 0.78rem;
+  letter-spacing: 0.02em;
+  color: var(--mk-mute);
+  white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+  .mk-start__item { grid-template-columns: 1fr; row-gap: 0.5rem; }
+  .mk-start__meta { flex-direction: row; align-items: center; text-align: left; }
+  .mk-start__title { font-size: 1.2rem; }
 }

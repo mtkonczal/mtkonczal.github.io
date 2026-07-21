@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Start Here — four mockups</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  --mk-blue-900: #0e2c33;
+  --mk-blue-700: #163e47;
+  --mk-blue-500: #2c6e73;
+  --mk-copper:   #aa5a28;
+  --mk-copper-dk:#8f461c;
+  --mk-ink:      #16242a;
+  --mk-ink-soft: #45555b;
+  --mk-mute:     #7e8a8c;
+  --mk-rule:     #e0e5e4;
+  --mk-paper:    #fbfaf7;
+  --mk-tint:     #eaeeed;
+  --serif: "Newsreader", Georgia, serif;
+  --ui: "Inter", -apple-system, sans-serif;
+  --band-max: 1140px;
+}
+* { box-sizing: border-box; }
+body { margin: 0; font-family: var(--serif); color: var(--mk-ink); background: #dfe4e3; }
+a { color: var(--mk-copper); text-decoration: none; border-bottom: 1px solid rgba(170,90,40,.3); }
+a:hover { color: var(--mk-blue-900); border-bottom-color: var(--mk-blue-700); }
+
+/* ---- mockup chrome (not part of the design) ---- */
+.mock-intro {
+  max-width: 760px; margin: 0 auto; padding: 2.5rem 1.5rem 1rem;
+  font-family: var(--ui); font-size: .92rem; line-height: 1.55; color: var(--mk-ink-soft);
+}
+.mock-intro h1 { font-family: var(--serif); font-size: 1.8rem; color: var(--mk-blue-900); margin: 0 0 .5rem; }
+.mock-label {
+  max-width: var(--band-max); margin: 3rem auto .6rem; padding: 0 1.5rem;
+  font-family: var(--ui); font-size: .78rem; letter-spacing: .09em; text-transform: uppercase;
+  color: var(--mk-blue-900); font-weight: 700;
+}
+.mock-label span { color: var(--mk-mute); font-weight: 500; text-transform: none; letter-spacing: 0; margin-left: .6rem; }
+
+/* ---- shared band + heading, matching the live site ---- */
+.band { padding: 2.2rem max(1.5rem, calc((100% - var(--band-max)) / 2)) 2.6rem; }
+.band--paper { background: var(--mk-paper); }
+.band--tint  { background: var(--mk-tint); }
+.band h2 {
+  font-family: var(--serif); font-size: 1.95rem; line-height: 1.12; letter-spacing: -.02em;
+  color: var(--mk-blue-900); font-weight: 600; margin: 0 0 1.1rem;
+}
+.band h2::after {
+  content: ""; display: block; width: 3rem; height: 3px; margin-top: .85rem;
+  border-radius: 2px; background: var(--mk-copper);
+}
+.band .lede { font-size: 1.02rem; color: var(--mk-ink-soft); margin: 0 0 1.6rem; max-width: 62ch; }
+
+/* pills */
+.pill {
+  font-family: var(--ui); font-size: .68rem; font-weight: 600; letter-spacing: .07em;
+  text-transform: uppercase; padding: .18rem .55rem; border-radius: 999px; white-space: nowrap;
+}
+.pill--research  { background: rgba(44,110,115,.14); color: var(--mk-blue-700); }
+.pill--testimony { background: rgba(170,90,40,.14);  color: var(--mk-copper-dk); }
+.pill--article   { background: rgba(22,36,42,.08);   color: var(--mk-ink-soft); }
+.pill--book      { background: var(--mk-blue-900);   color: #fff; }
+
+/* =========================================================
+   VARIANT A — Ranked editorial list
+   ========================================================= */
+.va-item {
+  display: grid; grid-template-columns: 1fr auto; gap: .35rem 2rem;
+  padding: 1.15rem 0; border-top: 1px solid var(--mk-rule); align-items: baseline;
+}
+.va-item:last-child { border-bottom: 1px solid var(--mk-rule); }
+.va-title { font-size: 1.28rem; font-weight: 600; letter-spacing: -.01em; line-height: 1.25; }
+.va-title a { color: var(--mk-blue-900); border-bottom: none; }
+.va-title a:hover { color: var(--mk-copper); }
+.va-impact { grid-column: 1; font-size: 1.02rem; color: var(--mk-ink-soft); line-height: 1.5; max-width: 68ch; }
+.va-meta {
+  grid-column: 2; grid-row: 1 / span 2; align-self: start; text-align: right;
+  font-family: var(--ui); font-size: .78rem; color: var(--mk-mute); display: flex;
+  flex-direction: column; gap: .4rem; align-items: flex-end;
+}
+@media (max-width: 640px) {
+  .va-item { grid-template-columns: 1fr; }
+  .va-meta { grid-column: 1; grid-row: auto; flex-direction: row; text-align: left; }
+}
+
+/* =========================================================
+   VARIANT B — Card grid
+   ========================================================= */
+.vb-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.1rem; }
+.vb-card {
+  background: var(--mk-paper); border: 1px solid var(--mk-rule); border-radius: 6px;
+  padding: 1.25rem 1.3rem 1.35rem; display: flex; flex-direction: column; gap: .6rem;
+  transition: box-shadow .15s, transform .15s;
+}
+.vb-card:hover { box-shadow: 0 6px 22px rgba(14,44,51,.12); transform: translateY(-2px); }
+.vb-card .vb-top { display: flex; justify-content: space-between; align-items: center; }
+.vb-card .vb-outlet { font-family: var(--ui); font-size: .74rem; color: var(--mk-mute); }
+.vb-title { font-size: 1.14rem; font-weight: 600; line-height: 1.28; letter-spacing: -.01em; }
+.vb-title a { color: var(--mk-blue-900); border-bottom: none; }
+.vb-title a:hover { color: var(--mk-copper); }
+.vb-impact { font-size: .95rem; color: var(--mk-ink-soft); line-height: 1.45; margin: 0; }
+@media (max-width: 900px) { .vb-grid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 600px) { .vb-grid { grid-template-columns: 1fr; } }
+
+/* =========================================================
+   VARIANT C — Grouped by theme
+   ========================================================= */
+.vc-groups { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2.4rem; }
+.vc-group h3 {
+  font-family: var(--serif); font-size: 1.18rem; font-weight: 600; color: var(--mk-blue-900);
+  margin: 0 0 .9rem; padding-bottom: .5rem; border-bottom: 2px solid var(--mk-copper);
+}
+.vc-entry { margin: 0 0 1.05rem; }
+.vc-entry .vc-t { font-size: 1.04rem; font-weight: 600; line-height: 1.3; }
+.vc-entry .vc-t a { color: var(--mk-blue-900); border-bottom: none; }
+.vc-entry .vc-t a:hover { color: var(--mk-copper); }
+.vc-entry .vc-i { font-size: .92rem; color: var(--mk-ink-soft); line-height: 1.42; margin: .15rem 0 0; }
+.vc-entry .vc-o { font-family: var(--ui); font-size: .74rem; color: var(--mk-mute); margin-top: .2rem; }
+@media (max-width: 900px) { .vc-groups { grid-template-columns: 1fr; gap: 1.6rem; } }
+
+/* =========================================================
+   VARIANT D — "Known for" strip + New slot (compact, hero-adjacent)
+   ========================================================= */
+.vd-wrap { display: grid; grid-template-columns: 2.2fr 1fr; gap: 2rem; align-items: stretch; }
+.vd-known { display: flex; flex-direction: column; }
+.vd-eyebrow {
+  font-family: var(--ui); font-size: .74rem; font-weight: 700; letter-spacing: .11em;
+  text-transform: uppercase; color: var(--mk-copper-dk); margin: 0 0 .8rem;
+}
+.vd-row { display: flex; gap: 1.1rem; flex: 1; }
+.vd-item {
+  flex: 1; border-left: 3px solid var(--mk-copper); padding: .15rem 0 .15rem 1rem;
+  display: flex; flex-direction: column; gap: .3rem;
+}
+.vd-item .vd-t { font-size: 1.06rem; font-weight: 600; line-height: 1.3; }
+.vd-item .vd-t a { color: var(--mk-blue-900); border-bottom: none; }
+.vd-item .vd-t a:hover { color: var(--mk-copper); }
+.vd-item .vd-i { font-size: .9rem; color: var(--mk-ink-soft); line-height: 1.4; }
+.vd-item .vd-o { font-family: var(--ui); font-size: .72rem; color: var(--mk-mute); margin-top: auto; }
+.vd-new {
+  background: var(--mk-blue-900); border-radius: 6px; padding: 1.2rem 1.3rem;
+  display: flex; flex-direction: column; gap: .45rem; color: #bcd0d0;
+}
+.vd-new .vd-eyebrow { color: #e0a06a; margin-bottom: .2rem; }
+.vd-new .vd-t { font-size: 1.08rem; font-weight: 600; line-height: 1.3; }
+.vd-new .vd-t a { color: #fff; border-bottom: none; }
+.vd-new .vd-t a:hover { color: #e0a06a; }
+.vd-new .vd-i { font-size: .9rem; line-height: 1.42; }
+.vd-new .vd-o { font-family: var(--ui); font-size: .72rem; color: rgba(255,255,255,.55); margin-top: auto; padding-top: .5rem; }
+@media (max-width: 900px) {
+  .vd-wrap { grid-template-columns: 1fr; }
+  .vd-row { flex-direction: column; }
+}
+</style>
+</head>
+<body>
+
+<div class="mock-intro">
+  <h1>“Start here” — four mockups</h1>
+  <p>Each band below uses your live design tokens (petrol/copper, Newsreader/Inter, band layout) and real items from <code>work_database.csv</code>. The <em>impact lines are placeholders</em> — I drafted plausible ones, but they're yours to write and fact-check before anything ships.</p>
+</div>
+
+<!-- ============ VARIANT A ============ -->
+<div class="mock-label">Variant A — Ranked list <span>title-led rows, impact line under each. Quietest; reads most like an editor's cut.</span></div>
+<section class="band band--tint">
+  <h2>Start here</h2>
+  <p class="lede">New here? These are the pieces that best explain what I work on and why it matters.</p>
+
+  <div class="va-item">
+    <div class="va-title"><a href="#">Supply-Side Expansion Has Driven the Decline in Inflation</a></div>
+    <div class="va-impact">The evidence that 2023's disinflation came from supply recovery, not demand destruction — a central document in the soft-landing debate.</div>
+    <div class="va-meta"><span class="pill pill--research">Research</span><span>Roosevelt Institute · 2023</span></div>
+  </div>
+  <div class="va-item">
+    <div class="va-title"><a href="#">How to Have a Roaring 2020s (Without Wild Inflation)</a></div>
+    <div class="va-impact">The early case that a high-pressure recovery could deliver full employment without a wage-price spiral.</div>
+    <div class="va-meta"><span class="pill pill--article">Article</span><span>New York Times · 2021</span></div>
+  </div>
+  <div class="va-item">
+    <div class="va-title"><a href="#">Inflation in 2023: Causes, Progress, and Solutions</a></div>
+    <div class="va-impact">Testimony before the House on what was actually driving inflation, and what wasn't.</div>
+    <div class="va-meta"><span class="pill pill--testimony">Testimony</span><span>U.S. House · 2023</span></div>
+  </div>
+  <div class="va-item">
+    <div class="va-title"><a href="#">Freedom from the Market</a></div>
+    <div class="va-impact">The book: America's long history of securing freedom <em>from</em> market dependence. “A powerful polemic” — <em>Financial Times</em>.</div>
+    <div class="va-meta"><span class="pill pill--book">Book</span><span>New Press · 2021</span></div>
+  </div>
+  <div class="va-item">
+    <div class="va-title"><a href="#">Rewriting the Rules of the American Economy</a></div>
+    <div class="va-impact">With Joseph Stiglitz: the 2015 report that helped reset the Democratic economic agenda around structural reform.</div>
+    <div class="va-meta"><span class="pill pill--research">Research</span><span>Roosevelt Institute · 2015</span></div>
+  </div>
+  <div class="va-item">
+    <div class="va-title"><a href="#">Building Affordability: The Policy Agenda for America's Housing Crisis</a></div>
+    <div class="va-impact">The affordability agenda, applied: how policy can actually build our way out of the housing crisis.</div>
+    <div class="va-meta"><span class="pill pill--research">Research</span><span>Economic Security Project · 2026</span></div>
+  </div>
+</section>
+
+<!-- ============ VARIANT B ============ -->
+<div class="mock-label">Variant B — Card grid <span>mirrors your Projects section; more visual weight, scans in any order.</span></div>
+<section class="band band--paper" style="background:#f1f4f3;">
+  <h2>Start here</h2>
+  <p class="lede">Six pieces that best explain what I work on and why it matters.</p>
+  <div class="vb-grid">
+    <div class="vb-card">
+      <div class="vb-top"><span class="pill pill--research">Research</span><span class="vb-outlet">Roosevelt · 2023</span></div>
+      <div class="vb-title"><a href="#">Supply-Side Expansion Has Driven the Decline in Inflation</a></div>
+      <p class="vb-impact">The evidence that disinflation came from supply recovery, not demand destruction.</p>
+    </div>
+    <div class="vb-card">
+      <div class="vb-top"><span class="pill pill--article">Article</span><span class="vb-outlet">New York Times · 2021</span></div>
+      <div class="vb-title"><a href="#">How to Have a Roaring 2020s (Without Wild Inflation)</a></div>
+      <p class="vb-impact">The early case that a high-pressure recovery could work. It did.</p>
+    </div>
+    <div class="vb-card">
+      <div class="vb-top"><span class="pill pill--testimony">Testimony</span><span class="vb-outlet">U.S. House · 2023</span></div>
+      <div class="vb-title"><a href="#">Inflation in 2023: Causes, Progress, and Solutions</a></div>
+      <p class="vb-impact">Testimony on what was actually driving inflation, and what wasn't.</p>
+    </div>
+    <div class="vb-card">
+      <div class="vb-top"><span class="pill pill--book">Book</span><span class="vb-outlet">New Press · 2021</span></div>
+      <div class="vb-title"><a href="#">Freedom from the Market</a></div>
+      <p class="vb-impact">“A powerful polemic” — <em>Financial Times</em>. Freedom from market dependence as an American tradition.</p>
+    </div>
+    <div class="vb-card">
+      <div class="vb-top"><span class="pill pill--research">Research</span><span class="vb-outlet">Roosevelt · 2015</span></div>
+      <div class="vb-title"><a href="#">Rewriting the Rules of the American Economy</a></div>
+      <p class="vb-impact">With Joseph Stiglitz: the report that helped reset the Democratic economic agenda.</p>
+    </div>
+    <div class="vb-card">
+      <div class="vb-top"><span class="pill pill--research">Research</span><span class="vb-outlet">ESP · 2026</span></div>
+      <div class="vb-title"><a href="#">Building Affordability</a></div>
+      <p class="vb-impact">The policy agenda for building our way out of the housing crisis.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ VARIANT C ============ -->
+<div class="mock-label">Variant C — Grouped by theme <span>frames you by argument, not format. Needs hand-written qmd, not the CSV.</span></div>
+<section class="band band--tint">
+  <h2>Start here</h2>
+  <p class="lede">Three arguments I keep making, and the work behind each.</p>
+  <div class="vc-groups">
+    <div class="vc-group">
+      <h3>Inflation &amp; the recovery</h3>
+      <div class="vc-entry">
+        <div class="vc-t"><a href="#">Supply-Side Expansion Has Driven the Decline in Inflation</a></div>
+        <p class="vc-i">Disinflation came from supply recovery, not demand destruction.</p>
+        <div class="vc-o">Roosevelt Institute · 2023</div>
+      </div>
+      <div class="vc-entry">
+        <div class="vc-t"><a href="#">How to Have a Roaring 2020s (Without Wild Inflation)</a></div>
+        <p class="vc-i">The early case for a high-pressure recovery.</p>
+        <div class="vc-o">New York Times · 2021</div>
+      </div>
+      <div class="vc-entry">
+        <div class="vc-t"><a href="#">Inflation in 2023: Causes, Progress, and Solutions</a></div>
+        <p class="vc-i">Testimony before the House.</p>
+        <div class="vc-o">U.S. House · 2023</div>
+      </div>
+    </div>
+    <div class="vc-group">
+      <h3>Markets &amp; freedom</h3>
+      <div class="vc-entry">
+        <div class="vc-t"><a href="#">Freedom from the Market</a></div>
+        <p class="vc-i">The book. “A powerful polemic” — <em>Financial Times</em>.</p>
+        <div class="vc-o">New Press · 2021</div>
+      </div>
+      <div class="vc-entry">
+        <div class="vc-t"><a href="#">Time Is the Universal Measure of Freedom</a></div>
+        <p class="vc-i">The eight-hour day as a freedom claim.</p>
+        <div class="vc-o">Boston Review · 2021</div>
+      </div>
+      <div class="vc-entry">
+        <div class="vc-t"><a href="#">Rewriting the Rules of the American Economy</a></div>
+        <p class="vc-i">With Joseph Stiglitz: rules, not redistribution alone.</p>
+        <div class="vc-o">Roosevelt Institute · 2015</div>
+      </div>
+    </div>
+    <div class="vc-group">
+      <h3>The affordability agenda</h3>
+      <div class="vc-entry">
+        <div class="vc-t"><a href="#">Building Affordability</a></div>
+        <p class="vc-i">The policy agenda for America's housing crisis.</p>
+        <div class="vc-o">Economic Security Project · 2026</div>
+      </div>
+      <div class="vc-entry">
+        <div class="vc-t"><a href="#">The Affordability Framework</a></div>
+        <p class="vc-i">With Becky Chao: what “affordability” should actually mean for policy.</p>
+        <div class="vc-o">Economic Security Project · 2025</div>
+      </div>
+      <div class="vc-entry">
+        <div class="vc-t"><a href="#">Trump's Tariff Fantasy Collides with Economic Reality</a></div>
+        <p class="vc-i">With Joseph Stiglitz: why tariffs raise costs, not factories.</p>
+        <div class="vc-o">Boston Globe · 2026</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ VARIANT D ============ -->
+<div class="mock-label">Variant D — “Known for” strip + New slot <span>compact; sits right under the hero and absorbs the Latest section's top item.</span></div>
+<section class="band band--paper">
+  <div class="vd-wrap">
+    <div class="vd-known">
+      <p class="vd-eyebrow">Known for</p>
+      <div class="vd-row">
+        <div class="vd-item">
+          <div class="vd-t"><a href="#">Supply-Side Expansion Has Driven the Decline in Inflation</a></div>
+          <div class="vd-i">The evidence behind the soft landing.</div>
+          <div class="vd-o">Roosevelt Institute · 2023</div>
+        </div>
+        <div class="vd-item">
+          <div class="vd-t"><a href="#">Freedom from the Market</a></div>
+          <div class="vd-i">“A powerful polemic” — <em>Financial Times</em>.</div>
+          <div class="vd-o">New Press · 2021</div>
+        </div>
+        <div class="vd-item">
+          <div class="vd-t"><a href="#">Rewriting the Rules of the American Economy</a></div>
+          <div class="vd-i">With Joseph Stiglitz.</div>
+          <div class="vd-o">Roosevelt Institute · 2015</div>
+        </div>
+      </div>
+    </div>
+    <div class="vd-new">
+      <p class="vd-eyebrow">New</p>
+      <div class="vd-t"><a href="#">Building Affordability: The Policy Agenda for America's Housing Crisis</a></div>
+      <div class="vd-i">How policy can actually build our way out of the housing crisis.</div>
+      <div class="vd-o">Economic Security Project · June 2026</div>
+    </div>
+  </div>
+</section>
+
+<div class="mock-intro" style="padding-top:2rem; padding-bottom:3.5rem;">
+  <p><strong>My read:</strong> A is the strongest default — the impact lines carry the persuasion and nothing competes with them. C is the most intellectually distinctive (it frames you by argument) but costs the CSV-driven workflow. B is the most conventional. D is the most space-efficient if you'd rather keep the homepage tight and merge “Latest” into it.</p>
+</div>
+
+</body>
+</html>

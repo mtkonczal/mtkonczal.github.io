@@ -31,10 +31,15 @@ REPO = Path(__file__).resolve().parent.parent
 WORK_CSV = REPO / "data" / "work_database.csv"
 PENDING_CSV = REPO / "data" / "pending.csv"
 SKIP_CSV = REPO / "data" / "skiplist.csv"
+STARTHERE_CSV = REPO / "data" / "start_here.csv"
 NOW_QMD = REPO / "_now-entries.qmd"
 
 HEADER = ["Date", "Original Title", "Outlet", "Format",
           "Link", "Highlight", "Author", "Excerpt"]
+# "Start here" curation: an ordered list keyed by Link. Title/outlet/date/type
+# and the descriptive Excerpt are resolved from the work database at render
+# time; a row may carry its own values for items not in the database (the book).
+SH_HEADER = ["Rank", "Link", "Type", "Title", "Outlet", "Year", "Excerpt"]
 FORMATS = ["Quote", "Article", "Podcast", "White Paper",
            "TV", "Panel", "Book Review", "Radio"]
 
@@ -58,7 +63,7 @@ OUTLET_MAP = {
 }
 
 PORT = 4747
-VERSION = "2026-07-19j"  # bump when editing; shown in the page footer
+VERSION = "2026-07-20b"  # bump when editing; shown in the page footer
 UA = ("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
       "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36")
 
@@ -105,6 +110,75 @@ def write_pending(rows):
         w.writerow(HEADER)
         for r in rows:
             w.writerow([r[c] for c in HEADER])
+
+
+def read_starthere():
+    return read_rows(STARTHERE_CSV)
+
+
+def write_starthere(rows):
+    """Rewrite start_here.csv, renumbering Rank 1..n in list order."""
+    with open(STARTHERE_CSV, "w", newline="", encoding="utf-8") as f:
+        w = csv.writer(f, lineterminator="\n")
+        w.writerow(SH_HEADER)
+        for i, r in enumerate(rows, start=1):
+            r = {**r, "Rank": i}
+            w.writerow([r.get(c, "") for c in SH_HEADER])
+
+
+def _blank_na(s):
+    s = (s or "").strip()
+    return "" if s.upper() == "NA" else s
+
+
+def starthere_state():
+    """Ordered selection, each row resolved against the work database so the
+    picker shows the same title/excerpt the site will render."""
+    db = {norm_url(r["Link"]): r for r in read_rows(WORK_CSV)}
+    out = []
+    for r in sorted(read_starthere(), key=lambda x: int(x.get("Rank") or 0)):
+        d = db.get(norm_url(r.get("Link", "")))
+        out.append({
+            "link": r.get("Link", ""),
+            "manual": d is None,
+            "title": _blank_na(r.get("Title")) or (
+                squish(d["Original Title"]) if d else r.get("Link", "")),
+            "outlet": _blank_na(r.get("Outlet")) or (d["Outlet"] if d else ""),
+            "year": _blank_na(r.get("Year")) or (
+                (d["Date"][:4] if d and d.get("Date") else "")),
+            "excerpt": _blank_na(r.get("Excerpt")) or (
+                _blank_na(d["Excerpt"]) if d else ""),
+        })
+    return out
+
+
+def save_starthere(items):
+    """Rebuild start_here.csv from an ordered list of {link, excerpt}. The
+    Excerpt is stored as edited in the tab (blank means "fall back to the
+    database excerpt" at render time). Database items store just the Link so
+    title/outlet/date still resolve from the database; rows not in the database
+    (the book) keep their other stored fields."""
+    prev = {norm_url(r["Link"]): r for r in read_starthere()}
+    db = {norm_url(r["Link"]): r for r in read_rows(WORK_CSV)}
+    rows = []
+    for it in items:
+        link = (it.get("link") or "").strip()
+        if not link:
+            continue
+        key = norm_url(link)
+        old = prev.get(key, {})
+        excerpt = _blank_na(it.get("excerpt"))
+        if db.get(key) is None:
+            # manual item (e.g. the book): preserve stored fields, take the
+            # edited excerpt, else fall back to whatever was stored.
+            row = {c: old.get(c, "") for c in SH_HEADER}
+            row["Link"] = link
+            row["Excerpt"] = excerpt or old.get("Excerpt", "")
+            rows.append(row)
+        else:
+            rows.append({"Link": link, "Type": "", "Title": "",
+                         "Outlet": "", "Year": "", "Excerpt": excerpt})
+    write_starthere(rows)
 
 
 def append_skiplist(link):
@@ -204,7 +278,8 @@ def make_row(fields):
 # Files the app is allowed to stage. Nothing commits automatically: edits
 # only touch the working tree, and the page's "Publish" button runs
 # git_publish() once, when Mike decides.
-APP_FILES = [str(WORK_CSV), str(PENDING_CSV), str(SKIP_CSV), str(NOW_QMD)]
+APP_FILES = [str(WORK_CSV), str(PENDING_CSV), str(SKIP_CSV),
+             str(STARTHERE_CSV), str(NOW_QMD)]
 
 
 def git_status():
@@ -362,6 +437,13 @@ PAGE = r"""<!doctype html>
          padding: 10px; border-radius: 6px; margin-top: 14px; }
   .warn { color: #b3261e; font-weight: 600; }
   .muted { color: #777; }
+  .shbtn { font: inherit; font-size: 12px; padding: 2px 6px; margin: 0 1px;
+           border: 1px solid #ccc; background: #f7f7f7; border-radius: 4px;
+           cursor: pointer; }
+  .shbtn:disabled { color: #bbb; cursor: default; }
+  .shex { width: 100%; height: 54px; margin-top: 5px; padding: 5px 7px;
+          border: 1px solid #ccc; border-radius: 5px; font: inherit;
+          font-size: 13px; box-sizing: border-box; }
   a { color: #2c5f8a; }
 </style>
 <script>
@@ -392,6 +474,7 @@ mikekonczal.com — work database, highlights &amp; Now page</span></h1>
     <span id="qcount"></span></button>
   <button id="tab-db" onclick="show('db')">Database</button>
   <button id="tab-hl" onclick="show('hl')">Highlights</button>
+  <button id="tab-sh" onclick="show('sh')">Start here</button>
   <button id="tab-now" onclick="show('now')">Now page</button>
   <button id="pubbtn" disabled onclick="publish()"
     style="float:right; background:#2e7d32; color:#fff">Publish</button>
@@ -472,6 +555,20 @@ mikekonczal.com — work database, highlights &amp; Now page</span></h1>
   <div id="hllist" class="muted">Loading…</div>
 </div>
 
+<div class="panel" id="panel-sh" style="display:none">
+  <p class="muted">The homepage <b>"Start here"</b> list. Pick items below to
+  include them; edit the <b>Excerpt</b> shown under each title right here (it is
+  prefilled from the database — leave it blank to fall back to the database
+  excerpt, or ↺ to reset). Use ▲ ▼ to set the order they appear on the page.</p>
+  <div class="card"><b>In Start here (in order)</b><div id="shtop"></div></div>
+  <button class="act success" onclick="saveSh()">Save &amp; publish</button>
+  <span id="shcount" class="muted"></span>
+  <div id="shlog"></div>
+  <input type="text" id="shsearch" placeholder="Filter to add more..."
+    oninput="renderSh()" style="margin-top:12px">
+  <div id="shlist" class="muted">Loading…</div>
+</div>
+
 <div class="panel" id="panel-now" style="display:none">
   <p class="muted">Entries in <b>_now-entries.qmd</b> (one per month).
      Click a date to edit it, or start a new month.</p>
@@ -494,7 +591,7 @@ const sel = document.getElementById('f_format');
 FORMATS.forEach(f => sel.add(new Option(f, f)));
 
 function show(which) {
-  for (const t of ['add', 'queue', 'db', 'hl', 'now']) {
+  for (const t of ['add', 'queue', 'db', 'hl', 'sh', 'now']) {
     document.getElementById('panel-' + t).style.display =
       t === which ? '' : 'none';
     document.getElementById('tab-' + t).classList.toggle('on', t === which);
@@ -503,6 +600,7 @@ function show(which) {
   if (which === 'now') loadNow();
   if (which === 'db') loadDb();
   if (which === 'hl') loadHl();
+  if (which === 'sh') loadSh();
 }
 
 async function api(path, body) {
@@ -762,6 +860,113 @@ async function saveHl() {
   if (r.ok) { loadHl(); pubStatus(); }
 }
 
+// ---- Start here tab ----
+
+let shSel = [], shDb = [];
+
+function normLink(u) { return (u || '').trim().replace(/\/+$/, ''); }
+
+async function loadSh() {
+  const s = await api('/api/starthere/state');
+  if (deadNotice('shlist', s)) return;
+  shSel = s.selected || [];
+  const d = await api('/api/db/state');
+  shDb = (d.rows || []).slice().sort((a, b) => b.Date.localeCompare(a.Date));
+  document.getElementById('shlog').innerHTML = '';
+  renderSh();
+}
+
+function renderSh() {
+  const selKeys = new Set(shSel.map(x => normLink(x.link)));
+  document.getElementById('shtop').innerHTML = shSel.length
+    ? shSel.map((it, i) => {
+        const inDb = shDb.some(x => normLink(x.Link) === normLink(it.link));
+        return `<div class="lrow" style="grid-template-columns:64px 1fr auto;
+            cursor:default; align-items:start">
+          <span style="white-space:nowrap">
+            <button class="shbtn" ${i === 0 ? 'disabled' : ''}
+              onclick="moveSh(${i},-1)">▲</button>
+            <button class="shbtn" ${i === shSel.length - 1 ? 'disabled' : ''}
+              onclick="moveSh(${i},1)">▼</button>
+          </span>
+          <span style="white-space:normal; overflow:visible">
+            <b>${esc(it.title)}</b>${it.manual ?
+              ' <span class="muted">· manual</span>' : ''}
+            <span class="muted"> — ${esc(it.outlet)}${it.year ?
+              ', ' + esc(it.year) : ''}</span>
+            <textarea class="shex" oninput="shSel[${i}].excerpt=this.value"
+              placeholder="Excerpt shown under the title on the site…">${
+              esc(it.excerpt || '')}</textarea>
+            ${inDb ? `<button class="shbtn" style="margin-top:4px"
+              onclick="resetShExcerpt(${i})">↺ Reset to database excerpt</button>`
+              : ''}
+          </span>
+          <span><button class="act danger" style="margin:0; padding:4px 10px"
+            onclick="removeSh(${i})">Remove</button></span>
+        </div>`;
+      }).join('')
+    : '<p class="muted">Nothing in Start here yet — pick items below.</p>';
+  document.getElementById('shcount').textContent =
+    ' ' + shSel.length + ' item' + (shSel.length === 1 ? '' : 's');
+  const term = document.getElementById('shsearch').value;
+  const avail = shDb.filter(r =>
+    !selKeys.has(normLink(r.Link)) && rowMatches(r, term));
+  document.getElementById('shlist').innerHTML =
+    '<p class="muted">Click to add:</p>' +
+    avail.slice(0, 60).map(r => {
+      const ex = r.Excerpt === 'NA' ? '' : r.Excerpt;
+      return `<div class="lrow" style="grid-template-columns:88px 1fr;
+          align-items:start; white-space:normal"
+          onclick="addSh('${encodeURIComponent(r.Link)}')">
+        <span class="muted">${esc(r.Date)}</span>
+        <span style="overflow:visible; white-space:normal">
+          <b>${esc(r['Original Title'])}</b>
+          <span class="muted"> — ${esc(r.Outlet)}</span>
+          <div class="muted" style="font-weight:400; margin-top:2px">
+            ${ex ? esc(ex) : '<i>no excerpt</i>'}</div>
+        </span></div>`;
+    }).join('') +
+    (avail.length > 60 ?
+      '<p class="muted">…refine the filter to see more.</p>' : '');
+}
+
+function dbExcerptFor(link) {
+  var r = shDb.find(x => normLink(x.Link) === normLink(link));
+  return r ? (r.Excerpt === 'NA' ? '' : r.Excerpt) : '';
+}
+
+function resetShExcerpt(i) {
+  shSel[i].excerpt = dbExcerptFor(shSel[i].link);
+  renderSh();
+}
+
+function moveSh(i, dir) {
+  const j = i + dir;
+  if (j < 0 || j >= shSel.length) return;
+  const t = shSel[i]; shSel[i] = shSel[j]; shSel[j] = t;
+  renderSh();
+}
+
+function removeSh(i) { shSel.splice(i, 1); renderSh(); }
+
+function addSh(encLink) {
+  const link = decodeURIComponent(encLink);
+  const r = shDb.find(x => normLink(x.Link) === normLink(link));
+  if (!r) return;
+  shSel.push({ link: r.Link, manual: false, title: r['Original Title'],
+    outlet: r.Outlet, year: (r.Date || '').slice(0, 4),
+    excerpt: r.Excerpt === 'NA' ? '' : r.Excerpt });
+  renderSh();
+}
+
+async function saveSh() {
+  const r = await api('/api/starthere/save',
+    {items: shSel.map(x => ({link: x.link, excerpt: x.excerpt || ''}))});
+  document.getElementById('shlog').innerHTML =
+    '<div class="log' + (r.ok ? '' : ' warn') + '">' + r.message + '</div>';
+  if (r.ok) { loadSh(); pubStatus(); }
+}
+
 // ---- Now page tab ----
 
 let nowEntries = [], nowOrig = null;
@@ -955,6 +1160,18 @@ class Handler(BaseHTTPRequestHandler):
             for i, r in enumerate(rows):
                 r["Highlight"] = "X" if i in chosen else ""
             write_work(rows)
+            return self._json({"ok": True, "message":
+                               "Saved. Hit Publish to push to the site."})
+
+        if self.path == "/api/starthere/state":
+            return self._json({"selected": starthere_state()})
+
+        if self.path == "/api/starthere/save":
+            items = data.get("items")
+            if items is None:  # tolerate an older client that sent links only
+                items = [{"link": l, "excerpt": ""}
+                         for l in (data.get("links") or [])]
+            save_starthere(items)
             return self._json({"ok": True, "message":
                                "Saved. Hit Publish to push to the site."})
 

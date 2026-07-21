@@ -12,6 +12,13 @@ execute:
 image: images/mkonczal_index.jpg
 ---
 
+```{=html}
+<!-- The page title ("Mike Konczal") is already the sidebar brand, so hide the
+     Quarto title-block H1 on this page only. It stays in the document metadata
+     for the browser tab and social cards. -->
+<style>#title-block-header { display: none; }</style>
+```
+
 ::: {#top .mk-hero}
 <img class="mk-hero__photo" src="images/mkonczal_index.jpg" alt="Mike Konczal">
 
@@ -23,6 +30,284 @@ A former software and financial engineer, he was an early hire at the Roosevelt 
 Specializing in economic data analysis and policy research, Mike is a respected voice in U.S. economic discourse, frequently cited in media outlets, and has provided testimony before Congress. The *New York Times Magazine* has described him as having "a cult following among progressives." Born and raised in Chicago, he now lives in Takoma Park, Maryland, with his wife, two daughters, and pit bull.
 :::
 :::
+
+<!-- ==========================================================================
+     MACRO STRIP — live headline indicators, fetched from FRED at render time.
+     Data policy: fetch fresh from fredgraph.csv (no API key needed); on
+     success, cache to data/macro_strip.csv. If the fetch fails, fall back to
+     the cache; if there is no cache either, FAIL the render loudly rather
+     than ship stale-looking or fabricated numbers.
+     ========================================================================== -->
+
+::: {#macro-heading}
+Data I'm watching
+:::
+
+::: {#macro-strip .mk-macro}
+
+```{r macro_strip, echo=FALSE, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(lubridate)
+library(htmltools)
+source("scripts/build_macro.R")   # defines build_macro(): the nine indicators,
+                                  # already transformed, in long (date, series_id,
+                                  # value) form. See that file for the economics.
+
+cache_path <- "data/macro_strip.csv"
+
+# Fetch fresh; on any failure (e.g. BLS_KEY missing, network) fall back to the
+# cached vintage rather than shipping a broken strip, and only fail the render
+# outright if there is no cache at all.
+macro <- tryCatch(
+  {
+    out <- build_macro()
+    write_csv(out, cache_path)
+    out
+  },
+  error = function(e) {
+    if (file.exists(cache_path)) {
+      message("Macro fetch failed; using cached data: ", conditionMessage(e))
+      read_csv(cache_path, show_col_types = FALSE) %>% mutate(date = as.Date(date))
+    } else {
+      stop("Macro strip: fetch failed and no cache at ", cache_path,
+           " — ", conditionMessage(e))
+    }
+  }
+)
+
+series_of <- function(id) macro %>% filter(series_id == id) %>% arrange(date)
+u  <- series_of("UNRATE_FULL")    # unemployment rate, extra digit (percent)
+sc <- series_of("SUPERCORE_YOY")  # PCE services ex-energy & housing, y/y percent
+vu <- series_of("VU")             # vacancies per unemployed worker (ratio)
+di <- series_of("DIFFUSION")      # 1-month payroll diffusion index (0-100)
+ws <- series_of("WOMEN_SHARE")    # women's share of trailing-12m net job gains (%)
+hs <- series_of("HEALTH_SHARE")   # ed & health share of trailing-12m net gains (%)
+ls <- series_of("LABOR_SHARE")    # nonfarm business labor share (index 2017=100)
+ty <- series_of("TAYLOR")         # Taylor-rule policy rate estimate (percent)
+ff <- series_of("FEDFUNDS")       # effective federal funds rate (percent)
+
+# --- Sanity checks: fail the render rather than publish a nonsense number ---
+# The two share-of-gains ratios are volatile (a small denominator swings them),
+# so their bounds are deliberately wide — just enough to catch a broken pull.
+stopifnot(
+  between(tail(u$value, 1),  1.5, 15),
+  between(tail(sc$value, 1), -3,  12),
+  between(tail(vu$value, 1), 0.1, 5),
+  between(tail(di$value, 1), 0,   100),
+  between(tail(ws$value, 1), -100, 200),
+  between(tail(hs$value, 1), -100, 300),
+  between(tail(ls$value, 1), 40,  70),
+  between(tail(ty$value, 1), -5,  20),
+  between(tail(ff$value, 1), 0,   15)
+)
+
+# Sparkline as inline SVG. Each of the last `n` observations gets a transparent
+# hit-circle carrying a data-tip attribute (month + value); a small script under
+# the strip shows it as a tooltip on hover. fmt formats the value the same way
+# as the headline number for that series.
+# viewBox scales with the container width set in CSS; width/height here are the
+# intrinsic size. pad_x keeps the start/end dots off the edges (otherwise the
+# non-uniform scaling clips the end dot's right half); pad_y is small so the
+# line uses most of the box height instead of leaving dead space top and bottom.
+spark_win_months <- 36  # trailing window drawn (~3 years; works monthly OR quarterly)
+
+# Restrict to the trailing window, over rows where the primary series exists.
+# A window in *months* (not a fixed observation count) shows a comparable 3-year
+# span whether the series is monthly (~37 points) or quarterly (~13). `v2` — the
+# optional second line — is assumed aligned to `dates`/`v` (same length, same
+# non-NA rows), which holds for the Taylor-rule vs fed-funds pair (one pull).
+spark_slice <- function(dates, v, v2 = NULL) {
+  keep <- !is.na(v)
+  d <- dates[keep]; v <- v[keep]; v2 <- if (is.null(v2)) NULL else v2[keep]
+  sel <- d >= (max(d) %m-% months(spark_win_months - 1))
+  list(dates = d[sel], v = v[sel], v2 = if (is.null(v2)) NULL else v2[sel])
+}
+
+# `ref`, when set, draws a muted dotted horizontal reference line at that value
+# (e.g. 50 for the diffusion index, 1 for v/u): no data-tip and pointer-events
+# :none, so it never appears in the hover tracking; its value is an HTML chip
+# (not SVG <text>, which the non-uniform scaling would distort) placed at the
+# line's height — the viewBox height equals the CSS pixel height, so viewBox y
+# maps 1:1 to pixels. `v2` overlays a second line (shared y-scale) for the
+# Taylor-rule/fed-funds chart; `lab`/`lab2` prefix each line's hover tips.
+spark_svg <- function(dates, v, fmt, ref = NULL, ref_fmt = NULL, v2 = NULL,
+                      col = "#7fb3d8", col2 = "#ef9a9a", dot = "#ffffff",
+                      lab = NULL, lab2 = NULL, w = 150, h = 100) {
+  s <- spark_slice(dates, v, v2); dates <- s$dates; v <- s$v; v2 <- s$v2
+  # Shared vertical domain across both lines and the reference value.
+  rng <- range(c(v, v2, ref), na.rm = TRUE); if (diff(rng) == 0) rng <- rng + c(-1, 1)
+  pad_x <- 5; pad_y <- 5
+  scale_y <- function(val) h - pad_y - (val - rng[1]) / diff(rng) * (h - 2 * pad_y)
+  x <- seq(pad_x, w - pad_x, length.out = length(v))
+
+  # Building blocks reused by each line.
+  poly   <- function(yv, color) sprintf(
+    '<polyline points="%s" fill="none" stroke="%s" stroke-width="2.2" stroke-linejoin="round"/>',
+    paste(sprintf("%.1f,%.1f", x, yv), collapse = " "), color)
+  enddot <- function(yv, color) sprintf(
+    '<circle cx="%.1f" cy="%.1f" r="3.2" fill="%s"/>', tail(x, 1), tail(yv, 1), color)
+  hits   <- function(yv, vv, pref) paste(
+    mapply(function(xi, yi, di, vi)
+      sprintf(paste0('<circle class="mk-macro__pt" cx="%.1f" cy="%.1f" r="5" ',
+                     'fill="transparent" data-tip="%s%s: %s"></circle>'),
+              xi, yi, pref, format(di, "%b %Y"), fmt(vi)),
+      x, yv, dates, vv), collapse = "")
+  # HTML entity (not a literal middot) so the separator survives R's sprintf
+  # regardless of locale; the browser decodes &#183; back to "·" in the tip.
+  pref <- function(l) if (is.null(l)) "" else paste0(l, " &#183; ")
+
+  # Reference line (drawn first, under the data) + its HTML label.
+  ref_line <- ""; ref_label <- ""
+  if (!is.null(ref)) {
+    yr <- scale_y(ref)
+    ref_line <- sprintf(
+      paste0('<line class="mk-macro__ref" x1="0" y1="%.1f" x2="%d" y2="%.1f" ',
+             'vector-effect="non-scaling-stroke" pointer-events="none"></line>'), yr, w, yr)
+    ref_txt <- if (is.null(ref_fmt)) formatC(ref, format = "g") else ref_fmt(ref)
+    ref_label <- sprintf('<span class="mk-macro__ref-label" style="top:%.1fpx">%s</span>',
+                         yr, ref_txt)
+  }
+
+  # Second line, if present, drawn beneath the primary.
+  line2 <- ""
+  if (!is.null(v2)) {
+    y2 <- scale_y(v2)
+    line2 <- paste0(poly(y2, col2), enddot(y2, col2), hits(y2, v2, pref(lab2)))
+  }
+  y <- scale_y(v)
+
+  svg <- sprintf(
+    paste0('<svg class="mk-macro__spark" viewBox="0 0 %d %d" width="%d" height="%d" role="img" preserveAspectRatio="none">',
+           '%s%s%s%s%s</svg>'),
+    w, h, w, h, ref_line, line2, poly(y, col), enddot(y, dot), hits(y, v, pref(lab)))
+  sprintf('<div class="mk-macro__spark-wrap">%s%s</div>', svg, ref_label)
+}
+
+# First/last date of the window actually drawn, so the date row labels the true
+# span, ending at the latest observation.
+spark_window <- function(dates, v) {
+  d <- spark_slice(dates, v)$dates
+  list(start = min(d), end = max(d))
+}
+
+pct1 <- function(x) sprintf("%.1f%%", x)
+pct2 <- function(x) sprintf("%.2f%%", x)
+# Two significant figures for the v/u ratio: one decimal at/above 1 (1.0),
+# two below (0.95), none in double digits — never a misleading trailing zero.
+sig2 <- function(x) formatC(x, format = "f",
+                            digits = max(0, 1 - floor(log10(abs(x)))))
+idx1 <- function(x) sprintf("%.1f", x)
+pct0 <- function(x) sprintf("%.0f%%", x)
+or_default <- function(x, d) if (is.null(x)) d else x
+
+fed_col <- "#7fb3d8"  # effective fed funds (primary line, matches the strip blue)
+tay_col <- "#ef9a9a"  # Taylor rule (muted coral, legible on the dark band)
+
+cells <- list(
+  list(label = "Unemployment",         value = pct2(tail(u$value, 1)),  dates = u$date,  series = u$value,  fmt = pct2, d = max(u$date),  ref = NULL),
+  list(label = "Supercore PCE (y/y)",   value = pct1(tail(sc$value, 1)), dates = sc$date, series = sc$value, fmt = pct1, d = max(sc$date), ref = NULL),
+  # v/u = 1 (job openings equal to unemployed) and diffusion = 50 (as many
+  # industries adding jobs as cutting) are the meaningful balance points.
+  list(label = "V/U ratio",             value = sig2(tail(vu$value, 1)), dates = vu$date, series = vu$value, fmt = sig2, d = max(vu$date), ref = 1),
+  list(label = "Jobs diffusion index",  value = idx1(tail(di$value, 1)), dates = di$date, series = di$value, fmt = idx1, d = max(di$date), ref = 50),
+  # Row 2 -------------------------------------------------------------------
+  list(label = "Women's share of job gains (12m)", value = pct0(tail(ws$value, 1)), dates = ws$date, series = ws$value, fmt = pct0, d = max(ws$date), ref = 50, ref_fmt = pct0),
+  list(label = "Health care share of job gains (12m)", value = pct0(tail(hs$value, 1)), dates = hs$date, series = hs$value, fmt = pct0, d = max(hs$date), ref = 50, ref_fmt = pct0),
+  list(label = "Labor share",                value = pct1(tail(ls$value, 1)), dates = ls$date, series = ls$value, fmt = pct1, d = max(ls$date)),
+  # Two lines, shared percent scale: fed funds (primary line) and the Taylor
+  # rule. The headline shows both current values, colour-keyed to the lines and
+  # ordered Taylor-then-fed to match the title.
+  list(label = "Taylor rule vs. fed funds", dual = TRUE,
+       value = tagList(
+         tags$span(style = paste0("color:", tay_col), pct1(tail(ty$value, 1))),
+         tags$span(class = "mk-macro__vs", "vs"),
+         tags$span(style = paste0("color:", fed_col), pct1(tail(ff$value, 1)))),
+       dates = ff$date, series = ff$value, fmt = pct1, d = max(ff$date),
+       v2 = ty$value, col = fed_col, col2 = tay_col, dot = fed_col, lab = "Fed funds", lab2 = "Taylor",
+       legend = tags$div(class = "mk-macro__legend",
+         tags$span(class = "mk-macro__leg",
+                   tags$span(class = "mk-macro__swatch", style = paste0("background:", tay_col)), "Taylor rule"),
+         tags$span(class = "mk-macro__leg",
+                   tags$span(class = "mk-macro__swatch", style = paste0("background:", fed_col)), "Fed funds")))
+)
+
+# The "Data I'm watching" heading now lives outside this band (as a text label
+# above it, on the page background) and the render caption has been dropped, so
+# the band holds only the graphics. Eight cells flow into the four-column grid
+# as two rows.
+tags$div(class = "mk-macro__cells",
+  !!!map(cells, function(cc) {
+    win <- spark_window(cc$dates, cc$series)
+    tags$div(class = "mk-macro__cell",
+      tags$div(class = "mk-macro__label", cc$label),
+      tags$div(class = if (isTRUE(cc$dual)) "mk-macro__value mk-macro__value--dual" else "mk-macro__value",
+               cc$value),
+      # NB: use [[ ]] (exact), not $, for `lab` — `cc$lab` would partial-match
+      # the cell's `label` field and prefix every single-line tooltip with the
+      # chart title.
+      HTML(spark_svg(cc$dates, cc$series, cc$fmt,
+                     ref  = cc[["ref"]], ref_fmt = cc[["ref_fmt"]], v2 = cc[["v2"]],
+                     col  = or_default(cc[["col"]],  "#7fb3d8"),
+                     col2 = or_default(cc[["col2"]], "#ef9a9a"),
+                     dot  = or_default(cc[["dot"]],  "#ffffff"),
+                     lab  = cc[["lab"]], lab2 = cc[["lab2"]])),
+      cc$legend,  # NULL for single-line cells; htmltools drops NULL children
+      # Date row spans the sparkline: window start on the left, latest
+      # observation on the right (under the end dot) so it reads left-to-right.
+      tags$div(class = "mk-macro__dates",
+        tags$span(class = "mk-macro__date mk-macro__date--start", format(win$start, "%b %Y")),
+        tags$span(class = "mk-macro__date mk-macro__date--end",   format(win$end,   "%b %Y")))
+    )
+  })
+)
+```
+
+:::
+
+```{=html}
+<script>
+// Hover tooltip for the macro sparklines: each point carries data-tip
+// ("[series ·] Mon YYYY: value"). Shown as a small floating box on two lines
+// (label/date above value) so it stays narrow; its centre is clamped to the
+// viewport so points at the right edge are not clipped.
+(function () {
+  var strip = document.getElementById("macro-strip");
+  if (!strip) return;
+  var tip = document.createElement("div");
+  tip.className = "mk-macro__tip";
+  tip.hidden = true;
+  document.body.appendChild(tip);
+  // Render "date: value" on two lines: everything before the last ": " on top,
+  // the value below. (The value and date never contain ": " themselves.)
+  function fill(text) {
+    tip.textContent = "";
+    var i = text.lastIndexOf(": ");
+    if (i < 0) { tip.textContent = text; return; }
+    tip.appendChild(document.createTextNode(text.slice(0, i)));
+    tip.appendChild(document.createElement("br"));
+    var val = document.createElement("span");
+    val.className = "mk-macro__tip-val";
+    val.textContent = text.slice(i + 2);
+    tip.appendChild(val);
+  }
+  strip.addEventListener("mousemove", function (e) {
+    var t = e.target;
+    var text = t && t.getAttribute && t.getAttribute("data-tip");
+    if (text) {
+      fill(text);
+      tip.hidden = false;
+      var half = tip.offsetWidth / 2, m = 6;
+      var x = Math.min(Math.max(e.clientX, half + m), window.innerWidth - half - m);
+      tip.style.left = x + "px";
+      tip.style.top = e.clientY + "px";
+    } else {
+      tip.hidden = true;
+    }
+  });
+  strip.addEventListener("mouseleave", function () { tip.hidden = true; });
+})();
+</script>
+```
 
 ## Latest {#latest}
 
@@ -51,7 +336,7 @@ recent <- read_csv("data/work_database.csv", show_col_types = FALSE) %>%
   ) %>%
   filter(Highlight == "X") %>%
   arrange(desc(Date)) %>%
-  head(5)
+  head(5)   # five most recent highlighted items
 
 items <- pmap(recent, function(Date, Title, Outlet, Type, Link, ...) {
   tags$a(
@@ -75,6 +360,83 @@ htmltools::tagList(
 )
 ```
 
+## Start Here {#start-here}
+
+New here? These are the pieces that best explain what I work on.
+
+```{r start_here, echo=FALSE, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(lubridate)
+library(htmltools)
+
+fix_title_case <- function(x) {
+  x <- str_to_title(x)
+  for (w in c(" A "," An "," The "," And "," But "," For "," Of "," In "," On "," To "," With ")) {
+    x <- str_replace_all(x, w, str_to_lower(w))
+  }
+  # ASCII \u escapes, NOT literal smart-quote chars: quarto transliterates
+  # non-ASCII source bytes to "<U+00D4>" text, which would turn this class into
+  # [<U+00D4>...] and silently strip D/U/5/0/4 from every title.
+  str_remove_all(x, "[\\u00d4\\u00d5]")
+}
+
+# Curation lives in data/start_here.csv (an ordered list keyed by Link, managed
+# from the Site Manager app's "Start here" tab). Title/outlet/date/type and the
+# descriptive Excerpt come from the work database so they can't drift; a row may
+# still carry its own values (the book, which isn't in the database). The line
+# under each title is the item's Excerpt.
+blank_na <- function(x) {
+  x <- as.character(x)
+  ifelse(is.na(x) | str_trim(x) %in% c("", "NA"), NA_character_, x)
+}
+
+db <- read_csv("data/work_database.csv", show_col_types = FALSE) %>%
+  transmute(
+    Link,
+    DBTitle   = fix_title_case(`Original Title`),
+    DBOutlet  = Outlet,
+    DBYear    = year(as.Date(Date)),
+    DBExcerpt = Excerpt,
+    DBType    = case_when(
+      str_detect(Outlet, "Testimony") ~ "Testimony",
+      Format == "White Paper"         ~ "Research",
+      TRUE                            ~ Format
+    )
+  )
+
+sh <- read_csv("data/start_here.csv", show_col_types = FALSE) %>%
+  left_join(db, by = "Link") %>%
+  mutate(
+    Title  = coalesce(blank_na(Title),  DBTitle),
+    Outlet = coalesce(blank_na(Outlet), DBOutlet),
+    Year   = coalesce(Year, DBYear),
+    Type   = coalesce(blank_na(Type),   DBType),
+    Desc   = coalesce(blank_na(Excerpt), blank_na(DBExcerpt))
+  ) %>%
+  arrange(Rank)
+
+# Every curated row must resolve to a title; catch broken Links at render time.
+stopifnot(!any(is.na(sh$Title)))
+
+items <- pmap(sh, function(Link, Title, Outlet, Year, Desc, ...) {
+  internal <- str_starts(Link, "#")
+  # No type pill; the outlet and year sit on the right ("Vox, 2015").
+  tags$a(
+    class  = "mk-start__item",
+    href   = Link,
+    target = if (!internal) "_blank",
+    rel    = if (!internal) "noopener",
+    tags$div(class = "mk-start__body",
+      tags$div(class = "mk-start__title", Title),
+      if (!is.na(Desc)) tags$div(class = "mk-start__impact", HTML(Desc))),
+    tags$div(class = "mk-start__meta",
+      tags$span(class = "mk-start__outlet", paste0(Outlet, ", ", Year)))
+  )
+})
+
+tags$div(class = "mk-start", !!!items)
+```
+
 ## Portfolio {#portfolio}
 
 A combined record of my work: writing, research, media appearances, and press hits. Use the tabs to switch between them, or search within any category. Feel free to contact me if you'd like me to write for you or join you on air.
@@ -90,7 +452,10 @@ fix_title_case <- function(x) {
   for (w in c(" A "," An "," The "," And "," But "," For "," Of "," In "," On "," To "," With ")) {
     x <- str_replace_all(x, w, str_to_lower(w))
   }
-  str_remove_all(x, "[ÔÕ]")
+  # ASCII \u escapes, NOT literal smart-quote chars: quarto transliterates
+  # non-ASCII source bytes to "<U+00D4>" text, which would turn this class into
+  # [<U+00D4>...] and silently strip D/U/5/0/4 from every title.
+  str_remove_all(x, "[\\u00d4\\u00d5]")
 }
 
 raw <- read_csv("data/work_database.csv", show_col_types = FALSE) %>%

@@ -5,6 +5,13 @@ project:
 
 website:
   title: "Mike Konczal"
+  site-url: https://www.mikekonczal.com
+  description: "Economist and writer. Vice President of Policy and Research at the Economic Security Project, former chief economist at the White House National Economic Council, and author of Freedom from the Market."
+  image: images/mkonczal_index.jpg
+  open-graph: true
+  twitter-card:
+    creator: "@mtkonczal"
+    card-style: summary_large_image
 
   page-footer:
     right: |
@@ -20,5 +27,6 @@ format:
     css: styles.css
     toc: false
     page-layout: full
+    include-in-header: _includes/in-header.html
     include-before-body: _includes/before-body.html
     include-after-body: _includes/after-body.html

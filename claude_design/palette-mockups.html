@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Palette directions — three mockups</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  --serif: "Newsreader", Georgia, serif;
+  --ui: "Inter", -apple-system, sans-serif;
+}
+* { box-sizing: border-box; }
+body { margin: 0; font-family: var(--serif); background: #d8dcdb; color: #16242a; }
+
+.mock-intro {
+  max-width: 780px; margin: 0 auto; padding: 2.5rem 1.5rem 0.5rem;
+  font-family: var(--ui); font-size: .92rem; line-height: 1.55; color: #45555b;
+}
+.mock-intro h1 { font-family: var(--serif); font-size: 1.8rem; color: #1a2b31; margin: 0 0 .5rem; }
+
+.variant { max-width: 1080px; margin: 2.75rem auto; padding: 0 1.5rem; }
+.variant-head { font-family: var(--ui); margin-bottom: .7rem; }
+.variant-head .vh-name { font-size: .82rem; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; color: #1a2b31; }
+.variant-head .vh-desc { font-size: .85rem; color: #5b6a6e; margin-top: .25rem; line-height: 1.5; }
+
+/* swatches */
+.swatches { display: flex; gap: .5rem; margin: .8rem 0 1rem; flex-wrap: wrap; }
+.sw { font-family: var(--ui); font-size: .68rem; color: #45555b; }
+.sw i {
+  display: block; width: 84px; height: 40px; border-radius: 5px; margin-bottom: .3rem;
+  border: 1px solid rgba(0,0,0,.12);
+}
+.sw b { display: block; font-weight: 600; }
+
+/* ---- shared composite layout; colors come from scoped vars ---- */
+.comp {
+  display: grid; grid-template-columns: 195px 1fr; border-radius: 8px; overflow: hidden;
+  box-shadow: 0 10px 34px rgba(10,25,30,.22);
+}
+.c-side {
+  background: var(--struct); color: var(--struct-soft);
+  padding: 1.4rem 1.2rem; font-family: var(--ui); display: flex; flex-direction: column; gap: .15rem;
+}
+.c-brand { font-family: var(--serif); font-size: 1.18rem; font-weight: 600; color: #fff; margin-bottom: 1rem; }
+.c-nav a {
+  display: block; padding: .42rem .6rem; margin-left: -.6rem; border-radius: 4px;
+  color: var(--struct-soft); font-size: .95rem; font-weight: 500; text-decoration: none;
+}
+.c-nav a.on { background: rgba(255,255,255,.1); color: #fff; box-shadow: inset 2px 0 0 var(--accent); }
+.c-cta {
+  margin-top: auto; background: var(--accent); color: var(--accent-text, #fff); text-align: center;
+  padding: .5rem .8rem; border-radius: 4px; font-size: .8rem; font-weight: 600; text-decoration: none;
+}
+.c-main { background: var(--paper); min-width: 0; }
+
+.c-band { padding: 1.35rem 1.75rem; }
+.c-band--tint { background: var(--tint); }
+
+.c-h2 { font-family: var(--serif); font-size: 1.55rem; font-weight: 600; letter-spacing: -.02em; color: var(--head); margin: 0 0 .9rem; }
+.c-h2::after { content: ""; display: block; width: 3rem; height: var(--rule-h, 3px); margin-top: .6rem; border-radius: 2px; background: var(--accent); }
+
+.c-row { display: grid; grid-template-columns: 1fr auto; column-gap: 1.6rem; padding: .9rem .75rem; border-bottom: 1px solid var(--hairline); border-radius: 4px; }
+.c-row:hover { background: var(--hover); }
+.c-rt { font-size: 1.16rem; font-weight: 600; color: var(--head); line-height: 1.25; }
+.c-ri { font-size: .95rem; color: var(--ink-soft); line-height: 1.45; margin-top: .25rem; max-width: 64ch; }
+.c-meta { display: flex; flex-direction: column; align-items: flex-end; gap: .4rem; }
+.c-pill {
+  font-family: var(--ui); font-size: .7rem; font-weight: 600; padding: .28rem .6rem; border-radius: 999px;
+  background: var(--pill-bg); color: var(--pill-text); white-space: nowrap;
+}
+.c-outlet { font-family: var(--ui); font-size: .74rem; color: var(--mute); white-space: nowrap; }
+
+.c-prose { font-size: 1rem; line-height: 1.55; color: var(--ink); margin: 0; max-width: 66ch; }
+.c-prose a { color: var(--link); text-decoration: none; border-bottom: 1px solid var(--link-under); }
+.c-prose a:hover { color: var(--head); }
+
+/* macro strip */
+.c-macro { background: var(--struct); padding: 1rem 1.75rem 1.1rem; background-image: var(--grid-motif, none); background-size: 22px 22px; }
+.c-mcells { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.4rem; }
+.c-mlabel { font-family: var(--ui); font-size: .64rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: rgba(255,255,255,.55); }
+.c-mval { font-family: var(--ui); font-variant-numeric: tabular-nums; font-size: 1.3rem; font-weight: 600; color: #fff; }
+.c-mdate { font-family: var(--ui); font-size: .66rem; color: rgba(255,255,255,.42); margin-top: .15rem; }
+.c-macro svg { display: block; margin-top: .3rem; }
+
+@media (max-width: 760px) {
+  .comp { grid-template-columns: 1fr; }
+  .c-side { flex-direction: row; align-items: center; gap: .8rem; }
+  .c-brand { margin: 0; }
+  .c-cta { margin: 0 0 0 auto; }
+  .c-mcells { grid-template-columns: 1fr 1fr; }
+}
+
+/* =====================================================================
+   V1 — COOLED COPPER: petrol structure unchanged; paper goes cool;
+   copper survives only in active states, pills, CTA, spark dot.
+   Links move to petrol.
+   ===================================================================== */
+.v1 {
+  --struct: #0e2c33; --struct-soft: rgba(255,255,255,.78);
+  --paper: #fafbfb; --tint: #eef1f1;
+  --head: #0e2c33; --ink: #182428; --ink-soft: #47565a; --mute: #7d898c;
+  --hairline: #e1e6e5; --hover: rgba(14,44,51,.05);
+  --accent: #aa5a28;
+  --link: #1d5b66; --link-under: rgba(29,91,102,.3);
+  --pill-bg: rgba(170,90,40,.12); --pill-text: #8f461c;
+}
+
+/* =====================================================================
+   V2 — CHART INK: petrol structure; accent becomes chart blue; faint
+   gridline motif behind the macro strip; copper fully retired here.
+   ===================================================================== */
+.v2 {
+  --struct: #0e2c33; --struct-soft: rgba(255,255,255,.78);
+  --paper: #fbfcfc; --tint: #edf1f2;
+  --head: #0e2c33; --ink: #182428; --ink-soft: #47565a; --mute: #7d898c;
+  --hairline: #e0e5e6; --hover: rgba(48,103,168,.07);
+  --accent: #3067a8;
+  --link: #3067a8; --link-under: rgba(48,103,168,.3);
+  --pill-bg: rgba(48,103,168,.12); --pill-text: #24507f;
+  --grid-motif: linear-gradient(rgba(255,255,255,.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,.05) 1px, transparent 1px);
+}
+
+/* =====================================================================
+   V3 — THE BOOK PALETTE: navy ink structure, carmine working accent,
+   cover off-white ground. The h2 rule thickens into the cover's bar.
+   ===================================================================== */
+.v3 {
+  --struct: #2e3a67; --struct-soft: rgba(255,255,255,.78);
+  --paper: #f5f3ee; --tint: #ebe8e0;
+  --head: #2e3a67; --ink: #23283a; --ink-soft: #4d5266; --mute: #83879a;
+  --hairline: #dfdcd2; --hover: rgba(168,33,58,.06);
+  --accent: #a8213a; --accent-text: #fff;
+  --link: #2e3a67; --link-under: rgba(168,33,58,.45);
+  --pill-bg: rgba(168,33,58,.1); --pill-text: #8c1b30;
+  --rule-h: 6px;
+}
+</style>
+</head>
+<body>
+
+<div class="mock-intro">
+  <h1>Palette directions — three mockups</h1>
+  <p>Same composite each time: sidebar, “Start here” row, macro strip, prose link. Typography and layout are held constant so only the palette is being judged. Hover the rows and links.</p>
+</div>
+
+<!-- ================= V1 ================= -->
+<div class="variant v1">
+  <div class="variant-head">
+    <div class="vh-name">1 · Cooled Copper — the minimal move</div>
+    <div class="vh-desc">Warm cream goes cool near-white; petrol stays; copper is demoted from every link to active states, pills, and data marks only. Links turn petrol. Smallest diff, breaks the cream-and-terracotta cliché.</div>
+  </div>
+  <div class="swatches">
+    <div class="sw"><i style="background:#0e2c33"></i><b>petrol</b>#0e2c33</div>
+    <div class="sw"><i style="background:#fafbfb"></i><b>paper (cooled)</b>#fafbfb</div>
+    <div class="sw"><i style="background:#eef1f1"></i><b>tint</b>#eef1f1</div>
+    <div class="sw"><i style="background:#aa5a28"></i><b>copper (rationed)</b>#aa5a28</div>
+    <div class="sw"><i style="background:#1d5b66"></i><b>link petrol</b>#1d5b66</div>
+  </div>
+  <div class="comp">
+    <div class="c-side">
+      <div class="c-brand">Mike Konczal</div>
+      <nav class="c-nav">
+        <a href="#" onclick="return false">Home</a>
+        <a href="#" onclick="return false" class="on">Start here</a>
+        <a href="#" onclick="return false">Portfolio</a>
+      </nav>
+      <a class="c-cta" href="#" onclick="return false">Newsletter</a>
+    </div>
+    <div class="c-main">
+      <div class="c-macro">
+        <div class="c-mcells">
+          <div><div class="c-mlabel">Unemployment</div><div class="c-mval">4.2%</div><svg width="100" height="26" viewBox="0 0 100 26"><polyline points="0,18 14,16 28,17 42,13 56,14 70,10 84,11 100,8" fill="none" stroke="#6fa3a6" stroke-width="1.8"/><circle cx="100" cy="8" r="2.5" fill="#e0a06a"/></svg><div class="c-mdate">Jun 2026</div></div>
+          <div><div class="c-mlabel">Core CPI (y/y)</div><div class="c-mval">2.7%</div><svg width="100" height="26" viewBox="0 0 100 26"><polyline points="0,6 14,8 28,10 42,11 56,14 70,15 84,17 100,16" fill="none" stroke="#6fa3a6" stroke-width="1.8"/><circle cx="100" cy="16" r="2.5" fill="#e0a06a"/></svg><div class="c-mdate">Jun 2026</div></div>
+          <div><div class="c-mlabel">Payrolls (m/m)</div><div class="c-mval">+140k</div><svg width="100" height="26" viewBox="0 0 100 26"><polyline points="0,10 14,14 28,8 42,16 56,12 70,18 84,13 100,12" fill="none" stroke="#6fa3a6" stroke-width="1.8"/><circle cx="100" cy="12" r="2.5" fill="#e0a06a"/></svg><div class="c-mdate">Jun 2026</div></div>
+          <div><div class="c-mlabel">Fed funds</div><div class="c-mval">3.75%</div><svg width="100" height="26" viewBox="0 0 100 26"><polyline points="0,20 14,20 28,16 42,12 56,8 70,8 84,10 100,12" fill="none" stroke="#6fa3a6" stroke-width="1.8"/><circle cx="100" cy="12" r="2.5" fill="#e0a06a"/></svg><div class="c-mdate">Jun 2026</div></div>
+        </div>
+      </div>
+      <div class="c-band">
+        <div class="c-h2">Start here</div>
+        <div class="c-row">
+          <div>
+            <div class="c-rt">Supply-Side Expansion Has Driven the Decline in Inflation</div>
+            <div class="c-ri">The evidence that 2023's disinflation came from supply recovery, not demand destruction.</div>
+          </div>
+          <div class="c-meta"><span class="c-pill">Research</span><span class="c-outlet">Roosevelt Institute · 2023</span></div>
+        </div>
+      </div>
+      <div class="c-band c-band--tint">
+        <p class="c-prose">A former software and financial engineer, he was an early hire at the <a href="#" onclick="return false">Roosevelt Institute</a>, where he led major projects on financial reform, inequality, and macroeconomics.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= V2 ================= -->
+<div class="variant v2">
+  <div class="variant-head">
+    <div class="vh-name">2 · Chart Ink — the statistical-graphics identity</div>
+    <div class="vh-desc">Petrol structure stays; the working accent becomes a chart blue, a faint gridline motif sits behind the macro strip, and copper retires (it would survive only on the book band). Most “data economist,” but blue-on-petrol needs the value contrast shown here to avoid mush.</div>
+  </div>
+  <div class="swatches">
+    <div class="sw"><i style="background:#0e2c33"></i><b>petrol</b>#0e2c33</div>
+    <div class="sw"><i style="background:#fbfcfc"></i><b>paper</b>#fbfcfc</div>
+    <div class="sw"><i style="background:#edf1f2"></i><b>tint</b>#edf1f2</div>
+    <div class="sw"><i style="background:#3067a8"></i><b>chart blue</b>#3067a8</div>
+    <div class="sw"><i style="background:#6fa3a6"></i><b>spark line</b>#6fa3a6</div>
+  </div>
+  <div class="comp">
+    <div class="c-side">
+      <div class="c-brand">Mike Konczal</div>
+      <nav class="c-nav">
+        <a href="#" onclick="return false">Home</a>
+        <a href="#" onclick="return false" class="on">Start here</a>
+        <a href="#" onclick="return false">Portfolio</a>
+      </nav>
+      <a class="c-cta" href="#" onclick="return false">Newsletter</a>
+    </div>
+    <div class="c-main">
+      <div class="c-macro">
+        <div class="c-mcells">
+          <div><div class="c-mlabel">Unemployment</div><div class="c-mval">4.2%</div><svg width="100" height="26" viewBox="0 0 100 26"><polyline points="0,18 14,16 28,17 42,13 56,14 70,10 84,11 100,8" fill="none" stroke="#7fb3d8" stroke-width="1.8"/><circle cx="100" cy="8" r="2.5" fill="#fff"/></svg><div class="c-mdate">Jun 2026</div></div>
+          <div><div class="c-mlabel">Core CPI (y/y)</div><div class="c-mval">2.7%</div><svg width="100" height="26" viewBox="0 0 100 26"><polyline points="0,6 14,8 28,10 42,11 56,14 70,15 84,17 100,16" fill="none" stroke="#7fb3d8" stroke-width="1.8"/><circle cx="100" cy="16" r="2.5" fill="#fff"/></svg><div class="c-mdate">Jun 2026</div></div>
+          <div><div class="c-mlabel">Payrolls (m/m)</div><div class="c-mval">+140k</div><svg width="100" height="26" viewBox="0 0 100 26"><polyline points="0,10 14,14 28,8 42,16 56,12 70,18 84,13 100,12" fill="none" stroke="#7fb3d8" stroke-width="1.8"/><circle cx="100" cy="12" r="2.5" fill="#fff"/></svg><div class="c-mdate">Jun 2026</div></div>
+          <div><div class="c-mlabel">Fed funds</div><div class="c-mval">3.75%</div><svg width="100" height="26" viewBox="0 0 100 26"><polyline points="0,20 14,20 28,16 42,12 56,8 70,8 84,10 100,12" fill="none" stroke="#7fb3d8" stroke-width="1.8"/><circle cx="100" cy="12" r="2.5" fill="#fff"/></svg><div class="c-mdate">Jun 2026</div></div>
+        </div>
+      </div>
+      <div class="c-band">
+        <div class="c-h2">Start here</div>
+        <div class="c-row">
+          <div>
+            <div class="c-rt">Supply-Side Expansion Has Driven the Decline in Inflation</div>
+            <div class="c-ri">The evidence that 2023's disinflation came from supply recovery, not demand destruction.</div>
+          </div>
+          <div class="c-meta"><span class="c-pill">Research</span><span class="c-outlet">Roosevelt Institute · 2023</span></div>
+        </div>
+      </div>
+      <div class="c-band c-band--tint">
+        <p class="c-prose">A former software and financial engineer, he was an early hire at the <a href="#" onclick="return false">Roosevelt Institute</a>, where he led major projects on financial reform, inequality, and macroeconomics.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= V3 ================= -->
+<div class="variant v3">
+  <div class="variant-head">
+    <div class="vh-name">3 · The Book Palette — navy, carmine, cover off-white</div>
+    <div class="vh-desc">Derived directly from the <em>Freedom from the Market</em> cover: navy replaces petrol as structural ink, carmine replaces copper as the rationed working accent, and the section rule thickens into the cover's bar — the one motif that's unmistakably yours. Site, book, and byline share one identity.</div>
+  </div>
+  <div class="swatches">
+    <div class="sw"><i style="background:#2e3a67"></i><b>cover navy</b>#2e3a67</div>
+    <div class="sw"><i style="background:#f5f3ee"></i><b>cover off-white</b>#f5f3ee</div>
+    <div class="sw"><i style="background:#ebe8e0"></i><b>tint</b>#ebe8e0</div>
+    <div class="sw"><i style="background:#a8213a"></i><b>carmine (rationed)</b>#a8213a</div>
+    <div class="sw"><i style="background:#8a93b8"></i><b>spark line</b>#8a93b8</div>
+  </div>
+  <div class="comp">
+    <div class="c-side">
+      <div class="c-brand">Mike Konczal</div>
+      <nav class="c-nav">
+        <a href="#" onclick="return false">Home</a>
+        <a href="#" onclick="return false" class="on">Start here</a>
+        <a href="#" onclick="return false">Portfolio</a>
+      </nav>
+      <a class="c-cta" href="#" onclick="return false">Newsletter</a>
+    </div>
+    <div class="c-main">
+      <div class="c-macro">
+        <div class="c-mcells">
+          <div><div class="c-mlabel">Unemployment</div><div class="c-mval">4.2%</div><svg width="100" height="26" viewBox="0 0 100 26"><polyline points="0,18 14,16 28,17 42,13 56,14 70,10 84,11 100,8" fill="none" stroke="#8a93b8" stroke-width="1.8"/><circle cx="100" cy="8" r="2.5" fill="#e05a72"/></svg><div class="c-mdate">Jun 2026</div></div>
+          <div><div class="c-mlabel">Core CPI (y/y)</div><div class="c-mval">2.7%</div><svg width="100" height="26" viewBox="0 0 100 26"><polyline points="0,6 14,8 28,10 42,11 56,14 70,15 84,17 100,16" fill="none" stroke="#8a93b8" stroke-width="1.8"/><circle cx="100" cy="16" r="2.5" fill="#e05a72"/></svg><div class="c-mdate">Jun 2026</div></div>
+          <div><div class="c-mlabel">Payrolls (m/m)</div><div class="c-mval">+140k</div><svg width="100" height="26" viewBox="0 0 100 26"><polyline points="0,10 14,14 28,8 42,16 56,12 70,18 84,13 100,12" fill="none" stroke="#8a93b8" stroke-width="1.8"/><circle cx="100" cy="12" r="2.5" fill="#e05a72"/></svg><div class="c-mdate">Jun 2026</div></div>
+          <div><div class="c-mlabel">Fed funds</div><div class="c-mval">3.75%</div><svg width="100" height="26" viewBox="0 0 100 26"><polyline points="0,20 14,20 28,16 42,12 56,8 70,8 84,10 100,12" fill="none" stroke="#8a93b8" stroke-width="1.8"/><circle cx="100" cy="12" r="2.5" fill="#e05a72"/></svg><div class="c-mdate">Jun 2026</div></div>
+        </div>
+      </div>
+      <div class="c-band">
+        <div class="c-h2">Start here</div>
+        <div class="c-row">
+          <div>
+            <div class="c-rt">Supply-Side Expansion Has Driven the Decline in Inflation</div>
+            <div class="c-ri">The evidence that 2023's disinflation came from supply recovery, not demand destruction.</div>
+          </div>
+          <div class="c-meta"><span class="c-pill">Research</span><span class="c-outlet">Roosevelt Institute · 2023</span></div>
+        </div>
+      </div>
+      <div class="c-band c-band--tint">
+        <p class="c-prose">A former software and financial engineer, he was an early hire at the <a href="#" onclick="return false">Roosevelt Institute</a>, where he led major projects on financial reform, inequality, and macroeconomics.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="mock-intro" style="padding-bottom:3.5rem;">
+  <p><strong>Notes for judging:</strong> 1 is a refinement, not a rebrand — lowest risk, least memorable. 2 makes the data identity explicit but flirts with looking institutional (think central-bank dashboard). 3 is the only one derived from an artifact of yours; its risks are the warm ground (which we're otherwise moving away from — though here it's <em>the cover's</em> warm, which is the justification) and carmine discipline. All three keep Newsreader/Inter and your band system; only tokens change, so any of them is a styles.css-only diff.</p>
+</div>
+
+</body>
+</html>

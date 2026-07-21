@@ -48,11 +48,18 @@ jobs:
             any::lubridate
             any::htmltools
             any::DT
+            any::blsR
+            github::mtkonczal/tidyusmacro
 
       - name: Set up Quarto
         uses: quarto-dev/quarto-actions/setup@v2
 
       - name: Render site
+        # BLS_KEY (a repo secret) is needed for the diffusion index in the
+        # homepage macro strip; if it is missing the strip falls back to its
+        # cached vintage rather than failing the render.
+        env:
+          BLS_KEY: ${{ secrets.BLS_KEY }}
         run: quarto render
 
       - name: Commit rendered site
