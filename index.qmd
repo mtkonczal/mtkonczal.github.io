@@ -79,6 +79,8 @@ series_of <- function(id) macro %>% filter(series_id == id) %>% arrange(date)
 u  <- series_of("UNRATE_FULL")    # unemployment rate, extra digit (percent)
 sc <- series_of("SUPERCORE_YOY")  # PCE services ex-energy & housing, y/y percent
 vu <- series_of("VU")             # vacancies per unemployed worker (ratio)
+va <- series_of("VACANCIES")      # job openings level (thousands) — numerator of VU
+ul <- series_of("UNEMPLOY_LVL")   # unemployment level (thousands) — denominator of VU
 di <- series_of("DIFFUSION")      # 1-month payroll diffusion index (0-100)
 ws <- series_of("WOMEN_SHARE")    # women's share of trailing-12m net job gains (%)
 hs <- series_of("HEALTH_SHARE")   # ed & health share of trailing-12m net gains (%)
@@ -104,6 +106,17 @@ job_chg <- reduce(list(
          men   = total - women)    # nonfarm ex-women (i.e. men) 12m change
 stopifnot(nrow(job_chg) > 24)
 
+# V/U cell: keep the ratio as the headline, but plot the two underlying levels
+# (job openings and the unemployment level, both in thousands) as two lines on a
+# shared scale. Align them date for date the same way, so the pair never draws
+# mismatched.
+vu_lvl <- inner_join(
+  va %>% transmute(date, vacancies = value),
+  ul %>% transmute(date, unemploy  = value),
+  by = "date"
+) %>% arrange(date)
+stopifnot(nrow(vu_lvl) > 12)
+
 # --- Sanity checks: fail the render rather than publish a nonsense number ---
 # The two share-of-gains ratios are volatile (a small denominator swings them),
 # so their bounds are deliberately wide — just enough to catch a broken pull.
@@ -113,6 +126,8 @@ stopifnot(
   between(tail(u$value, 1),  1.5, 15),
   between(tail(sc$value, 1), -3,  12),
   between(tail(vu$value, 1), 0.1, 5),
+  between(tail(vu_lvl$vacancies, 1), 2000, 15000),
+  between(tail(vu_lvl$unemploy,  1), 2000, 30000),
   between(tail(di$value, 1), 0,   100),
   between(tail(ws$value, 1), -100, 200),
   between(tail(hs$value, 1), -100, 300),
@@ -215,16 +230,20 @@ spark_window <- function(dates, v) {
 
 pct1 <- function(x) sprintf("%.1f%%", x)
 pct2 <- function(x) sprintf("%.2f%%", x)
-# Two significant figures for the v/u ratio: one decimal at/above 1 (1.0),
-# two below (0.95), none in double digits — never a misleading trailing zero.
+# Three significant figures for the v/u ratio: two decimals at/above 1 (1.04),
+# three below (0.873), one in double digits — one more digit of precision than a
+# bare two-sig-fig read, without a misleading trailing zero.
 sig2 <- function(x) formatC(x, format = "f",
-                            digits = max(0, 1 - floor(log10(abs(x)))))
+                            digits = max(0, 2 - floor(log10(abs(x)))))
 idx1 <- function(x) sprintf("%.1f", x)
 pct0 <- function(x) sprintf("%.0f%%", x)
 # 12-month job change in thousands of jobs (the CES/PAYEMS levels are already in
 # thousands), comma-grouped and signed so declines read clearly; used for the
 # women's / health care sparkline tooltips. Matches the "thousands" axis caption.
 jobsK <- function(x) formatC(round(x), format = "d", big.mark = ",", flag = "+")
+# Levels in thousands (V/U cell): comma-grouped, no forced sign (unlike jobsK,
+# which signs the 12-month *changes*). A level is never usefully shown as "+".
+levK <- function(x) formatC(round(x), format = "d", big.mark = ",")
 zero_lab <- function(x) "0"
 or_default <- function(x, d) if (is.null(x)) d else x
 
@@ -243,9 +262,18 @@ legend_two <- function(n1, c1, n2, c2) tags$div(class = "mk-macro__legend",
 cells <- list(
   list(label = "Unemployment",         value = pct2(tail(u$value, 1)),  dates = u$date,  series = u$value,  fmt = pct2, d = max(u$date),  ref = NULL),
   list(label = "Non-Housing Core Services PCE (y/y)", value = pct1(tail(sc$value, 1)), dates = sc$date, series = sc$value, fmt = pct1, d = max(sc$date), ref = NULL),
-  # v/u = 1 (job openings equal to unemployed) and diffusion = 50 (as many
-  # industries adding jobs as cutting) are the meaningful balance points.
-  list(label = "V/U ratio",             value = sig2(tail(vu$value, 1)), dates = vu$date, series = vu$value, fmt = sig2, d = max(vu$date), ref = 1),
+  # V/U cell: the headline stays the ratio (job openings per unemployed worker),
+  # but the graphic plots the two underlying levels — vacancies vs the
+  # unemployment level, both in thousands — on a shared scale, the same two-line
+  # treatment as the health care and women's cells. (No balance-point reference
+  # line: 1 is meaningful for the ratio, not for the levels.)
+  list(label = "V/U ratio",             value = sig2(tail(vu$value, 1)),
+       dates = vu_lvl$date, series = vu_lvl$vacancies, v2 = vu_lvl$unemploy,
+       fmt = levK, d = max(vu_lvl$date),
+       col = grp_col, col2 = tot_col, dot = grp_col, lab = "Vacancies", lab2 = "Unemployment",
+       unit = "1,000s, level",
+       legend = legend_two("Vacancies", grp_col, "Unemployment", tot_col)),
+  # diffusion = 50 (as many industries adding jobs as cutting) is the balance point.
   list(label = "Jobs diffusion index",  value = idx1(tail(di$value, 1)), dates = di$date, series = di$value, fmt = idx1, d = max(di$date), ref = 50),
   # Row 2 -------------------------------------------------------------------
   # Health care and women's cells: the headline stays the SHARE of the past

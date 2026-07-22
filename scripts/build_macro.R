@@ -11,7 +11,11 @@
 #   SUPERCORE_YOY  PCE services ex-energy & housing (FRED IA001260M), the
 #                  "supercore" inflation gauge, year-over-year percent.
 #   VU             Vacancies per unemployed worker: job openings (JTSJOL) over
-#                  unemployment level (UNEMPLOY). A pure ratio.
+#                  unemployment level (UNEMPLOY). A pure ratio (the headline).
+#   VACANCIES      Job openings level (JTSJOL), thousands — numerator of VU,
+#                  plotted as one of the two lines in the V/U cell.
+#   UNEMPLOY_LVL   Unemployment level (UNEMPLOY), thousands — denominator of VU,
+#                  plotted as the second line in the V/U cell.
 #   DIFFUSION      BLS 1-month payroll diffusion index, total private
 #                  (CES0500000021), 0-100 (50 = as many industries adding jobs
 #                  as cutting). Pulled from the BLS API, so it needs BLS_KEY.
@@ -63,10 +67,16 @@ build_macro <- function() {
     select(date, series_id, value)
 
   # 3. Vacancies per unemployed worker (v/u) --------------------------------
-  vu <- getFRED(c("JTSJOL", "UNEMPLOY")) %>%
+  #    From one pull we derive both the RATIO (headline) and the two underlying
+  #    levels (thousands) — job openings and the unemployment level — that the
+  #    cell now plots as two lines on a shared scale, mirroring the women's /
+  #    health care cells.
+  vu_raw <- getFRED(c("JTSJOL", "UNEMPLOY")) %>%
     arrange(date) %>%
-    filter(!is.na(jtsjol), !is.na(unemploy)) %>%
-    transmute(date, series_id = "VU", value = jtsjol / unemploy)
+    filter(!is.na(jtsjol), !is.na(unemploy))
+  vu       <- vu_raw %>% transmute(date, series_id = "VU",           value = jtsjol / unemploy)
+  vac_lvl  <- vu_raw %>% transmute(date, series_id = "VACANCIES",    value = jtsjol)
+  unemp_lvl<- vu_raw %>% transmute(date, series_id = "UNEMPLOY_LVL", value = unemploy)
 
   # 4. Diffusion index (BLS API) --------------------------------------------
   key <- Sys.getenv("BLS_KEY")
@@ -143,7 +153,8 @@ build_macro <- function() {
   taylor   <- tr %>% transmute(date, series_id = "TAYLOR",   value = 100 * taylor)
   fedfunds <- tr %>% transmute(date, series_id = "FEDFUNDS", value = 100 * fed_funds)
 
-  bind_rows(u, sc, vu, di, women, health, women_chg, health_chg, total_chg,
+  bind_rows(u, sc, vu, vac_lvl, unemp_lvl, di, women, health,
+            women_chg, health_chg, total_chg,
             lshare, taylor, fedfunds) %>%
     filter(date >= Sys.Date() - years(5)) %>%
     arrange(series_id, date) %>%
