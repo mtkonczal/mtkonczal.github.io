@@ -260,8 +260,8 @@ legend_two <- function(n1, c1, n2, c2) tags$div(class = "mk-macro__legend",
             tags$span(class = "mk-macro__swatch", style = paste0("background:", c2)), n2))
 
 cells <- list(
-  list(label = "Unemployment",         value = pct2(tail(u$value, 1)),  dates = u$date,  series = u$value,  fmt = pct2, d = max(u$date),  ref = NULL),
-  list(label = "Non-Housing Core Services PCE (y/y)", value = pct1(tail(sc$value, 1)), dates = sc$date, series = sc$value, fmt = pct1, d = max(sc$date), ref = NULL),
+  list(label = "Unemployed",         value = pct2(tail(u$value, 1)),  dates = u$date,  series = u$value,  fmt = pct2, d = max(u$date),  ref = NULL),
+  list(label = "Core Non-Housing Services PCE (y/y)", value = pct1(tail(sc$value, 1)), dates = sc$date, series = sc$value, fmt = pct1, d = max(sc$date), ref = NULL),
   # V/U cell: the headline stays the ratio (job openings per unemployed worker),
   # but the graphic plots the two underlying levels — vacancies vs the
   # unemployment level, both in thousands — on a shared scale, the same two-line
@@ -270,9 +270,9 @@ cells <- list(
   list(label = "V/U ratio",             value = sig2(tail(vu$value, 1)),
        dates = vu_lvl$date, series = vu_lvl$vacancies, v2 = vu_lvl$unemploy,
        fmt = levK, d = max(vu_lvl$date),
-       col = grp_col, col2 = tot_col, dot = grp_col, lab = "Vacancies", lab2 = "Unemployment",
+       col = grp_col, col2 = tot_col, dot = grp_col, lab = "Vacancies", lab2 = "Unemployed",
        unit = "1,000s, level",
-       legend = legend_two("Vacancies", grp_col, "Unemployment", tot_col)),
+       legend = legend_two("Vacancies", grp_col, "Unemployed", tot_col)),
   # diffusion = 50 (as many industries adding jobs as cutting) is the balance point.
   list(label = "Jobs diffusion index",  value = idx1(tail(di$value, 1)), dates = di$date, series = di$value, fmt = idx1, d = max(di$date), ref = 50),
   # Row 2 -------------------------------------------------------------------
