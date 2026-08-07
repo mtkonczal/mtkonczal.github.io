@@ -132,6 +132,9 @@ ul.task-list li input[type="checkbox"] {
 <!-- main -->
 <main class="content column-page" id="quarto-document-content">
 <div class="mk-layout">
+<!-- Below 760px this rail becomes an off-canvas drawer. The toggle button and
+     scrim are created in _includes/after-body.html, not here, so that a page
+     without JS falls back to a plain stacked nav rather than a dead button. -->
 <nav class="mk-sidebar" aria-label="Site navigation">
   <div class="mk-sidebar__brand"><a href="index.html">Mike Konczal</a></div>
   <a class="mk-sidebar__back" href="index.html">← Back to main page</a>
@@ -187,6 +190,52 @@ ul.task-list li input[type="checkbox"] {
   var sb = document.querySelector('.mk-sidebar');
   if (sb && sb.parentNode !== document.body) {
     document.body.insertBefore(sb, document.body.firstChild);
+  }
+
+  // ---- Mobile drawer -----------------------------------------------------
+  // Below 760px styles.css releases the fixed rail. Adding .mk-js here upgrades
+  // the stacked fallback into an off-canvas drawer; without JS the fallback
+  // stands on its own, so the toggle is created here rather than shipped as
+  // dead markup in before-body.html. Everything is CSS-gated by the media
+  // query, so this is inert on desktop.
+  if (sb) {
+    sb.id = sb.id || 'mk-sidebar-nav';
+
+    var scrim = document.createElement('div');
+    scrim.id = 'mk-nav-scrim';
+
+    var toggle = document.createElement('button');
+    toggle.id = 'mk-nav-toggle';
+    toggle.type = 'button';
+    toggle.setAttribute('aria-controls', sb.id);
+    toggle.setAttribute('aria-expanded', 'false');
+    toggle.setAttribute('aria-label', 'Open navigation');
+    toggle.innerHTML =
+      '<svg viewBox="0 0 24 24" aria-hidden="true">' +
+      '<path d="M3 6h18M3 12h18M3 18h18" stroke-linecap="round"/></svg>';
+
+    document.body.appendChild(scrim);
+    document.body.appendChild(toggle);
+    document.body.classList.add('mk-js');
+
+    var setNavOpen = function (open) {
+      document.body.classList.toggle('mk-nav-open', open);
+      toggle.setAttribute('aria-expanded', String(open));
+      toggle.setAttribute('aria-label', open ? 'Close navigation' : 'Open navigation');
+    };
+
+    toggle.addEventListener('click', function () {
+      setNavOpen(!document.body.classList.contains('mk-nav-open'));
+    });
+    scrim.addEventListener('click', function () { setNavOpen(false); });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') setNavOpen(false);
+    });
+    // Any link tap closes the drawer: in-page anchors scroll behind it, and
+    // links to other pages are about to unload it anyway.
+    sb.addEventListener('click', function (e) {
+      if (e.target.closest('a')) setNavOpen(false);
+    });
   }
 
   var nav = document.querySelector('.mk-sidebar__nav');

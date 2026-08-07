@@ -422,9 +422,145 @@ body { margin: 0; padding-left: 240px; }
 }
 .mk-profile { display: none; }
 
-/* The sidebar stays a fixed 240px left rail at every width (no top-bar mode).
-   Content keeps its `padding-left: 240px` offset; narrow-screen content padding
-   is handled by the .mk-content rule in the max-width:1000px block above. */
+/* --- Mobile: the rail becomes an off-canvas drawer ------------------------ */
+/* Above 760px the sidebar stays a fixed 240px left rail and the page keeps its
+   `padding-left: 240px` offset (narrow-screen content padding is handled by the
+   .mk-content rule in the max-width:1000px block above).
+
+   Below 760px that offset leaves roughly 150px of content on a 390px phone, so
+   the rail is released and the page runs full bleed. Two levels:
+
+     CSS only  — the rail becomes a stacked nav block at the top of the page.
+                 This is the no-JS fallback and is deliberately usable on its own.
+     With JS   — _includes/after-body.html puts .mk-js on <body> and injects a
+                 toggle button plus a scrim, turning that block into a drawer
+                 that slides in from the left. Nothing is pinned to the top, so
+                 the page reads full height and the nav is one tap away.
+
+   No scroll-margin-top is needed on the section targets because nothing sticks
+   to the top of the viewport. */
+
+/* Injected by JS; stay hidden unless the drawer layer is active. */
+#mk-nav-toggle, #mk-nav-scrim { display: none; }
+
+@media (max-width: 760px) {
+  body { padding-left: 0; }
+
+  /* No-JS fallback: brand + social on one row, wrapped nav, then the CTA. */
+  .mk-sidebar {
+    position: static;
+    width: auto;
+    height: auto;
+    overflow: visible;
+    padding: 0.9rem 1.25rem 1rem;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      "brand social"
+      "nav   nav"
+      "cta   cta";
+    align-items: center;
+    column-gap: 1rem;
+  }
+  .mk-sidebar__brand   { grid-area: brand; margin: 0; }
+  .mk-sidebar__tagline { display: none; }
+  .mk-sidebar__social  { grid-area: social; border-top: none; padding-top: 0; margin: 0; }
+  .mk-sidebar__nav {
+    grid-area: nav;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 0.15rem 0.35rem;
+    margin: 0.6rem 0 0;
+  }
+  .mk-sidebar__nav a { font-size: 0.95rem; padding: 0.35rem 0.55rem; margin-left: 0; }
+  .mk-sidebar__cta { grid-area: cta; margin: 0.75rem 0 0; }
+
+  /* --- JS present: off-canvas drawer --- */
+  .mk-js .mk-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 130;
+    width: 265px;
+    max-width: 82vw;
+    height: 100dvh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    padding: 1.75rem 1.5rem;
+    transform: translateX(-100%);
+    transition: transform 0.24s ease;
+    /* The drawer and the #macro-strip band are both petrol; without an edge the
+       boundary disappears when the drawer opens over that section. */
+    border-right: 1px solid rgba(255, 255, 255, 0.14);
+    box-shadow: 3px 0 26px rgba(6, 20, 24, 0.45);
+  }
+  .mk-js .mk-sidebar__nav {
+    flex-direction: column;
+    flex-wrap: nowrap;
+    gap: 0.15rem;
+    margin: 1rem 0 auto;
+  }
+  .mk-js .mk-sidebar__nav a { font-size: 1.1rem; padding: 0.6rem 0.65rem; margin-left: -0.65rem; }
+  .mk-js .mk-sidebar__cta { margin: 1.5rem 0 0; }
+  .mk-js .mk-sidebar__social {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 1rem;
+    margin-top: 0.75rem;
+  }
+  .mk-js.mk-nav-open .mk-sidebar { transform: translateX(0); }
+
+  .mk-js #mk-nav-scrim {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 125;
+    background: rgba(6, 20, 24, 0.55);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.24s ease;
+  }
+  .mk-js.mk-nav-open #mk-nav-scrim { opacity: 1; pointer-events: auto; }
+
+  .mk-js #mk-nav-toggle {
+    display: grid;
+    place-items: center;
+    position: fixed;
+    z-index: 120;
+    right: 14px;
+    bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background: rgba(14, 44, 51, 0.90);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 3px 14px rgba(6, 20, 24, 0.34);
+    transition: opacity 0.18s;
+  }
+  .mk-js #mk-nav-toggle svg {
+    width: 22px;
+    height: 22px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2;
+  }
+  .mk-js #mk-nav-toggle:focus-visible {
+    outline: 2px solid var(--mk-blue-300);
+    outline-offset: 3px;
+  }
+  /* Once the drawer is open the scrim is the close affordance. */
+  .mk-js.mk-nav-open #mk-nav-toggle { opacity: 0; pointer-events: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mk-js .mk-sidebar,
+  .mk-js #mk-nav-scrim,
+  .mk-js #mk-nav-toggle { transition: none; }
+}
 
 /* Clips intro: photo + text side-by-side */
 .mk-clips-intro {
@@ -537,6 +673,8 @@ main h2 {
    ========================================================================== */
 body:has(.mk-now-archive) { padding-left: 0; }
 body:has(.mk-now-archive) .mk-sidebar { display: none; }
+/* No rail here, so the mobile drawer toggle would open an empty panel. */
+body:has(.mk-now-archive) #mk-nav-toggle { display: none; }
 body:has(.mk-now-archive) #quarto-content.page-columns { display: block; }
 body:has(.mk-now-archive) main#quarto-document-content.column-page {
   width: 100%;
@@ -704,6 +842,9 @@ body:has(.mk-now-archive) .mk-content {
   cursor: pointer;
   display: inline-flex;
   flex: 1 1 0;              /* equal-width segments */
+  min-width: 0;             /* let the segments shrink; the default min-width:auto
+                               pins them to their label width and pushes the bar
+                               past the viewport on phones */
   justify-content: center; /* centered label within each segment */
   align-items: baseline;
   gap: 0.3rem;              /* tight: binds the count to its own label */
@@ -728,6 +869,10 @@ body:has(.mk-now-archive) .mk-content {
 }
 .mk-tab:hover:not(.is-active)::after { background: var(--mk-rule); }
 .mk-tab.is-active::after { background: var(--mk-accent); }
+/* Four labels plus counts don't fit at phone widths even once they can shrink. */
+@media (max-width: 640px) {
+  .mk-tab { font-size: 0.85rem; }
+}
 /* Count rendered as a parenthetical so the number reads as a count, not a stray figure */
 .mk-tab__count {
   font-variant-numeric: tabular-nums;
