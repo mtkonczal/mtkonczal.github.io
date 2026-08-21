@@ -4,8 +4,8 @@ title: "Projects"
 
 Here are some of my data projects and tools.
 
-**[Resume:](resume.qmd)**
-My resume and longer CV, with links to downloadable PDFs.
+**[Resume:](files/resume_brief.pdf){target="_blank"}**
+My one-page resume brief.
 
 **[tidyusmacro:](tidyusmacro.qmd)**
 An R package providing utilities to retrieve and tidy U.S. macroeconomic data series from public government data providers.

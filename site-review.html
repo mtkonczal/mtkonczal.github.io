@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Site Review | mikekonczal.com</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ==========================================================================
+   Local review document. Borrows the Petrol & Chart Ink tokens from
+   styles.css so it reads as part of the site, with three of the review's own
+   recommendations applied to itself: a capped reading measure, real band
+   padding, and the darkened --mk-mute that clears WCAG AA.
+   ========================================================================== */
+:root {
+  --mk-blue-900:   #0e2c33;
+  --mk-blue-700:   #163e47;
+  --mk-blue-500:   #2c6e73;
+  --mk-blue-300:   #6fa3a6;
+  --mk-accent:     #3067a8;
+  --mk-accent-dk:  #24507f;
+  --mk-ink:        #16242a;
+  --mk-ink-soft:   #45555b;
+  --mk-mute:       #6a7577;   /* darkened from #7e8a8c: 3.46:1 -> 4.6:1 */
+  --mk-rule:       #e0e5e6;
+  --mk-rule-soft:  #eef1f2;
+  --mk-paper:      #fbfcfc;
+  --mk-band-tint:  #edf1f2;
+  --mk-radius:     6px;
+  --mk-band-max:   1140px;
+  --mk-band-pad-y: 3.25rem;   /* was 1.25rem on the live site */
+  --mk-measure:    68ch;      /* prose cap; live site runs to ~108 chars */
+  --mk-rail:       240px;
+  --mk-font-serif: "Newsreader", Georgia, "Iowan Old Style", "Times New Roman", serif;
+  --mk-font-ui:    "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  font-family: var(--mk-font-serif);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  color: var(--mk-ink);
+  background: var(--mk-paper);
+  -webkit-font-smoothing: antialiased;
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  * { transition: none !important; }
+}
+
+a {
+  color: var(--mk-accent);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(48, 103, 168, 0.30);
+  transition: color .15s, border-color .15s;
+}
+a:hover { color: var(--mk-accent-dk); border-bottom-color: var(--mk-accent); }
+a:focus-visible {
+  outline: 2px solid var(--mk-blue-500);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* --- Rail ---------------------------------------------------------------- */
+.rail {
+  position: fixed;
+  inset: 0 auto 0 0;
+  width: var(--mk-rail);
+  background: var(--mk-blue-900);
+  padding: 1.75rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  overflow-y: auto;
+  z-index: 10;
+}
+.rail__brand {
+  font-family: var(--mk-font-serif);
+  font-size: 1.3rem;
+  line-height: 1.25;
+  color: #fff;
+}
+.rail__brand span {
+  display: block;
+  font-family: var(--mk-font-ui);
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--mk-blue-300);
+  margin-top: 0.45rem;
+}
+.rail nav ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-family: var(--mk-font-ui);
+  font-size: 0.92rem;
+  font-weight: 500;
+  counter-reset: r;
+}
+.rail nav li { margin-bottom: 0.15rem; }
+.rail nav a {
+  display: block;
+  padding: 0.4rem 0.6rem;
+  border: 0;
+  border-radius: var(--mk-radius);
+  color: rgba(255, 255, 255, 0.78);
+}
+.rail nav a:hover { background: rgba(255, 255, 255, 0.09); color: #fff; }
+.rail__foot {
+  margin-top: auto;
+  font-family: var(--mk-font-ui);
+  font-size: 0.72rem;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+/* --- Bands -------------------------------------------------------------- */
+.content { margin-left: var(--mk-rail); }
+.band {
+  padding: var(--mk-band-pad-y) max(3rem, calc((100% - var(--mk-band-max)) / 2));
+  scroll-margin-top: 0;
+}
+.band--tint  { background: var(--mk-band-tint); }
+.band--paper { background: var(--mk-paper); }
+.band--dark {
+  background-color: var(--mk-blue-900);
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 22px 22px;
+  color: rgba(255, 255, 255, 0.88);
+}
+.band--dark h2, .band--dark h3, .band--dark strong { color: #fff; }
+.band--dark a { color: #e0a06a; border-bottom-color: rgba(224, 160, 106, 0.35); }
+.band--dark a:hover { color: #ead9b6; border-bottom-color: #ead9b6; }
+.band--dark .eyebrow { color: var(--mk-blue-300); }
+
+/* --- Type -------------------------------------------------------------- */
+.eyebrow {
+  font-family: var(--mk-font-ui);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--mk-mute);
+  margin: 0 0 0.6rem;
+}
+h1 {
+  font-size: clamp(2.1rem, 4.2vw, 3.1rem);
+  line-height: 1.05;
+  letter-spacing: -0.015em;
+  font-weight: 600;
+  color: var(--mk-blue-900);
+  margin: 0 0 1rem;
+}
+h1 + .lede {
+  font-size: 1.22rem;
+  line-height: 1.55;
+  color: var(--mk-ink-soft);
+  max-width: var(--mk-measure);
+  margin: 0;
+}
+.band > h2:first-of-type { margin-top: 0; }
+h2 {
+  font-size: 1.95rem;
+  line-height: 1.12;
+  letter-spacing: -0.01em;
+  font-weight: 600;
+  color: var(--mk-blue-900);
+  margin: 0 0 1.1rem;
+}
+h2::after {
+  content: "";
+  display: block;
+  width: 2.5rem;
+  height: 3px;
+  margin-top: 0.65rem;
+  border-radius: 2px;
+  background: var(--mk-accent);
+}
+.band--dark h2::after { background: #e0a06a; }
+h3 {
+  font-family: var(--mk-font-ui);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--mk-mute);
+  margin: 2.5rem 0 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--mk-rule);
+}
+.band--dark h3 { color: var(--mk-blue-300); border-bottom-color: rgba(255,255,255,0.14); }
+p, li { max-width: var(--mk-measure); }
+p { margin: 0 0 1rem; }
+.intro { color: var(--mk-ink-soft); margin-bottom: 2rem; }
+code, .path {
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 0.86em;
+  background: rgba(48, 103, 168, 0.08);
+  color: var(--mk-accent-dk);
+  padding: 0.1em 0.35em;
+  border-radius: 3px;
+}
+.band--dark code,
+.rail code {
+  background: rgba(255, 255, 255, 0.10);
+  color: #ead9b6;
+}
+
+/* --- Findings list ------------------------------------------------------ */
+ol.findings, ul.plain { list-style: none; margin: 0; padding: 0; }
+ol.findings { counter-reset: f; }
+ol.findings > li {
+  counter-increment: f;
+  position: relative;
+  max-width: none;
+  padding: 0 0 1.15rem 3rem;
+  margin-bottom: 1.15rem;
+  border-bottom: 1px solid var(--mk-rule-soft);
+}
+ol.findings > li:last-child { border-bottom: 0; margin-bottom: 0; }
+ol.findings > li::before {
+  content: counter(f);
+  position: absolute;
+  left: 0;
+  top: 0.05rem;
+  width: 1.9rem;
+  text-align: center;
+  font-family: var(--mk-font-ui);
+  font-size: 0.74rem;
+  font-weight: 600;
+  line-height: 1.55rem;
+  color: #fff;
+  background: var(--mk-accent);
+  border-radius: 50%;
+}
+ol.findings .fix { max-width: var(--mk-measure); margin: 0; }
+ol.findings .fix strong { color: var(--mk-blue-900); }
+
+ul.plain > li {
+  position: relative;
+  padding-left: 1.35rem;
+  margin-bottom: 0.85rem;
+}
+ul.plain > li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.62em;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--mk-accent);
+}
+ul.plain > li strong { color: var(--mk-blue-900); }
+.band--dark ul.plain > li::before { background: #e0a06a; }
+
+/* Evidence note: the measured fact behind a claim. */
+.evidence {
+  display: block;
+  max-width: var(--mk-measure);
+  margin-top: 0.45rem;
+  padding-left: 0.7rem;
+  border-left: 2px solid var(--mk-rule);
+  font-family: var(--mk-font-ui);
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: var(--mk-mute);
+}
+.band--dark .evidence { border-left-color: rgba(255,255,255,0.18); color: var(--mk-blue-300); }
+
+/* --- Verdict panel ----------------------------------------------------- */
+.verdict {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem;
+  margin: 2rem 0 0;
+  max-width: 840px;
+}
+.verdict__card {
+  background: #fff;
+  border: 1px solid var(--mk-rule);
+  border-top: 3px solid var(--mk-accent);
+  border-radius: var(--mk-radius);
+  padding: 1.35rem 1.4rem;
+}
+.verdict__card--fail { border-top-color: #8a2a3c; }
+.verdict__job {
+  font-family: var(--mk-font-ui);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--mk-mute);
+  margin: 0 0 0.5rem;
+}
+.verdict__grade {
+  font-size: 1.35rem;
+  line-height: 1.2;
+  font-weight: 600;
+  color: var(--mk-blue-900);
+  margin: 0 0 0.6rem;
+}
+.verdict__card--fail .verdict__grade { color: #8a2a3c; }
+.verdict__card p:last-child { margin: 0; font-size: 0.98rem; color: var(--mk-ink-soft); }
+
+/* --- Priority list (dark band) ----------------------------------------- */
+ol.priority { list-style: none; margin: 1.5rem 0 0; padding: 0; counter-reset: p; }
+ol.priority > li {
+  counter-increment: p;
+  position: relative;
+  max-width: 760px;
+  padding: 0.9rem 0 0.9rem 3.4rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.13);
+}
+ol.priority > li:last-child { border-bottom: 1px solid rgba(255, 255, 255, 0.13); }
+ol.priority > li::before {
+  content: counter(p);
+  position: absolute;
+  left: 0;
+  top: 0.85rem;
+  font-family: var(--mk-font-ui);
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #e0a06a;
+  line-height: 1;
+}
+ol.priority .cost {
+  display: block;
+  font-family: var(--mk-font-ui);
+  font-size: 0.76rem;
+  letter-spacing: 0.04em;
+  color: var(--mk-blue-300);
+  margin-top: 0.3rem;
+}
+
+footer.doc-foot {
+  padding: 2rem max(3rem, calc((100% - var(--mk-band-max)) / 2));
+  border-top: 1px solid var(--mk-rule);
+  font-family: var(--mk-font-ui);
+  font-size: 0.8rem;
+  color: var(--mk-mute);
+}
+footer.doc-foot p { max-width: 70ch; }
+
+/* --- Responsive -------------------------------------------------------- */
+@media (max-width: 900px) {
+  .rail {
+    position: static;
+    width: auto;
+    inset: auto;
+    flex-direction: column;
+    padding: 1.5rem 1.5rem 1.75rem;
+  }
+  .rail nav ol { columns: 2; column-gap: 1rem; }
+  .rail__foot { margin-top: 1rem; }
+  .content { margin-left: 0; }
+  :root { --mk-band-pad-y: 2.25rem; }
+  .band { padding-left: 1.5rem; padding-right: 1.5rem; }
+  footer.doc-foot { padding-left: 1.5rem; padding-right: 1.5rem; }
+  .verdict { grid-template-columns: 1fr; }
+  ol.findings > li { padding-left: 2.6rem; }
+}
+
+@media print {
+  .rail { display: none; }
+  .content { margin-left: 0; }
+  .band { padding: 1.25rem 0; background: #fff !important; color: #000; }
+  .band--dark { color: #000; }
+  .band--dark h2, .band--dark h3, .band--dark strong { color: #000; }
+  ol.priority > li::before { color: #000; }
+  a { color: #000; border-bottom: 0; }
+}
+</style>
+</head>
+<body>
+
+<aside class="rail">
+  <div class="rail__brand">Mike Konczal<span>Site review</span></div>
+  <nav aria-label="Sections">
+    <ol>
+      <li><a href="#verdict">Verdict</a></li>
+      <li><a href="#pros">What works</a></li>
+      <li><a href="#quick">Quick wins</a></li>
+      <li><a href="#deeper">Deeper changes</a></li>
+      <li><a href="#five">Do five things</a></li>
+    </ol>
+  </nav>
+  <div class="rail__foot">
+    Local file. Not published, not indexed.<br>
+    <code>site-review.html</code><br>
+    August 19, 2026
+  </div>
+</aside>
+
+<main class="content">
+
+<!-- ================= HERO ================= -->
+<section class="band band--paper" id="top">
+  <p class="eyebrow">Design and interface review</p>
+  <h1>The craft is fine.<br>The site is pointed at the wrong job.</h1>
+  <p class="lede">
+    Reviewed live at <a href="https://www.mikekonczal.com">mikekonczal.com</a> on desktop
+    (1280 and 1440) and mobile (375), against <span class="path">styles.css</span>,
+    <span class="path">index.qmd</span>, the includes, and the built payload in
+    <span class="path">docs/</span>. Every number below was measured, not estimated.
+  </p>
+</section>
+
+<!-- ================= VERDICT ================= -->
+<section class="band band--tint" id="verdict">
+  <h2>Verdict</h2>
+  <p class="intro">
+    The site has two jobs. It does one of them well and the other almost not at all,
+    and the one it neglects is the one you wrote a goal for.
+  </p>
+
+  <div class="verdict">
+    <div class="verdict__card">
+      <p class="verdict__job">Job one: credibility</p>
+      <p class="verdict__grade">Working</p>
+      <p>
+        A producer, editor, Hill staffer, or funder googles you and needs to confirm
+        you are real and serious. Bio, credentials, book, 346 press hits, testimony,
+        resume. This is better built than almost any economist's personal site.
+      </p>
+    </div>
+    <div class="verdict__card verdict__card--fail">
+      <p class="verdict__job">Job two: audience growth</p>
+      <p class="verdict__grade">Not working</p>
+      <p>
+        One post a week, 3,000 to 9,000 subscribers. The site offers one sidebar
+        button, no inline capture, and none of your newsletter writing anywhere
+        in the record.
+      </p>
+    </div>
+  </div>
+
+  <h3>The specific gap</h3>
+  <p>
+    You published on Aug 13, Jul 9, Jun 27, and Jun 23. None of those appear anywhere
+    on this site. <strong>Latest</strong> tops out at Jun 10. <strong>Now</strong> says
+    June. Portfolio's Writing tab (66 items) jumps from Feb 2026 to Mar 2025 to 2023,
+    because your most active channel is absent from the record entirely.
+  </p>
+  <p>
+    A visitor arriving from a media hit sees a site that looks last tended in June,
+    sitting next to a live data strip showing July numbers. The freshest thing on the
+    page is a number. The freshest thing you wrote is invisible.
+  </p>
+  <p>
+    So the recommendation is not a redesign. The design work here is careful and mostly
+    right. It is a funnel and freshness problem wearing a design problem's clothes.
+  </p>
+</section>
+
+<!-- ================= PROS ================= -->
+<section class="band band--paper" id="pros">
+  <h2>What works</h2>
+  <p class="intro">Worth naming, because the instinct will be to change too much.</p>
+
+  <ul class="plain">
+    <li>
+      <strong>"Start Here" is the best thing on the site.</strong> First person, five
+      pieces, each with a sentence on why it matters and where it sits in your arc.
+      That is exactly what a curious reader needs and almost nobody builds it.
+    </li>
+    <li>
+      <strong>The macro strip is a genuine differentiator.</strong> Eight indicators
+      rendered from FRED at build time, with a fail-loud and cache-fallback policy in
+      the R. No other personal site has this.
+    </li>
+    <li>
+      <strong>The book band is the one real visual moment.</strong> Dark petrol panel,
+      copper links, cover, four blurbs. It borrows from the jacket instead of inventing
+      a look, which is the right call.
+    </li>
+    <li>
+      <strong>Newsreader plus Inter is a real pairing</strong>, not the default stack.
+      Both actually load.
+      <span class="evidence">Verified with <code>document.fonts.check()</code>. Served via the
+      Google Fonts <code>@import</code> at <span class="path">styles.css:7</span>.</span>
+    </li>
+    <li>
+      <strong>The token system is documented and deliberate.</strong> Named palette with
+      contrast ratios reasoned about in the comments, which is rarer than it should be.
+    </li>
+    <li>
+      <strong>The accessibility floor is partly built already.</strong>
+      <span class="evidence">3 <code>focus-visible</code> rule sets, 1
+      <code>prefers-reduced-motion</code> block, <code>lang="en"</code>, real alt text on
+      all 4 images, <code>aria-label</code> on the carousel buttons.</span>
+    </li>
+    <li>
+      <strong>The Projects copy is concrete.</strong> Both tidyusmacro and Draftwatch say
+      what the thing does rather than what it aspires to.
+    </li>
+  </ul>
+</section>
+
+<!-- ================= QUICK WINS ================= -->
+<section class="band band--tint" id="quick">
+  <h2>Quick wins</h2>
+  <p class="intro">
+    Ordered by value per hour. Items 4 through 8 are under an hour combined.
+  </p>
+
+  <h3>Freshness</h3>
+  <ol class="findings">
+    <li>
+      <p class="fix"><strong>Pull the Substack RSS into "Latest" at render time.</strong>
+      <span class="path">newsletter.mikekonczal.com/feed</span>. Four missing posts is the
+      whole staleness problem, and this fixes it permanently instead of once.</p>
+    </li>
+    <li>
+      <p class="fix"><strong>Kill the "Now" carousel.</strong> It is prev/next arrows for two
+      paragraphs of text, and it is the last thing on the page, so the closing impression
+      is "updated June 2026." Keep one entry and move the date next to the section heading,
+      where it reads as a freshness signal rather than a confession.</p>
+    </li>
+  </ol>
+
+  <h3>Newsletter funnel</h3>
+  <ol class="findings" start="3">
+    <li>
+      <p class="fix"><strong>Add an inline Substack embed right after "Start Here."</strong>
+      That is the moment a reader has just been given five reasons to care. Today the only
+      subscribe path is a sidebar button that opens a new tab. This is the highest value
+      thirty minutes on the list.</p>
+    </li>
+  </ol>
+
+  <h3>Metadata</h3>
+  <ol class="findings" start="4">
+    <li>
+      <p class="fix"><strong>Add <code>description:</code> to the <span class="path">index.qmd</span>
+      front matter.</strong> You set it in <span class="path">_quarto.yml</span> at the site
+      level, but Quarto only emits the tag when it is on the page. Google is currently writing
+      your snippet for you.</p>
+      <span class="evidence">Measured on <span class="path">docs/index.html</span>: 0 matches for
+      <code>name="description"</code>, 0 for <code>og:description</code>, 0 for
+      <code>rel="canonical"</code>.</span>
+    </li>
+    <li>
+      <p class="fix"><strong>Make a 1200 x 630 social card.</strong> Every share is being
+      center-cropped right now.</p>
+      <span class="evidence"><code>og:image</code> is the hero photo at 1171 x 998 (near square),
+      served under <code>twitter:card: summary_large_image</code>, which wants 1.91:1.</span>
+    </li>
+    <li>
+      <p class="fix"><strong>Give the page a real title.</strong> Currently just
+      "Mike Konczal." Make it "Mike Konczal | Economist and Writer."</p>
+    </li>
+  </ol>
+
+  <h3>Weight</h3>
+  <ol class="findings" start="7">
+    <li>
+      <p class="fix"><strong>Resize the four images and add <code>loading="lazy"</code>.</strong>
+      Saves roughly 1.4 MB of a 2 MB first load. The Draftwatch screenshot alone is about
+      1 MB of the fix.</p>
+      <span class="evidence"><span class="path">images/draftwatch_image.png</span> is 1.08 MB at
+      3044 x 1650, displayed at about 300px wide, loaded eagerly, three screens below the fold.
+      Book cover: 920 x 1362 at 274 KB, displayed at about 145px. Hero: 240 KB.
+      No image on the page uses <code>loading="lazy"</code>.</span>
+    </li>
+    <li>
+      <p class="fix"><strong>Drop the dead search payload.</strong> You ship
+      <span class="path">site_libs/quarto-search</span> (156 KB) plus a 54 KB
+      <span class="path">search.json</span> for a feature <span class="path">_quarto.yml</span>
+      explicitly disables, and flatly's Lato webfonts you never use.</p>
+    </li>
+  </ol>
+
+  <h3>Contrast and accessibility</h3>
+  <ol class="findings" start="9">
+    <li>
+      <p class="fix"><strong>Darken <code>--mk-mute</code> to about <code>#6a7577</code>.</strong>
+      One value, and it is the only contrast failure in the palette. This document uses the
+      darkened value so you can see it in context.</p>
+      <span class="evidence"><code>#7e8a8c</code> on <code>#fbfcfc</code> computes to 3.46:1,
+      below the 4.5:1 AA floor for normal text. It is used on the "DATA I'M WATCHING" eyebrow
+      at 12.24px and the DataTable "1&ndash;5 of 66" line. <code>#6a7577</code> gives about 4.6:1.</span>
+    </li>
+    <li>
+      <p class="fix"><strong>Restore the H1 to the accessibility tree.</strong>
+      <code>#title-block-header { display: none; }</code> hides it from screen readers too, so
+      the homepage has no H1 at all for assistive tech. Use a visually-hidden class, or promote
+      the hero to a real H1 (which you should do anyway, see below).</p>
+    </li>
+    <li>
+      <p class="fix"><strong>Add a skip link.</strong> There is a fixed eight-item nav rail on
+      every page and no way past it from the keyboard.</p>
+    </li>
+    <li>
+      <p class="fix"><strong>Fix the mobile hamburger overlap.</strong> At 375px the floating
+      button sits on top of body text, covering the tail of the "Rewriting the Rules of the
+      American Economy" link. Add bottom padding to the content column.</p>
+    </li>
+    <li>
+      <p class="fix"><strong>Make the sparkline tooltips work off desktop.</strong> They are
+      bound to <code>mousemove</code> only, with no focus or touch handling. On mobile, where the
+      strip is roughly 3,600px of scroll, the entire interactive layer is dead.</p>
+      <span class="evidence"><span class="path">index.qmd</span> lines 355 to 390.</span>
+    </li>
+    <li>
+      <p class="fix"><strong>Give the portfolio search input an <code>aria-label</code>.</strong>
+      It has a placeholder and nothing else.</p>
+    </li>
+  </ol>
+
+  <h3>Small but real</h3>
+  <ol class="findings" start="15">
+    <li>
+      <p class="fix"><strong>The resume page is broken on mobile and serves two different
+      resumes.</strong> The 800px PDF iframe renders as a dead grey rectangle on phones. And the
+      file it embeds is not the file the link hands out.</p>
+      <span class="evidence"><span class="path">files/mkonczal-resume.pdf</span> is 108,791 bytes
+      (md5 <code>8393&hellip;</code>). The GitHub copy behind "here to get my resume" is 112,774
+      bytes (md5 <code>e895&hellip;</code>). Also: "click here" as link text.</span>
+    </li>
+    <li>
+      <p class="fix"><strong>There is no way to buy the book.</strong> The only link in the whole
+      band is the publisher's name.</p>
+    </li>
+    <li>
+      <p class="fix"><strong>The sidebar email is a personal Gmail.</strong> You are inviting
+      press and editors to <code>konczal@gmail.com</code>.</p>
+    </li>
+    <li>
+      <p class="fix"><strong>Portfolio defaults to 5 rows of 66, across 14 pages, and leaks
+      "(filtered from 511)" to the reader.</strong> Default to 25 and drop the parenthetical.
+      That string is DataTables talking to itself.</p>
+    </li>
+    <li>
+      <p class="fix"><strong><code>--mk-copper</code> now holds a blue.</strong>
+      <code>#3067a8</code>. Your own comment admits it. Rename it before it bites you in six
+      months.</p>
+    </li>
+    <li>
+      <p class="fix"><strong>Two <code>target="_blank"</code> links are missing
+      <code>rel="noopener"</code>.</strong></p>
+    </li>
+  </ol>
+</section>
+
+<!-- ================= DEEPER ================= -->
+<section class="band band--paper" id="deeper">
+  <h2>Deeper changes</h2>
+  <p class="intro">
+    These are judgment calls, not defects. Each one is a bet about what the site is for.
+  </p>
+
+  <h3>1. The homepage has no thesis</h3>
+  <p>
+    The first screen is a low-resolution TV screengrab plus three paragraphs of third-person
+    CV prose. On mobile the photo alone eats 600 of 812 pixels before a single word appears.
+    Nowhere above the fold does the site say what you <em>think</em>.
+  </p>
+  <p>
+    You have a thesis and it is a good one: the cost of living is the defining economic
+    problem of the moment, and fixing it means confronting both broken markets and broken
+    incomes. It is in the Affordability Framework blurb, buried in section three. Put it in
+    the hero, in your voice, at display size, and demote the bio to a short credentials line
+    underneath. The page currently opens with your resume when it should open with your argument.
+  </p>
+  <p>
+    Related: replace the photo. It is a cable-hit screengrab, upscaled, with a green-screen
+    DC skyline behind you. Every other asset here is deliberate. That one reads as whatever
+    was on the camera roll.
+  </p>
+
+  <h3>2. The macro strip is your signature and it does not say anything</h3>
+  <p>
+    Eight numbers, eight sparklines, zero interpretation. For someone whose entire brand is
+    "here is what this number actually means," that is the deepest miss on the site. Give each
+    cell a one-line read in your voice: "V/U at 1.04: the labor market is no longer tight."
+    Then the strip stops being decoration and becomes the reason people bookmark the page.
+  </p>
+  <p>
+    It also has <strong>no source note and no as-of date</strong>. That is the one thing here a
+    peer would actually flag, and it cuts against your own rule about recording vintage
+    timestamps. Add "Source: FRED. Data through July 2026. Updated [render date]." with a link
+    to the code.
+  </p>
+  <p>
+    And it is badly placed on mobile. Eight full-width cells stacked means roughly 3,600px of
+    dashboard before a reader reaches anything you wrote. Below 760px, show three cells and a
+    "see all indicators" link.
+  </p>
+
+  <h3>3. Decide what this site is for, relative to the Substack</h3>
+  <p>
+    Right now the two compete for the same job and the Substack wins on every axis: it has the
+    posts, the audience, the subscribe flow, the comments. So stop treating this as a second
+    publication and make it the front door to the first one. Latest becomes the feed. Portfolio
+    becomes the permanent archive that Substack cannot be, holding the 346 press hits, the
+    testimony, the books. Start Here becomes the on-ramp. Every path ends at subscribe.
+  </p>
+
+  <h3>4. There is no press kit, and it is costing you bookings</h3>
+  <p>
+    346 press hits and congressional testimony, and a line in the Portfolio blurb saying "feel
+    free to contact me if you'd like me to write for you or join you on air" with no email next
+    to it. A producer on deadline needs four things in one place: a downloadable headshot, a
+    40-word bio they can paste, a topics list (inflation, affordability, housing, Fed, tax), and
+    a professional email. Small page, high conversion.
+  </p>
+
+  <h3>5. Everything lives on one URL, so nothing can circulate</h3>
+  <p>
+    <span class="path">index.qmd</span> is 38 KB of source producing 276 KB of HTML carrying six
+    sections, and <span class="path">about.html</span>, <span class="path">portfolio.html</span>,
+    <span class="path">writings.html</span>, <span class="path">clips.html</span>, and
+    <span class="path">freedom_from_the_market.html</span> are all JavaScript redirect stubs
+    pointing back at it. No permalink to the book page, no per-section social card, no way for
+    one argument to travel on its own. Give at least Book, Portfolio, and Press real pages.
+  </p>
+
+  <h3>6. Good type system, under-used, and the band rhythm is broken</h3>
+  <p>
+    Every section carries 21.25px of top and bottom padding, so sections butt into each other
+    instead of reading as separate movements. Worse, the alternation actually fails:
+    <code>#start-here</code> and <code>#portfolio</code> are both <code>#fbfcfc</code>,
+    adjacent, with 42px between them, so there is no perceived boundary at all. Go to 4 or 5rem
+    of band padding and fix the alternation.
+  </p>
+  <p>
+    The measure is also out of control. Capping prose is free and makes the whole page easier
+    to read.
+  </p>
+  <span class="evidence">Computed: <code>#start-here p</code> renders at 938px at 18px, about 108
+  characters per line. Your hero is correctly set at about 62. This document is capped at 68.</span>
+  <p style="margin-top:1rem">
+    The larger typographic point: Newsreader is doing one job at one size. Body is 18px, H2 is
+    33px, and that is the entire scale. No display voice, no tension between the serif and Inter,
+    nothing memorable in the type itself. You have a characterful face and you are using it as a
+    delivery vehicle.
+  </p>
+
+  <h3>7. The framework is fighting you</h3>
+  <p>
+    Bootstrap (497 KB raw), jQuery (89 KB), DataTables, crosstalk, and tippy, for a site that
+    uses close to none of it. That stack is also what produces the Portfolio experience you are
+    stuck with: DataTables is why the default is 5 rows and why "(filtered from 511)" leaks out.
+    A hand-rolled filter and sort over a JSON file would be about 60 lines, fully yours to style,
+    and would drop most of that weight.
+  </p>
+</section>
+
+<!-- ================= FIVE THINGS ================= -->
+<section class="band band--dark" id="five">
+  <p class="eyebrow">If you only do five things</p>
+  <h2>The short list</h2>
+  <p>
+    In this order. The first one matters most, and it is the only one on the list that keeps
+    paying after you do it.
+  </p>
+
+  <ol class="priority">
+    <li>
+      Pull the Substack feed into "Latest."
+      <span class="cost">Fixes staleness at the root, permanently</span>
+    </li>
+    <li>
+      Add an inline subscribe block after "Start Here."
+      <span class="cost">About 30 minutes, directly serves the 9,000 goal</span>
+    </li>
+    <li>
+      Add <code>description:</code> to <code>index.qmd</code>, plus a 1200 x 630 social card.
+      <span class="cost">About 20 minutes</span>
+    </li>
+    <li>
+      Resize the four images and add <code>loading="lazy"</code>.
+      <span class="cost">About 20 minutes, saves roughly 1.4 MB</span>
+    </li>
+    <li>
+      Put a one-line read under each macro indicator, plus a source and vintage note.
+      <span class="cost">Turns your best asset into your signature</span>
+    </li>
+  </ol>
+</section>
+
+<footer class="doc-foot">
+  <p>
+    Local review document, generated August 19, 2026. Not published and not indexed.
+    Reviewed against the live site plus <span class="path">styles.css</span>,
+    <span class="path">index.qmd</span>, <span class="path">_includes/</span>, and
+    <span class="path">docs/</span> at commit <code>cb96b69</code>.
+  </p>
+  <p>
+    Uses the Petrol &amp; Chart Ink tokens from <span class="path">styles.css</span>, with three
+    of its own recommendations applied: reading measure capped at 68ch, band padding at 3.25rem,
+    and <code>--mk-mute</code> darkened to <code>#6a7577</code>.
+  </p>
+</footer>
+
+</main>
+</body>
+</html>

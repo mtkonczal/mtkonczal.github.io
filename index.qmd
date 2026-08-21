@@ -659,7 +659,7 @@ datatable(
 
 :::
 
-You can [check out my resume here](resume.html).
+You can [check out my resume here](files/resume_brief.pdf){target="_blank"}.
 
 ## Projects {#projects}
 

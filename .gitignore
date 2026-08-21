@@ -6,3 +6,7 @@
 /.quarto/
 __pycache__/
 .addwork.log
+
+# typst build artifacts — source (.typ) is tracked; PDFs are rebuilt by
+# scripts/sync-typst-pdf.sh and synced into files/ on render.
+typst/*.pdf
