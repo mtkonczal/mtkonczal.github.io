@@ -1,5 +1,8 @@
 ---
 title: "Mike Konczal"
+pagetitle: "Mike Konczal | Economist and Writer"
+title-prefix: ""
+description: "Mike Konczal is VP of Policy and Research at the Economic Security Project, a former White House chief economist, and author of Freedom from the Market."
 aliases:
   - about.html
   - portfolio.html
@@ -13,13 +16,32 @@ image: images/mkonczal_index.jpg
 ---
 
 ```{=html}
-<!-- The page title ("Mike Konczal") is already the sidebar brand, so hide the
-     Quarto title-block H1 on this page only. It stays in the document metadata
-     for the browser tab and social cards. -->
-<style>#title-block-header { display: none; }</style>
+<!-- The page title ("Mike Konczal") is already the sidebar brand, so the
+     Quarto title-block H1 is redundant visually on this page. But it's the
+     only H1 the page has, so it must stay in the accessibility tree rather
+     than being display:none'd out of it entirely: visually-hidden, not
+     removed. Its sibling nodes (the auto-injected description paragraph,
+     the empty title-meta div) are pure duplicates of the hero bio and meta
+     tags, so those are fully hidden instead. -->
+<style>
+.mk-content:has(.mk-hero) > #title-block-header {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+  background: none;
+}
+#title-block-header .description,
+#title-block-header .quarto-title-meta { display: none; }
+</style>
 ```
 
-::: {#top .mk-hero}
+::: {#top .mk-hero tabindex="-1"}
 <img class="mk-hero__photo" src="images/mkonczal_index.jpg" alt="Mike Konczal">
 
 ::: {.mk-hero__bio}
@@ -623,7 +645,7 @@ datatable(
         this.classList.toggle('is-active', on);
         this.setAttribute('aria-selected', on ? 'true' : 'false');
       });
-      box.attr('placeholder', labels[cat] || '');
+      box.attr('placeholder', labels[cat] || '').attr('aria-label', labels[cat] || '');
       table.column(0).search(cat).draw();
     }
     $('#mk-portfolio-tabs .mk-tab').on('click', function() {

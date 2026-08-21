@@ -9,6 +9,13 @@
     document.body.insertBefore(sb, document.body.firstChild);
   }
 
+  // The skip link has to stay the first focusable node in the document, so
+  // re-hoist it ahead of the sidebar we just moved to body root.
+  var skip = document.querySelector('.mk-skip-link');
+  if (skip && document.body.firstChild !== skip) {
+    document.body.insertBefore(skip, document.body.firstChild);
+  }
+
   // ---- Mobile drawer -----------------------------------------------------
   // Below 760px styles.css releases the fixed rail. Adding .mk-js here upgrades
   // the stacked fallback into an off-canvas drawer; without JS the fallback

@@ -26,7 +26,7 @@
 
   --mk-ink:        #16242a;
   --mk-ink-soft:   #45555b;
-  --mk-mute:       #7e8a8c;
+  --mk-mute:       #6a7577;  /* darkened from #7e8a8c: 3.46:1 -> 4.6:1 on --mk-paper */
   --mk-rule:       #e0e5e6;
   --mk-rule-soft:  #eef1f2;
   --mk-bg-soft:    #f8fafb;
@@ -71,6 +71,32 @@ a:hover { color: var(--mk-blue-900); border-bottom-color: var(--mk-blue-700); }
    the viewport with position:fixed; the page is offset with body padding so
    content clears it. The .mk-layout/.mk-content wrappers are passthrough. */
 .mk-layout { display: block; }
+
+/* Skip link: invisible until keyboard focus, then jumps a tab/screen-reader
+   user past the 8-item sidebar straight to #top. */
+.mk-skip-link {
+  position: absolute;
+  top: -3rem;
+  left: 1rem;
+  z-index: 200;
+  background: var(--mk-accent);
+  color: #fff;
+  padding: 0.6rem 1rem;
+  border: 0;
+  border-radius: 4px;
+  font-family: var(--mk-font-ui);
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: top 0.15s;
+}
+.mk-skip-link:focus-visible {
+  top: 1rem;
+  outline: 2px solid var(--mk-blue-500);
+  outline-offset: 2px;
+}
+/* Landing target only, not part of tab order: suppress the focus ring the
+   skip link's own outline already served its purpose. */
+.mk-hero:focus { outline: none; }
 
 .mk-sidebar {
   background: var(--mk-blue-900);

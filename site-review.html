@@ -246,6 +246,15 @@ ol.findings > li::before {
 ol.findings .fix { max-width: var(--mk-measure); margin: 0; }
 ol.findings .fix strong { color: var(--mk-blue-900); }
 
+/* Done: shipped items stay visible but visually retired. */
+ol.findings > li.is-done { opacity: 0.5; }
+ol.findings > li.is-done::before {
+  content: "\2713";
+  background: #2f7d52;
+}
+ol.findings > li.is-done .fix strong { text-decoration: line-through; }
+ol.findings > li.is-done .evidence { text-decoration: none; }
+
 ul.plain > li {
   position: relative;
   padding-left: 1.35rem;
@@ -541,7 +550,7 @@ footer.doc-foot p { max-width: 70ch; }
 
   <h3>Metadata</h3>
   <ol class="findings" start="4">
-    <li>
+    <li class="is-done">
       <p class="fix"><strong>Add <code>description:</code> to the <span class="path">index.qmd</span>
       front matter.</strong> You set it in <span class="path">_quarto.yml</span> at the site
       level, but Quarto only emits the tag when it is on the page. Google is currently writing
@@ -556,7 +565,7 @@ footer.doc-foot p { max-width: 70ch; }
       <span class="evidence"><code>og:image</code> is the hero photo at 1171 x 998 (near square),
       served under <code>twitter:card: summary_large_image</code>, which wants 1.91:1.</span>
     </li>
-    <li>
+    <li class="is-done">
       <p class="fix"><strong>Give the page a real title.</strong> Currently just
       "Mike Konczal." Make it "Mike Konczal | Economist and Writer."</p>
     </li>
@@ -583,7 +592,7 @@ footer.doc-foot p { max-width: 70ch; }
 
   <h3>Contrast and accessibility</h3>
   <ol class="findings" start="9">
-    <li>
+    <li class="is-done">
       <p class="fix"><strong>Darken <code>--mk-mute</code> to about <code>#6a7577</code>.</strong>
       One value, and it is the only contrast failure in the palette. This document uses the
       darkened value so you can see it in context.</p>
@@ -591,13 +600,13 @@ footer.doc-foot p { max-width: 70ch; }
       below the 4.5:1 AA floor for normal text. It is used on the "DATA I'M WATCHING" eyebrow
       at 12.24px and the DataTable "1&ndash;5 of 66" line. <code>#6a7577</code> gives about 4.6:1.</span>
     </li>
-    <li>
+    <li class="is-done">
       <p class="fix"><strong>Restore the H1 to the accessibility tree.</strong>
       <code>#title-block-header { display: none; }</code> hides it from screen readers too, so
       the homepage has no H1 at all for assistive tech. Use a visually-hidden class, or promote
       the hero to a real H1 (which you should do anyway, see below).</p>
     </li>
-    <li>
+    <li class="is-done">
       <p class="fix"><strong>Add a skip link.</strong> There is a fixed eight-item nav rail on
       every page and no way past it from the keyboard.</p>
     </li>
@@ -612,7 +621,7 @@ footer.doc-foot p { max-width: 70ch; }
       strip is roughly 3,600px of scroll, the entire interactive layer is dead.</p>
       <span class="evidence"><span class="path">index.qmd</span> lines 355 to 390.</span>
     </li>
-    <li>
+    <li class="is-done">
       <p class="fix"><strong>Give the portfolio search input an <code>aria-label</code>.</strong>
       It has a placeholder and nothing else.</p>
     </li>
@@ -620,7 +629,7 @@ footer.doc-foot p { max-width: 70ch; }
 
   <h3>Small but real</h3>
   <ol class="findings" start="15">
-    <li>
+    <li class="is-done">
       <p class="fix"><strong>The resume page is broken on mobile and serves two different
       resumes.</strong> The 800px PDF iframe renders as a dead grey rectangle on phones. And the
       file it embeds is not the file the link hands out.</p>
