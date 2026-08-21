@@ -9,7 +9,7 @@ website:
   title: "Mike Konczal"
   site-url: https://www.mikekonczal.com
   description: "Economist and writer. Vice President of Policy and Research at the Economic Security Project, former chief economist at the White House National Economic Council, and author of Freedom from the Market."
-  image: images/mkonczal_index.jpg
+  image: images/social-card.png
   open-graph: true
   twitter-card:
     creator: "@mtkonczal"
@@ -17,11 +17,13 @@ website:
 
   page-footer:
     right: |
-      <span class="container">Made with [Quarto](https://quarto.org/){target="_blank"} ([This Site's Repo](https://github.com/mtkonczal/mtkonczal.github.io){target="_blank"})</span>
+      <span class="container">Made with [Quarto](https://quarto.org/){target="_blank" rel="noopener"} ([This Site's Repo](https://github.com/mtkonczal/mtkonczal.github.io){target="_blank" rel="noopener"})</span>
 
   # Site navigation is a custom sidebar injected via the includes below
-  # (see _includes/before-body.html). Quarto's built-in navbar/sidebar and
-  # search are intentionally disabled.
+  # (see _includes/before-body.html). Quarto's built-in navbar/sidebar are
+  # intentionally unused; search is explicitly turned off below so Quarto
+  # stops shipping the quarto-search JS bundle and search.json payload.
+  search: false
 
 format:
   html:

@@ -25,10 +25,6 @@ ul.task-list li input[type="checkbox"] {
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -39,18 +35,6 @@ ul.task-list li input[type="checkbox"] {
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="site_libs/bootstrap/bootstrap-d1b12f2568ecbe55642fee6aa00bd082.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
-  "location": "sidebar",
-  "copy-button": false,
-  "collapse-after": 3,
-  "panel-placement": "start",
-  "type": "textbox",
-  "limit": 50,
-  "keyboard-shortcut": [
-    "f",
-    "/",
-    "s"
-  ],
-  "show-item-context": false,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -95,12 +79,16 @@ ul.task-list li input[type="checkbox"] {
 
 <link rel="stylesheet" href="styles.css">
 <meta property="og:title" content="IEA Presentation – Mike Konczal">
-<meta property="og:image" content="https://www.mikekonczal.com/images/mkonczal_index.jpg">
+<meta property="og:image" content="https://www.mikekonczal.com/images/social-card.png">
 <meta property="og:site_name" content="Mike Konczal">
+<meta property="og:image:height" content="630">
+<meta property="og:image:width" content="1200">
 <meta name="twitter:title" content="IEA Presentation – Mike Konczal">
-<meta name="twitter:image" content="https://www.mikekonczal.com/images/mkonczal_index.jpg">
+<meta name="twitter:image" content="https://www.mikekonczal.com/images/social-card.png">
 <meta name="twitter:creator" content="@mtkonczal">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image-height" content="630">
+<meta name="twitter:image-width" content="1200">
 </head>
 
 <body>
@@ -113,6 +101,7 @@ ul.task-list li input[type="checkbox"] {
     
 <!-- main -->
 <main class="content column-page" id="quarto-document-content">
+<a class="mk-skip-link" href="#top">Skip to content</a>
 <div class="mk-layout">
 <!-- Below 760px this rail becomes an off-canvas drawer. The toggle button and
      scrim are created in _includes/after-body.html, not here, so that a page
@@ -122,12 +111,11 @@ ul.task-list li input[type="checkbox"] {
   <a class="mk-sidebar__back" href="index.html">← Back to main page</a>
   <ul class="mk-sidebar__nav">
     <li><a href="#top">Home</a></li>
-    <li><a href="#latest">Latest</a></li>
     <li><a href="#start-here">Start Here</a></li>
+    <li><a href="#latest">Latest</a></li>
     <li><a href="#portfolio">Portfolio</a></li>
     <li><a href="#projects">Projects</a></li>
     <li><a href="#book">Book</a></li>
-    <li><a href="#now">Now</a></li>
   </ul>
   <a class="mk-sidebar__cta" href="https://newsletter.mikekonczal.com/" target="_blank" rel="noopener">Newsletter</a>
   <div class="mk-sidebar__social">
@@ -162,7 +150,7 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-navigation-envelope" class="hidden">
 <p><span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLWludC1zaWRlYmFyLXRpdGxl">Mike Konczal</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLWludC1uYXZiYXItdGl0bGU=">Mike Konczal</span></p>
 <div class="hidden quarto-markdown-envelope-contents" data-render-id="Zm9vdGVyLXJpZ2h0">
-<p><span class="container">Made with <a href="https://quarto.org/" target="_blank">Quarto</a> (<a href="https://github.com/mtkonczal/mtkonczal.github.io" target="_blank">This Site’s Repo</a>)</span></p>
+<p><span class="container">Made with <a href="https://quarto.org/" target="_blank" rel="noopener">Quarto</a> (<a href="https://github.com/mtkonczal/mtkonczal.github.io" target="_blank" rel="noopener">This Site’s Repo</a>)</span></p>
 </div>
 </div>
 <div id="quarto-meta-markdown" class="hidden">
@@ -179,6 +167,13 @@ ul.task-list li input[type="checkbox"] {
   var sb = document.querySelector('.mk-sidebar');
   if (sb && sb.parentNode !== document.body) {
     document.body.insertBefore(sb, document.body.firstChild);
+  }
+
+  // The skip link has to stay the first focusable node in the document, so
+  // re-hoist it ahead of the sidebar we just moved to body root.
+  var skip = document.querySelector('.mk-skip-link');
+  if (skip && document.body.firstChild !== skip) {
+    document.body.insertBefore(skip, document.body.firstChild);
   }
 
   // ---- Mobile drawer -----------------------------------------------------
@@ -704,7 +699,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       &nbsp;
     </div>
     <div class="nav-footer-right">
-      <div class='footer-contents'><span class="container">Made with [Quarto](https://quarto.org/){target="_blank"} ([This Site's Repo](https://github.com/mtkonczal/mtkonczal.github.io){target="_blank"})</span>
+      <div class='footer-contents'><span class="container">Made with [Quarto](https://quarto.org/){target="_blank" rel="noopener"} ([This Site's Repo](https://github.com/mtkonczal/mtkonczal.github.io){target="_blank" rel="noopener"})</span>
 </div>  
     </div>
   </div>

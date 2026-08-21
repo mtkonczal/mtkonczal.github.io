@@ -9,10 +9,10 @@
 /* --- Design tokens ------------------------------------------------------- */
 :root {
   /* Petrol & Chart Ink palette — deep teal-blue structure with a chart-blue
-     working accent, drawn from statistical-graphics vernacular. The --mk-blue-*
-     and --mk-copper-* names are kept so the whole cascade keeps resolving; only
-     the values move. Copper itself survives in one place: the #book band links,
-     where it echoes the earlier identity against the dark petrol. */
+     working accent, drawn from statistical-graphics vernacular. Real copper
+     (#e0a06a) survives in one place, hardcoded rather than tokenized: the
+     #book band's links and rule, where it echoes the earlier identity
+     against the dark petrol. */
   --mk-blue-900:   #0e2c33;  /* petrol: sidebar bg, book band, headings, dark ink */
   --mk-blue-700:   #163e47;  /* deeper petrol: heading/link hover */
   --mk-blue-500:   #2c6e73;  /* mid petrol: focus rings, cool secondary */
@@ -21,8 +21,8 @@
 
   /* Chart-blue accent — links, CTA, accent rules, active states, sorting/pagination.
      #3067a8 clears WCAG AA (~5.2:1) both as link text on paper and under white CTA text. */
-  --mk-copper:     #3067a8;  /* chart blue (name kept for the cascade) */
-  --mk-copper-dk:  #24507f;  /* darker chart blue for text sitting on tinted chips */
+  --mk-chart-blue:     #3067a8;
+  --mk-chart-blue-dk:  #24507f;  /* darker chart blue for text sitting on tinted chips */
 
   --mk-ink:        #16242a;
   --mk-ink-soft:   #45555b;
@@ -31,13 +31,13 @@
   --mk-rule-soft:  #eef1f2;
   --mk-bg-soft:    #f8fafb;
   --mk-paper:      #fbfcfc;  /* cool near-white for the content + light bands */
-  --mk-accent:     var(--mk-copper);
+  --mk-accent:     var(--mk-chart-blue);
   --mk-accent-dk:  var(--mk-blue-900);
   --mk-radius:     6px;
 
   /* Section bands (homepage alternating backgrounds) */
   --mk-band-tint:  #edf1f2;   /* cool petrol-grey tint for the alternate bands */
-  --mk-band-pad-y: 1.25rem;    /* vertical breathing room inside each band */
+  --mk-band-pad-y: 3.25rem;    /* vertical breathing room inside each band */
   --mk-band-max:   1140px;    /* width of the centered inner content column */
 
   --mk-font-serif: "Newsreader", Georgia, "Iowan Old Style", "Times New Roman", serif;
@@ -291,7 +291,6 @@ body:has(.mk-hero) main#quarto-document-content.column-page {
 .mk-content:has(.mk-hero) > #portfolio { background: var(--mk-paper); }
 .mk-content:has(.mk-hero) > #projects  { background: var(--mk-band-tint); }
 .mk-content:has(.mk-hero) > #book      { background: var(--mk-blue-900); }
-.mk-content:has(.mk-hero) > #now       { background: var(--mk-paper); }
 
 /* --- Heading accent: short rule under each section H2 --------------------- */
 .mk-content:has(.mk-hero) > section.level2 > h2:first-child {
@@ -320,8 +319,7 @@ body:has(.mk-hero) main#quarto-document-content.column-page {
 #latest > h2:first-child,
 #portfolio > h2:first-child,
 #projects > h2:first-child,
-#book > h2:first-child,
-#now > h2:first-child {
+#book > h2:first-child {
   font-size: 1.95rem;
   line-height: 1.12;
   letter-spacing: -0.02em;
@@ -331,8 +329,7 @@ body:has(.mk-hero) main#quarto-document-content.column-page {
 #latest > h2:first-child::after,
 #portfolio > h2:first-child::after,
 #projects > h2:first-child::after,
-#book > h2:first-child::after,
-#now > h2:first-child::after {
+#book > h2:first-child::after {
   width: 3rem;
   margin-top: 0.85rem;
 }
@@ -364,8 +361,8 @@ body:has(.mk-hero) main#quarto-document-content.column-page {
   .mk-content:has(.mk-hero) > .mk-hero,
   .mk-content:has(.mk-hero) > #macro-strip,
   .mk-content:has(.mk-hero) > section.level2 {
-    padding-top: 1.75rem;
-    padding-bottom: 1.75rem;
+    padding-top: 2.5rem;
+    padding-bottom: 2.5rem;
     padding-inline: 1.25rem;
   }
   .mk-content:has(.mk-hero) > #macro-strip { padding-top: 1.15rem; padding-bottom: 1.15rem; }
@@ -403,6 +400,14 @@ body { margin: 0; padding-left: 240px; }
   .mk-hero { grid-template-columns: 1fr; gap: 1.25rem; }
   .mk-hero__photo { max-width: 320px; }
 }
+/* The fixed nav-toggle FAB (see #mk-nav-toggle below) sits at bottom-right of
+   the viewport at every scroll position; on a phone, one of the bio's wrapped
+   lines currently lands right under it (which paragraph depends on exact
+   line breaks, so this reserves the gutter on all three rather than chasing
+   today's specific wrap point). */
+@media (max-width: 760px) {
+  .mk-hero__bio p { padding-right: 60px; }
+}
 
 /* Book section: cover on the left, praise quotes on the right (mirrors hero) */
 /* Publication byline (publisher + year), shown in parentheses inline after the
@@ -427,6 +432,29 @@ body { margin: 0; padding-left: 240px; }
   border-radius: 4px;
   display: block;
   box-shadow: 0 2px 14px rgba(14, 44, 51, 0.18);
+}
+/* Buy CTA: sits under the cover, in the copper that otherwise survives only
+   on this band's links. The New Press page is the target rather than a
+   specific retailer, since it lists them. Selectors are #book-scoped so they
+   outrank the "#book a" band override just below and get a self-consistent
+   border/color on all four sides instead of a copper-vs-white mismatch. */
+#book .mk-book__buy {
+  display: block;
+  text-align: center;
+  margin-top: 0.85rem;
+  padding: 0.55rem 0.75rem;
+  border: 1px solid rgba(224, 160, 106, 0.45);
+  border-radius: var(--mk-radius);
+  font-family: var(--mk-font-ui);
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: #e0a06a;
+}
+#book .mk-book__buy:hover {
+  color: #0e2c33;
+  background: #e0a06a;
+  border-color: #e0a06a;
 }
 .mk-book__praise > :first-child { margin-top: 0; }
 @media (max-width: 640px) {
@@ -620,134 +648,6 @@ main h2 {
   color: var(--mk-blue-900);
 }
 
-/* Now page */
-.mk-now-meta {
-  font-family: var(--mk-font-ui);
-  font-size: 0.78rem;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--mk-mute);
-  margin: -0.5rem 0 2rem;
-}
-
-/* --- Now updates: carousel with big arrows flanking the update ----------- */
-.mk-now {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;  /* arrow | text | arrow */
-  align-items: center;                               /* arrows ride the middle */
-  gap: 1.5rem;
-  margin: 0.25rem 0 1.75rem;
-}
-.mk-now-viewport { min-width: 0; }
-.mk-now-viewport .mk-now-meta { display: inline-block; margin: 0 0 0.85rem; }
-
-.mk-now-arrow {
-  appearance: none;
-  -webkit-appearance: none;
-  border: 1px solid var(--mk-rule);
-  background: #fff;
-  color: var(--mk-blue-900);
-  width: 3rem;
-  height: 3rem;
-  padding: 0;
-  border-radius: 999px;
-  font-family: var(--mk-font-ui);
-  font-size: 1.4rem;
-  line-height: 1;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 1px 3px rgba(14, 44, 51, 0.12);
-  transition: background 0.15s, color 0.15s, border-color 0.15s, box-shadow 0.15s, transform 0.1s;
-}
-.mk-now-arrow:hover:not(:disabled) {
-  background: var(--mk-blue-900);
-  color: #fff;
-  border-color: var(--mk-blue-900);
-  box-shadow: 0 3px 11px rgba(14, 44, 51, 0.22);
-}
-.mk-now-arrow:active:not(:disabled) { transform: translateY(1px); }
-.mk-now-arrow:disabled { opacity: 0.3; cursor: default; box-shadow: none; }
-.mk-now-arrow:focus-visible { outline: 2px solid var(--mk-blue-500); outline-offset: 2px; }
-
-@media (max-width: 640px) {
-  .mk-now { gap: 0.6rem; }
-  .mk-now-arrow { width: 2.5rem; height: 2.5rem; font-size: 1.2rem; }
-}
-
-/* Show one update at a time; trim the leading margin of each entry's first head */
-.mk-now-entry[hidden] { display: none; }
-.mk-now-entry > section.level3:first-child > h3:first-child,
-.mk-now-entry > h3:first-child { margin-top: 0; }
-
-/* The date label doubles as a permalink to the standalone page for that update */
-.mk-now-permalink { border-bottom: none; }
-.mk-now-permalink:hover { color: var(--mk-blue-700); }
-.mk-now-permalink::after {
-  content: "\2197";          /* ↗ */
-  font-size: 0.78em;
-  margin-left: 0.35em;
-  opacity: 0.55;
-}
-.mk-now-permalink:hover::after { opacity: 1; }
-
-/* ==========================================================================
-   Now archive — standalone, deep-linkable page (now.qmd). No site sidebar:
-   the rail is hidden and the page grid collapsed so content centers cleanly.
-   Scoped with :has(.mk-now-archive) so only now.qmd is affected.
-   ========================================================================== */
-body:has(.mk-now-archive) { padding-left: 0; }
-body:has(.mk-now-archive) .mk-sidebar { display: none; }
-/* No rail here, so the mobile drawer toggle would open an empty panel. */
-body:has(.mk-now-archive) #mk-nav-toggle { display: none; }
-body:has(.mk-now-archive) #quarto-content.page-columns { display: block; }
-body:has(.mk-now-archive) main#quarto-document-content.column-page {
-  width: 100%;
-  margin: 0;
-  padding: 0;
-}
-body:has(.mk-now-archive) .mk-content {
-  max-width: 760px;
-  margin: 0 auto;
-  padding: 3rem 1.5rem 5rem;
-}
-
-.mk-now-back {
-  display: inline-block;
-  font-family: var(--mk-font-ui);
-  font-size: 0.82rem;
-  letter-spacing: 0.01em;
-  border-bottom: none;
-  margin-bottom: 0.5rem;
-}
-.mk-now-back:hover { color: var(--mk-blue-900); }
-
-/* Each archived entry: divided, with a uniform inset so :target can fill it */
-.mk-now-archive .mk-now-entry {
-  padding: 1.9rem 1.25rem 2.1rem;
-  border-top: 1px solid var(--mk-rule);
-  border-radius: var(--mk-radius);
-  scroll-margin-top: 1.5rem;
-  transition: background 0.3s ease;
-}
-.mk-now-archive .mk-now-entry:target { background: var(--mk-band-tint); }
-
-/* The clickable date header above each entry */
-.mk-now-entry__date {
-  font-family: var(--mk-font-ui);
-  font-size: 0.78rem;
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--mk-mute);
-  margin: 0 0 1rem;
-}
-.mk-now-entry__date a { color: var(--mk-mute); border-bottom: none; }
-.mk-now-entry__date a:hover { color: var(--mk-blue-700); }
-.mk-now-entry__date a::before { content: "# "; opacity: 0.5; }
-.mk-now-archive .mk-now-entry section.level3:first-of-type > h3 { margin-top: 0; }
-
 /* ==========================================================================
    Latest — homepage highlight reel (index.qmd)
    3-column grid rows (date · serif title/outlet · filled kind pill). Same row
@@ -810,7 +710,7 @@ body:has(.mk-now-archive) .mk-content {
   font-size: 0.74rem;
   font-weight: 600;
   letter-spacing: 0.005em;
-  color: var(--mk-copper-dk);
+  color: var(--mk-chart-blue-dk);
   background: rgba(48, 103, 168, 0.12);
   padding: 0.3rem 0.65rem;
   border-radius: 999px;
@@ -1276,7 +1176,7 @@ body:has(.mk-now-archive) .mk-content {
   font-family: var(--mk-font-ui);
   font-size: 0.82rem;
   font-weight: 600;
-  color: var(--mk-copper-dk);
+  color: var(--mk-chart-blue-dk);
 }
 .mk-project__cta::after {
   content: "\2192";             /* → */
@@ -1322,7 +1222,7 @@ body:has(.mk-now-archive) .mk-content {
 }
 .mk-btn--ghost {
   background: transparent;
-  color: var(--mk-copper-dk);
+  color: var(--mk-chart-blue-dk);
 }
 .mk-btn--ghost:hover {
   background: var(--mk-blue-900);

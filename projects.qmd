@@ -4,7 +4,7 @@ title: "Projects"
 
 Here are some of my data projects and tools.
 
-**[Resume:](files/resume_brief.pdf){target="_blank"}**
+**[Resume:](files/resume_brief.pdf){target="_blank" rel="noopener"}**
 My one-page resume brief.
 
 **[tidyusmacro:](tidyusmacro.qmd)**
