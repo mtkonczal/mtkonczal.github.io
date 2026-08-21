@@ -287,6 +287,12 @@ body:has(.mk-hero) main#quarto-document-content.column-page {
   padding-bottom: 1.15rem;
 }
 .mk-content:has(.mk-hero) > #start-here  { background: var(--mk-paper); }
+/* Its own wash rather than paper/tint: it sits between two bands that are
+   already paper→tint, so reusing either would butt two same-color bands
+   together (see the h2/h3 note on this exact bug elsewhere in the file).
+   The tint is the chart-blue accent at low opacity, the same "blue wash"
+   already used for `code` and the active portfolio-tab pill. */
+.mk-content:has(.mk-hero) > #subscribe { background: rgba(48, 103, 168, 0.055); }
 .mk-content:has(.mk-hero) > #latest    { background: var(--mk-band-tint); }
 .mk-content:has(.mk-hero) > #portfolio { background: var(--mk-paper); }
 .mk-content:has(.mk-hero) > #projects  { background: var(--mk-band-tint); }
@@ -316,6 +322,7 @@ body:has(.mk-hero) main#quarto-document-content.column-page {
    All four section openers share this treatment so they read at one size.
    (#book sets its own white heading color below for the dark band.) */
 #start-here > h2:first-child,
+#subscribe > h2:first-child,
 #latest > h2:first-child,
 #portfolio > h2:first-child,
 #projects > h2:first-child,
@@ -326,6 +333,7 @@ body:has(.mk-hero) main#quarto-document-content.column-page {
   color: var(--mk-blue-900);
 }
 #start-here > h2:first-child::after,
+#subscribe > h2:first-child::after,
 #latest > h2:first-child::after,
 #portfolio > h2:first-child::after,
 #projects > h2:first-child::after,
@@ -354,6 +362,104 @@ body:has(.mk-hero) main#quarto-document-content.column-page {
 }
 .mk-content:has(.mk-hero) > #book .mk-book__cover {
   box-shadow: 0 10px 34px rgba(0, 0, 0, 0.45);
+}
+
+/* ==========================================================================
+   Subscribe — the newsletter band (index.qmd #subscribe), between Start
+   Here and Latest. Split layout: pitch on the left, a live-fetched post
+   list on the right (data/substack_feed.csv, see fetch_substack.R) styled
+   as a self-contained card rather than an actual embedded iframe.
+   ========================================================================== */
+.mk-subscribe {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 3rem;
+  align-items: center;
+  margin-top: 0.5rem;
+}
+.mk-subscribe__pitch > :first-child {
+  font-size: 1.4rem;
+  line-height: 1.45;
+  font-weight: 500;
+  color: var(--mk-blue-900);
+  margin: 0 0 1rem;
+}
+.mk-subscribe__pitch > :nth-child(2) {
+  font-family: var(--mk-font-ui);
+  font-size: 0.85rem;
+  color: var(--mk-mute);
+  margin: 0 0 1.5rem;
+}
+.mk-subscribe__btn {
+  display: inline-block;
+  background: var(--mk-accent);
+  color: #fff;
+  padding: 0.65rem 1.3rem;
+  border-radius: 4px;
+  font-family: var(--mk-font-ui);
+  font-size: 0.9rem;
+  font-weight: 600;
+  border: none;
+  border-bottom: none;
+  letter-spacing: 0.01em;
+}
+.mk-subscribe__btn:hover { background: var(--mk-accent-dk); border-bottom: none; }
+
+.mk-subscribe__widget {
+  background: #fff;
+  border: 1px solid var(--mk-rule);
+  border-radius: var(--mk-radius);
+  box-shadow: 0 8px 26px rgba(14, 44, 51, 0.08);
+  overflow: hidden;
+}
+.mk-subscribe__widget-head {
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--mk-rule);
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.mk-subscribe__widget-mark {
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  background: var(--mk-accent);
+  flex-shrink: 0;
+}
+.mk-subscribe__widget-head strong {
+  font-family: var(--mk-font-ui);
+  font-size: 0.92rem;
+  color: var(--mk-blue-900);
+}
+.mk-subscribe__widget-body { padding: 0.1rem 1.25rem; }
+.mk-subscribe__post {
+  display: block;
+  padding: 0.8rem 0;
+  border-bottom: 1px solid var(--mk-rule-soft);
+  border-bottom-width: 1px;
+  font-family: var(--mk-font-ui);
+}
+.mk-subscribe__post:last-child { border-bottom: none; }
+.mk-subscribe__post .t {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--mk-ink);
+  line-height: 1.35;
+  border-bottom: none;
+}
+.mk-subscribe__post:hover .t { color: var(--mk-accent-dk); }
+.mk-subscribe__post .d {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--mk-mute);
+  margin-top: 0.2rem;
+}
+.mk-subscribe__widget-foot { padding: 1rem 1.25rem 1.25rem; }
+.mk-subscribe__widget-foot .mk-subscribe__btn { display: block; width: 100%; text-align: center; }
+
+@media (max-width: 760px) {
+  .mk-subscribe { grid-template-columns: 1fr; gap: 1.75rem; }
 }
 
 @media (max-width: 1000px) {
@@ -815,6 +921,11 @@ main h2 {
 
 /* Snug the combined table up under the tabs */
 #mk-portfolio-tabs + .mk-table { margin-top: 0.85rem; }
+/* The resume aside was sitting flush against the pagination row (both had
+   0 margin at that boundary). 1.25rem mirrors .mk-table's own margin-top
+   just below, so the table gets symmetric breathing room on both sides
+   instead of an arbitrary new value. */
+#portfolio .mk-table + p { margin-top: 1.25rem; }
 
 /* ==========================================================================
    Writings & Clips lists — DataTables (DT::datatable) override

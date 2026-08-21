@@ -504,6 +504,66 @@ items <- pmap(sh, function(Link, Title, Outlet, Year, Desc, ...) {
 tags$div(class = "mk-start", !!!items)
 ```
 
+## The Newsletter {#subscribe}
+
+::: {.mk-subscribe}
+
+::: {.mk-subscribe__pitch}
+The newsletter is where I actually think out loud — data-driven, theory-informed writing on affordability, labor markets, and the Fed, before any of it becomes a report.
+
+On Substack · free
+
+[Subscribe for free](https://newsletter.mikekonczal.com/){.mk-subscribe__btn target="_blank" rel="noopener"}
+:::
+
+```{r subscribe_widget, echo=FALSE, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(htmltools)
+source("scripts/fetch_substack.R")   # defines fetch_substack_posts()
+
+# Same fetch-fresh, fall-back-to-cache, fail-loud-if-neither policy as the
+# macro strip: never ship a broken widget, never ship fabricated titles.
+cache_path <- "data/substack_feed.csv"
+posts <- tryCatch(
+  {
+    out <- fetch_substack_posts(3)
+    write_csv(out, cache_path)
+    out
+  },
+  error = function(e) {
+    if (file.exists(cache_path)) {
+      message("Substack feed fetch failed; using cached data: ", conditionMessage(e))
+      read_csv(cache_path, show_col_types = FALSE) %>% mutate(date = as.Date(date))
+    } else {
+      stop("Substack widget: fetch failed and no cache at ", cache_path,
+           " — ", conditionMessage(e))
+    }
+  }
+)
+stopifnot(nrow(posts) >= 1)
+
+rows <- pmap(posts, function(title, link, date) {
+  tags$a(class = "mk-subscribe__post", href = link, target = "_blank", rel = "noopener",
+    tags$span(class = "t", title),
+    tags$span(class = "d", format(date, "%b %d"))
+  )
+})
+
+tags$div(class = "mk-subscribe__widget",
+  tags$div(class = "mk-subscribe__widget-head",
+    tags$div(class = "mk-subscribe__widget-mark"),
+    tags$strong("Mike Konczal")
+  ),
+  tags$div(class = "mk-subscribe__widget-body", !!!rows),
+  tags$div(class = "mk-subscribe__widget-foot",
+    tags$a(class = "mk-subscribe__btn", href = "https://newsletter.mikekonczal.com/",
+           target = "_blank", rel = "noopener", "Subscribe")
+  )
+)
+```
+
+:::
+
 ## Latest {#latest}
 
 A running shortlist of my most recent work.
@@ -697,7 +757,7 @@ datatable(
 
 :::
 
-You can [check out my resume here](files/resume_brief.pdf){target="_blank" rel="noopener"}.
+You can [check out my brief resume here](files/resume_brief.pdf){target="_blank" rel="noopener"}.
 
 ## Projects {#projects}
 
