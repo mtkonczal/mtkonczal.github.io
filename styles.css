@@ -366,32 +366,36 @@ body:has(.mk-hero) main#quarto-document-content.column-page {
 
 /* ==========================================================================
    Subscribe — the newsletter band (index.qmd #subscribe), between Start
-   Here and Latest. Split layout: pitch on the left, a live-fetched post
-   list on the right (data/substack_feed.csv, see fetch_substack.R) styled
-   as a self-contained card rather than an actual embedded iframe.
+   Here and Latest. Compact by design (the original two-column card ran
+   ~630px tall for three lines of real content): one line of pitch + CTA,
+   then a three-up ribbon of live-fetched posts (data/substack_feed.csv,
+   see fetch_substack.R) with the date as the visual lead rather than a
+   card widget.
    ========================================================================== */
-.mk-subscribe {
-  display: grid;
-  grid-template-columns: 1.15fr 0.85fr;
-  gap: 3rem;
+.mk-subscribe__top {
+  display: flex;
   align-items: center;
-  margin-top: 0.5rem;
+  justify-content: space-between;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  margin: 0 0 1.1rem;
 }
-.mk-subscribe__pitch > :first-child {
-  font-size: 1.4rem;
-  line-height: 1.45;
-  font-weight: 500;
+.mk-subscribe__top > :first-child {
+  font-family: var(--mk-font-ui);
+  font-size: 1rem;
   color: var(--mk-blue-900);
-  margin: 0 0 1.5rem;
+  font-weight: 500;
+  margin: 0;
 }
 .mk-subscribe__btn {
   display: inline-block;
+  flex-shrink: 0;
   background: var(--mk-accent);
   color: #fff;
-  padding: 0.65rem 1.3rem;
+  padding: 0.6rem 1.2rem;
   border-radius: 4px;
   font-family: var(--mk-font-ui);
-  font-size: 0.9rem;
+  font-size: 0.88rem;
   font-weight: 600;
   border: none;
   border-bottom: none;
@@ -399,61 +403,47 @@ body:has(.mk-hero) main#quarto-document-content.column-page {
 }
 .mk-subscribe__btn:hover { background: var(--mk-accent-dk); border-bottom: none; }
 
-.mk-subscribe__widget {
-  background: #fff;
-  border: 1px solid var(--mk-rule);
-  border-radius: var(--mk-radius);
-  box-shadow: 0 8px 26px rgba(14, 44, 51, 0.08);
-  overflow: hidden;
-}
-.mk-subscribe__widget-head {
-  padding: 1rem 1.25rem;
-  border-bottom: 1px solid var(--mk-rule);
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-}
-.mk-subscribe__widget-mark {
-  width: 24px;
-  height: 24px;
-  border-radius: 6px;
-  background: var(--mk-accent);
-  flex-shrink: 0;
-}
-.mk-subscribe__widget-head strong {
-  font-family: var(--mk-font-ui);
-  font-size: 0.92rem;
-  color: var(--mk-blue-900);
-}
-.mk-subscribe__widget-body { padding: 0.1rem 1.25rem; }
-.mk-subscribe__post {
+.mk-subscribe__label {
   display: block;
-  padding: 0.8rem 0;
-  border-bottom: 1px solid var(--mk-rule-soft);
-  border-bottom-width: 1px;
   font-family: var(--mk-font-ui);
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--mk-mute);
+  margin: 0 0 0.75rem;
 }
-.mk-subscribe__post:last-child { border-bottom: none; }
+.mk-subscribe__ribbon {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1.5rem;
+}
+/* The whole card is the link (title + date), so it needs its own explicit
+   border-bottom:none — otherwise it inherits the sitewide underline-as-
+   border-bottom rule applied to the full block instead of just the text. */
+.mk-subscribe__post { display: block; font-family: var(--mk-font-ui); border-bottom: none; }
+.mk-subscribe__post:hover { border-bottom: none; }
+.mk-subscribe__post .d {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--mk-accent-dk);
+}
 .mk-subscribe__post .t {
   display: block;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   font-weight: 600;
   color: var(--mk-ink);
   line-height: 1.35;
+  margin-top: 0.25rem;
   border-bottom: none;
 }
 .mk-subscribe__post:hover .t { color: var(--mk-accent-dk); }
-.mk-subscribe__post .d {
-  display: block;
-  font-size: 0.75rem;
-  color: var(--mk-mute);
-  margin-top: 0.2rem;
-}
-.mk-subscribe__widget-foot { padding: 1rem 1.25rem 1.25rem; }
-.mk-subscribe__widget-foot .mk-subscribe__btn { display: block; width: 100%; text-align: center; }
 
 @media (max-width: 760px) {
-  .mk-subscribe { grid-template-columns: 1fr; gap: 1.75rem; }
+  /* No divider between stacked posts now, so give them more room than the
+     grid's column gap needs to read as separate items rather than one. */
+  .mk-subscribe__ribbon { grid-template-columns: 1fr; gap: 1.4rem; }
 }
 
 @media (max-width: 1000px) {

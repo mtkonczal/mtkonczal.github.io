@@ -508,11 +508,13 @@ tags$div(class = "mk-start", !!!items)
 
 ::: {.mk-subscribe}
 
-::: {.mk-subscribe__pitch}
-My Substack is where I'm always test running economic analysis, situating where the arguments need to end up. Subscribe to see it all in advance and leave feedback.
+::: {.mk-subscribe__top}
+My Substack is where I test-run economic analysis before it becomes a report.
 
 [Subscribe for free](https://newsletter.mikekonczal.com/){.mk-subscribe__btn target="_blank" rel="noopener"}
 :::
+
+[Recent posts:]{.mk-subscribe__label}
 
 ```{r subscribe_widget, echo=FALSE, message=FALSE, warning=FALSE}
 library(tidyverse)
@@ -521,6 +523,8 @@ source("scripts/fetch_substack.R")   # defines fetch_substack_posts()
 
 # Same fetch-fresh, fall-back-to-cache, fail-loud-if-neither policy as the
 # macro strip: never ship a broken widget, never ship fabricated titles.
+# NB: this runs at render time, not page-load time — the three posts below
+# are only as fresh as the last `quarto render`, same as the macro strip.
 cache_path <- "data/substack_feed.csv"
 posts <- tryCatch(
   {
@@ -542,22 +546,12 @@ stopifnot(nrow(posts) >= 1)
 
 rows <- pmap(posts, function(title, link, date) {
   tags$a(class = "mk-subscribe__post", href = link, target = "_blank", rel = "noopener",
-    tags$span(class = "t", title),
-    tags$span(class = "d", format(date, "%b %d"))
+    tags$span(class = "d", format(date, "%b %d")),
+    tags$span(class = "t", title)
   )
 })
 
-tags$div(class = "mk-subscribe__widget",
-  tags$div(class = "mk-subscribe__widget-head",
-    tags$div(class = "mk-subscribe__widget-mark"),
-    tags$strong("Mike Konczal")
-  ),
-  tags$div(class = "mk-subscribe__widget-body", !!!rows),
-  tags$div(class = "mk-subscribe__widget-foot",
-    tags$a(class = "mk-subscribe__btn", href = "https://newsletter.mikekonczal.com/",
-           target = "_blank", rel = "noopener", "Subscribe")
-  )
-)
+tags$div(class = "mk-subscribe__ribbon", !!!rows)
 ```
 
 :::
