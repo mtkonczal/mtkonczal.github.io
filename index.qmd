@@ -509,9 +509,7 @@ tags$div(class = "mk-start", !!!items)
 ::: {.mk-subscribe}
 
 ::: {.mk-subscribe__pitch}
-The newsletter is where I actually think out loud — data-driven, theory-informed writing on affordability, labor markets, and the Fed, before any of it becomes a report.
-
-On Substack · free
+My Substack is where I'm always test running economic analysis, situating where the arguments need to end up. Subscribe to see it all in advance and leave feedback.
 
 [Subscribe for free](https://newsletter.mikekonczal.com/){.mk-subscribe__btn target="_blank" rel="noopener"}
 :::

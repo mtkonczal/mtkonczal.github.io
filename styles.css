@@ -382,12 +382,6 @@ body:has(.mk-hero) main#quarto-document-content.column-page {
   line-height: 1.45;
   font-weight: 500;
   color: var(--mk-blue-900);
-  margin: 0 0 1rem;
-}
-.mk-subscribe__pitch > :nth-child(2) {
-  font-family: var(--mk-font-ui);
-  font-size: 0.85rem;
-  color: var(--mk-mute);
   margin: 0 0 1.5rem;
 }
 .mk-subscribe__btn {
