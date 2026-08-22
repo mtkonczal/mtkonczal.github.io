@@ -684,12 +684,12 @@ n_press    <- tab_n("Press")
 ```{r tabs, results='asis'}
 cat(sprintf('
 <div id="mk-portfolio-tabs" class="mk-tabs" role="tablist" aria-label="Filter portfolio by type">
-  <button type="button" class="mk-tab is-active" role="tab" data-cat="Writing" aria-selected="true">Writing<span class="mk-tab__count">%d</span></button>
-  <button type="button" class="mk-tab" role="tab" data-cat="Research" aria-selected="false">Research<span class="mk-tab__count">%d</span></button>
+  <button type="button" class="mk-tab is-active" role="tab" data-cat="Research" aria-selected="true">Research<span class="mk-tab__count">%d</span></button>
+  <button type="button" class="mk-tab" role="tab" data-cat="Writing" aria-selected="false">Writing<span class="mk-tab__count">%d</span></button>
   <button type="button" class="mk-tab" role="tab" data-cat="Media" aria-selected="false">Media<span class="mk-tab__count">%d</span></button>
   <button type="button" class="mk-tab" role="tab" data-cat="Press" aria-selected="false">Press<span class="mk-tab__count">%d</span></button>
 </div>
-', n_writing, n_research, n_media, n_press))
+', n_research, n_writing, n_media, n_press))
 ```
 
 ::: {.mk-table}
@@ -719,7 +719,7 @@ datatable(
     $('#mk-portfolio-tabs .mk-tab').on('click', function() {
       activate(this.getAttribute('data-cat'));
     });
-    activate('Writing');
+    activate('Research');
   "),
   options  = list(
     pageLength   = 5,
