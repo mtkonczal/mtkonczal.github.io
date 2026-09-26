@@ -30,7 +30,7 @@ image: images/social-card.png
 <p class="mk-hero__role">Vice President of Policy and Research, Economic Security Project · Former White House chief economist</p>
 </div>
 
-<img class="mk-hero__photo" src="images/mkonczal_portrait.jpg" alt="Mike Konczal outdoors">
+<img class="mk-hero__photo" src="images/mkonczal_index.jpg" alt="Mike Konczal wearing glasses during a TV appearance">
 
 ::: {.mk-hero__bio}
 Mike Konczal is the Vice-President of Policy and Research at the [Economic Security Project](https://www.economicsecurityproject.org/), where he oversees policy development, research, and strategic analysis to build economic power for all Americans. Previously, he served as a Special Assistant to the President for Economic Policy and Chief Economist at the National Economic Council.
@@ -41,7 +41,7 @@ Specializing in economic data analysis and policy research, Mike is a respected 
 
 <nav class="mk-hero__links" aria-label="Biography and booking links">
   <a href="files/resume_brief.pdf" target="_blank" rel="noopener">Brief résumé</a>
-  <a href="images/mkonczal_headshot.jpg" download="Mike-Konczal-headshot.jpg">Download headshot</a>
+  <a href="images/mkonczal_index.jpg" download="Mike-Konczal-headshot.jpg">Download headshot</a>
   <a href="mailto:konczal@gmail.com?subject=Media%20or%20event%20inquiry">Media &amp; event inquiries</a>
 </nav>
 :::
@@ -146,31 +146,34 @@ Data I'm watching
 library(tidyverse)
 library(lubridate)
 library(htmltools)
-source("scripts/build_macro.R")   # defines build_macro(): the nine indicators,
-                                  # already transformed, in long (date, series_id,
-                                  # value) form. See that file for the economics.
 
 cache_path <- "data/macro_strip.csv"
 
-# Fetch fresh; on any failure (e.g. BLS_KEY missing, network) fall back to the
-# cached vintage rather than shipping a broken strip, and only fail the render
-# outright if there is no cache at all.
-macro <- tryCatch(
-  {
-    out <- build_macro()
-    write_csv(out, cache_path)
-    out
-  },
-  error = function(e) {
-    if (file.exists(cache_path)) {
-      message("Macro fetch failed; using cached data: ", conditionMessage(e))
-      read_csv(cache_path, show_col_types = FALSE) %>% mutate(date = as.Date(date))
-    } else {
-      stop("Macro strip: fetch failed and no cache at ", cache_path,
-           " — ", conditionMessage(e))
+# The scheduled newsletter-only build must not refresh economic data or require
+# BLS credentials. Normal renders still fetch fresh and fall back to the cache.
+if (identical(Sys.getenv("MK_MACRO_FROM_CACHE"), "1")) {
+  if (!file.exists(cache_path)) stop("Macro strip cache is missing: ", cache_path)
+  macro <- read_csv(cache_path, show_col_types = FALSE) %>%
+    mutate(date = as.Date(date))
+} else {
+  source("scripts/build_macro.R")
+  macro <- tryCatch(
+    {
+      out <- build_macro()
+      write_csv(out, cache_path)
+      out
+    },
+    error = function(e) {
+      if (file.exists(cache_path)) {
+        message("Macro fetch failed; using cached data: ", conditionMessage(e))
+        read_csv(cache_path, show_col_types = FALSE) %>% mutate(date = as.Date(date))
+      } else {
+        stop("Macro strip: fetch failed and no cache at ", cache_path,
+             " — ", conditionMessage(e))
+      }
     }
-  }
-)
+  )
+}
 
 series_of <- function(id) macro %>% filter(series_id == id) %>% arrange(date)
 u  <- series_of("UNRATE_FULL")    # unemployment rate, extra digit (percent)
@@ -533,32 +536,14 @@ My Substack is where I test-run economic analysis before it becomes a report.
 ```{r subscribe_widget, echo=FALSE, message=FALSE, warning=FALSE}
 library(tidyverse)
 library(htmltools)
-source("scripts/fetch_substack.R")   # defines fetch_substack_posts()
+source("scripts/fetch_substack.R")
 
-# Same fetch-fresh, fall-back-to-cache, fail-loud-if-neither policy as the
-# macro strip: never ship a broken widget, never ship fabricated titles.
-# NB: this runs at render time, not page-load time — the three posts below
-# are only as fresh as the last `quarto render`, same as the macro strip.
-cache_path <- "data/substack_feed.csv"
-posts <- tryCatch(
-  {
-    out <- fetch_substack_posts(3)
-    write_csv(out, cache_path)
-    out
-  },
-  error = function(e) {
-    if (file.exists(cache_path)) {
-      message("Substack feed fetch failed; using cached data: ", conditionMessage(e))
-      read_csv(cache_path, show_col_types = FALSE) %>% mutate(date = as.Date(date))
-    } else {
-      stop("Substack widget: fetch failed and no cache at ", cache_path,
-           " — ", conditionMessage(e))
-    }
-  }
-)
+# Fetch at render time and retain older RSS items in the committed cache.
+# The newsletter ribbon shows three; the Portfolio below uses the full cache.
+posts <- load_substack_posts()
 stopifnot(nrow(posts) >= 1)
 
-rows <- pmap(posts, function(title, link, date) {
+rows <- pmap(slice_head(posts, n = 3), function(title, link, date) {
   tags$a(class = "mk-subscribe__post", href = link, target = "_blank", rel = "noopener",
     tags$span(class = "d", format(date, "%b %d")),
     tags$span(class = "t", title)
@@ -642,9 +627,23 @@ fix_title_case <- function(x) {
   str_remove_all(x, "[\\u00d4\\u00d5]")
 }
 
-raw <- read_csv("data/work_database.csv", show_col_types = FALSE) %>%
+work <- read_csv("data/work_database.csv", show_col_types = FALSE)
+
+# New newsletter posts appear in Writing without going through the Site
+# Manager review queue. Database entries win when a link is already curated.
+link_key <- function(x) str_remove(str_remove(x, "[?#].*$"), "/$")
+newsletter_work <- posts %>%
+  filter(!link_key(link) %in% link_key(work$Link)) %>%
+  transmute(
+    Date = date, `Original Title` = title, Outlet = "Substack",
+    Format = "Article", Link = link, Highlight = NA_character_,
+    Author = NA_character_, Excerpt = NA_character_
+  )
+
+raw <- bind_rows(work, newsletter_work) %>%
   mutate(
-    Title = fix_title_case(`Original Title`),
+    Title = if_else(Link %in% newsletter_work$Link,
+                    `Original Title`, fix_title_case(`Original Title`)),
     Date  = as.Date(Date)  # ISO YYYY-MM-DD in the CSV
   ) %>%
   arrange(desc(Date))
@@ -661,7 +660,7 @@ cat_for <- function(format) {
   )
 }
 
-# Label shown in the Type pill (distinct from the tab/Category above).
+# Label shown in the Type column (distinct from the tab/Category above).
 type_label <- function(format) {
   case_when(
     format == "White Paper" ~ "Research",
@@ -680,10 +679,11 @@ combined <- raw %>%
     Year      = year(Date),
     Month     = format(Date, "%b"),
     TitleHTML = paste0(
-      '<a href="', Link, '" target="_blank" rel="noopener">', Title, '</a>',
-      '<span class="mk-outlet">', Outlet, '</span>'
+      '<a href="', htmlEscape(Link, attribute = TRUE),
+      '" target="_blank" rel="noopener">', htmlEscape(Title), '</a>',
+      '<span class="mk-outlet">', htmlEscape(Outlet), '</span>'
     ),
-    TypeHTML  = paste0('<span class="mk-pill" data-type="', TypeLab, '">', TypeLab, '</span>')
+    TypeHTML  = paste0('<span class="mk-type">', TypeLab, '</span>')
   ) %>%
   select(Category, Year, Month, Type = TypeHTML, Title = TitleHTML)
 

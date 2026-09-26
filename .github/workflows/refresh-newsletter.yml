@@ -1,0 +1,76 @@
+name: Refresh newsletter from RSS
+
+on:
+  schedule:
+    - cron: "23 13 * * 1" # Mondays at 13:23 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+
+concurrency:
+  group: newsletter-rss-refresh
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check RSS for new or changed posts
+        id: feed
+        run: python3 scripts/check_substack_feed.py
+
+      - uses: r-lib/actions/setup-r@v2
+        if: steps.feed.outputs.changed == 'true'
+        with:
+          use-public-rspm: true
+
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        if: steps.feed.outputs.changed == 'true'
+        with:
+          packages: |
+            any::tidyverse
+            any::lubridate
+            any::htmltools
+            any::xml2
+            any::DT
+          install-quarto: false
+
+      - name: Refresh the saved RSS posts
+        id: refresh
+        if: steps.feed.outputs.changed == 'true'
+        run: |
+          Rscript -e 'source("scripts/fetch_substack.R"); load_substack_posts(strict = TRUE)'
+          if git diff --quiet -- data/substack_feed.csv; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: quarto-dev/quarto-actions/setup@v2
+        if: steps.refresh.outputs.changed == 'true'
+
+      - name: Render homepage using the checked-in economic data
+        if: steps.refresh.outputs.changed == 'true'
+        env:
+          MK_MACRO_FROM_CACHE: "1"
+        run: quarto render index.qmd
+
+      - name: Commit the updated feed and homepage
+        if: steps.refresh.outputs.changed == 'true'
+        run: |
+          git add data/substack_feed.csv docs/index.html docs/search.json docs/sitemap.xml
+          git -c user.name="github-actions[bot]" \
+              -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
+              commit -m "Refresh newsletter from RSS"
+          git push
+
+      # GITHUB_TOKEN pushes do not start a branch-based GitHub Pages build.
+      - name: Publish the refreshed docs folder
+        if: steps.refresh.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api -X POST "repos/${GITHUB_REPOSITORY}/pages/builds"

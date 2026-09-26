@@ -7,11 +7,10 @@ Opens a browser tab at http://localhost:4747. Two tabs:
   Add by URL   -- paste a link, Fetch pre-fills fields from the page's
                   metadata, correct anything, Add appends to work_database.csv,
                   commits, and pushes. GitHub Actions then renders the site.
-  Review queue -- candidates from two sources, shown together: the weekly
-                  discovery task (data/pending.csv) and a Substack newsletter
-                  check this app runs on every launch (data/pending_substack.csv,
-                  see check_newsletter()). Approve publishes; Reject adds the
-                  URL to data/skiplist.csv so it is never proposed again.
+  Review queue -- candidates from the weekly discovery task (data/pending.csv).
+                  Approve publishes; Reject adds the URL to data/skiplist.csv
+                  so it is never proposed again. Newsletter posts are read
+                  directly from RSS when the site is rendered.
 
 Only reachable from this machine while the window is open.
 """
@@ -32,13 +31,10 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parent.parent
 WORK_CSV = REPO / "data" / "work_database.csv"
 PENDING_CSV = REPO / "data" / "pending.csv"
-PENDING_SUBSTACK_CSV = REPO / "data" / "pending_substack.csv"
 SKIP_CSV = REPO / "data" / "skiplist.csv"
 STARTHERE_CSV = REPO / "data" / "start_here.csv"
 NOW_QMD = REPO / "_now-entries.qmd"
-PENDING_FILES = [PENDING_CSV, PENDING_SUBSTACK_CSV]
-
-NEWSLETTER_ARCHIVE_API = "https://newsletter.mikekonczal.com/api/v1/archive"
+PENDING_FILES = [PENDING_CSV]
 
 HEADER = ["Date", "Original Title", "Outlet", "Format",
           "Link", "Highlight", "Author", "Excerpt"]
@@ -69,7 +65,7 @@ OUTLET_MAP = {
 }
 
 PORT = 4747
-VERSION = "2026-08-21"  # bump when editing; shown in the page footer
+VERSION = "2026-09-26"  # bump when editing; shown in the page footer
 UA = ("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
       "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36")
 
@@ -293,7 +289,7 @@ def make_row(fields):
 # Files the app is allowed to stage. Nothing commits automatically: edits
 # only touch the working tree, and the page's "Publish" button runs
 # git_publish() once, when Mike decides.
-APP_FILES = [str(WORK_CSV), str(PENDING_CSV), str(PENDING_SUBSTACK_CSV),
+APP_FILES = [str(WORK_CSV), str(PENDING_CSV),
              str(SKIP_CSV), str(STARTHERE_CSV), str(NOW_QMD)]
 
 
@@ -406,67 +402,6 @@ def fetch_metadata(url):
         "excerpt": squish(excerpt),
         "duplicate": norm_url(url) in existing_links(),
     }
-
-
-# ---------- newsletter sync --------------------------------------------------
-#
-# Runs once per app launch, in a background thread (see main()). Pages
-# Substack's archive API newest-first and stops at the first post already
-# known anywhere (work database, either pending queue, or the skiplist) — so
-# the very first run walks the whole archive (a one-time backfill) and every
-# run after that only looks at what's new since the last check.
-
-def known_newsletter_links():
-    paths = [WORK_CSV, SKIP_CSV, *PENDING_FILES]
-    return {norm_url(r["Link"]) for p in paths for r in read_rows(p)}
-
-
-def fetch_newsletter_page(offset, limit=20):
-    url = f"{NEWSLETTER_ARCHIVE_API}?sort=new&limit={limit}&offset={offset}"
-    req = urllib.request.Request(url, headers={"User-Agent": UA})
-    with urllib.request.urlopen(req, timeout=20) as resp:
-        return json.loads(resp.read().decode("utf-8"))
-
-
-def check_newsletter():
-    known = known_newsletter_links()
-    queued = {norm_url(r["Link"]) for r in read_rows(PENDING_SUBSTACK_CSV)}
-    found, offset, limit = [], 0, 20
-    while True:
-        try:
-            posts = fetch_newsletter_page(offset, limit)
-        except Exception as e:  # noqa: BLE001 - best effort, never blocks launch
-            print(f"[newsletter] check failed: {e}", flush=True)
-            break
-        if not posts:
-            break
-        hit_known = False
-        for post in posts:
-            link = norm_url(post.get("canonical_url"))
-            if not link:
-                continue
-            if link in known:
-                hit_known = True
-                break
-            if link not in queued:
-                found.append({
-                    "Date": (post.get("post_date") or "")[:10],
-                    "Original Title": squish(post.get("title")),
-                    "Outlet": "Substack",
-                    "Format": "Article",
-                    "Link": post["canonical_url"].strip(),
-                    "Highlight": "",
-                    "Author": "NA",
-                    "Excerpt": squish(post.get("subtitle")) or "NA",
-                })
-        if hit_known or len(posts) < limit:
-            break
-        offset += len(posts)
-    if found:
-        write_pending(read_rows(PENDING_SUBSTACK_CSV) + found,
-                      PENDING_SUBSTACK_CSV)
-        print(f"[newsletter] {len(found)} new post(s) queued for review",
-              flush=True)
 
 
 # ---------- web app -----------------------------------------------------------
@@ -752,9 +687,7 @@ async function loadQueue() {
     q.length ? '(' + q.length + ')' : '';
   const el = document.getElementById('queue');
   if (!q.length) {
-    el.innerHTML = 'Queue is empty. The weekly discovery task adds press ' +
-                   'candidates, and this app checks your Substack newsletter ' +
-                   'for new posts each time it launches.';
+    el.innerHTML = 'Queue is empty. The weekly discovery task adds press candidates.';
     return;
   }
   el.innerHTML = q.map((row, i) => {
@@ -1308,7 +1241,6 @@ def main():
         return
     print(f"Site Manager v{VERSION} running at {url}  (use the page's "
           "Quit link, or Ctrl-C here, to stop)", flush=True)
-    threading.Thread(target=check_newsletter, daemon=True).start()
     threading.Timer(0.4, lambda: webbrowser.open(url)).start()
     try:
         server.serve_forever()
