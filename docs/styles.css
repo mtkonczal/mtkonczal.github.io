@@ -251,6 +251,7 @@ body:has(.mk-hero) main#quarto-document-content.column-page {
 .mk-content:has(.mk-hero) > .mk-hero,
 .mk-content:has(.mk-hero) > #macro-heading,
 .mk-content:has(.mk-hero) > #macro-strip,
+.mk-content:has(.mk-hero) > .mk-home-section,
 .mk-content:has(.mk-hero) > section.level2 {
   margin: 0;
   padding-top: var(--mk-band-pad-y);
@@ -268,9 +269,8 @@ body:has(.mk-hero) main#quarto-document-content.column-page {
    else alternates white / soft tint. */
 .mk-content:has(.mk-hero) > #title-block-header,
 .mk-content:has(.mk-hero) > .mk-hero   { background: var(--mk-paper); }
-/* "Data I'm watching" label sits on the paper band, snug above the dark macro
-   strip: no top padding (the hero's bottom padding already separates it from
-   the bio), a small gap below before the dark box. */
+/* "Data I'm watching" follows Start Here on the paper band, with a small gap
+   before the dark macro strip. */
 .mk-content:has(.mk-hero) > #macro-heading {
   background: var(--mk-paper);
   padding-top: 0;
@@ -299,11 +299,13 @@ body:has(.mk-hero) main#quarto-document-content.column-page {
 .mk-content:has(.mk-hero) > #book      { background: var(--mk-blue-900); }
 
 /* --- Heading accent: short rule under each section H2 --------------------- */
-.mk-content:has(.mk-hero) > section.level2 > h2:first-child {
+.mk-content:has(.mk-hero) > section.level2 > h2:first-child,
+.mk-content:has(.mk-hero) > .mk-home-section > h2:first-child {
   margin-top: 0;          /* band top padding already supplies the space */
   margin-bottom: 1.1rem;
 }
-.mk-content:has(.mk-hero) > section.level2 > h2:first-child::after {
+.mk-content:has(.mk-hero) > section.level2 > h2:first-child::after,
+.mk-content:has(.mk-hero) > .mk-home-section > h2:first-child::after {
   content: "";
   display: block;
   width: 2.5rem;
@@ -365,8 +367,8 @@ body:has(.mk-hero) main#quarto-document-content.column-page {
 }
 
 /* ==========================================================================
-   Subscribe — the newsletter band (index.qmd #subscribe), between Start
-   Here and Latest. Compact by design (the original two-column card ran
+   Subscribe — the newsletter band (index.qmd #subscribe), after the data
+   strip. Compact by design (the original two-column card ran
    ~630px tall for three lines of real content): one line of pitch + CTA,
    then a three-up ribbon of live-fetched posts (data/substack_feed.csv,
    see fetch_substack.R) with the date as the visual lead rather than a
@@ -462,33 +464,75 @@ body:has(.mk-hero) main#quarto-document-content.column-page {
 html { scroll-behavior: smooth; }
 body { margin: 0; padding-left: 240px; }
 
-/* Home page hero: photo and bio split 50/50 across the section.
-   Two equal columns; "Latest Things" below stays full width. */
+/* Home page hero: a clear name, portrait, full biography, and useful links. */
 .mk-hero {
   display: grid;
-  grid-template-columns: 2fr 3fr;
-  gap: 2.5rem;
-  align-items: center;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+  column-gap: clamp(1.75rem, 4vw, 3.5rem);
+  row-gap: 1.65rem;
+  align-items: start;
   /* width + spacing now come from the section-band rules above */
+}
+.mk-hero__intro { grid-column: 1 / -1; }
+.mk-hero__name {
+  margin: 0;
+  font-size: clamp(2.8rem, 5vw, 4.25rem);
+  line-height: 1;
+  letter-spacing: -0.035em;
+}
+.mk-hero__role {
+  margin: 0.55rem 0 0;
+  font-family: var(--mk-font-ui);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--mk-ink-soft);
 }
 .mk-hero > p {            /* Pandoc wraps the raw <img> in a paragraph */
   margin: 0;
 }
 .mk-hero__photo {
   width: 100%;
-  height: auto;
+  aspect-ratio: 4 / 5;
   border-radius: 4px;
   object-fit: cover;
+  object-position: center 34%;
   display: block;
 }
 .mk-hero__bio > :first-child { margin-top: 0; }
 .mk-hero__bio p {
   font-size: 1.05rem;
-  line-height: 1.55;
+  line-height: 1.6;
+}
+.mk-hero__bio > p:first-child {
+  font-size: 1.16rem;
+  line-height: 1.52;
+  color: var(--mk-blue-900);
+}
+.mk-hero__links {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 1.25rem;
+  row-gap: 0.65rem;
+  padding-top: 0.5rem;
+  font-family: var(--mk-font-ui);
+  font-size: 0.84rem;
+  font-weight: 600;
+}
+.mk-hero__links a {
+  color: var(--mk-chart-blue-dk);
+  border-bottom: 1px solid currentColor;
+}
+.mk-hero__links a:hover { color: var(--mk-blue-900); }
+.mk-hero__links a:focus-visible {
+  outline: 2px solid var(--mk-chart-blue);
+  outline-offset: 4px;
+}
+@media (max-width: 900px) {
+  .mk-hero { grid-template-columns: 1fr; gap: 1.4rem; }
+  .mk-hero__photo { max-width: 320px; }
 }
 @media (max-width: 640px) {
-  .mk-hero { grid-template-columns: 1fr; gap: 1.25rem; }
-  .mk-hero__photo { max-width: 320px; }
+  .mk-hero__name { font-size: clamp(2.65rem, 10vw, 3.5rem); }
 }
 
 /* Book section: cover on the left, praise quotes on the right (mirrors hero) */
@@ -736,7 +780,7 @@ main h2 {
 }
 
 /* ==========================================================================
-   Latest — homepage highlight reel (index.qmd)
+   Selected recent research and media — homepage highlight reel (index.qmd)
    3-column grid rows (date · serif title/outlet · filled kind pill). Same row
    shape as the Portfolio index below, but the kind reads as a filled accent
    pill rather than quiet text — this is the one place the two lists differ.
@@ -882,9 +926,22 @@ main h2 {
 }
 .mk-tab:hover:not(.is-active)::after { background: var(--mk-rule); }
 .mk-tab.is-active::after { background: var(--mk-accent); }
-/* Four labels plus counts don't fit at phone widths even once they can shrink. */
+/* Give each phone-sized tab a distinct, comfortably tappable cell. */
 @media (max-width: 640px) {
-  .mk-tab { font-size: 0.85rem; }
+  .mk-tabs {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.25rem 0.5rem;
+    border-bottom: 0;
+  }
+  .mk-tab {
+    min-height: 44px;
+    padding: 0.65rem 0.25rem;
+    margin-bottom: 0;
+    border-bottom: 1px solid var(--mk-rule);
+    font-size: 0.9rem;
+  }
+  .mk-tab::after { bottom: 0; }
 }
 /* Count rendered as a parenthetical so the number reads as a count, not a stray figure */
 .mk-tab__count {
@@ -1383,8 +1440,8 @@ img.mk-dw-shot {
 }
 
 /* ==========================================================================
-   Macro strip — live headline indicators on a thin petrol band under the
-   hero (index.qmd #macro-strip). Values are UI-font tabular numerals; the
+   Macro strip — live headline indicators on a petrol band after Start Here
+   (index.qmd #macro-strip). Values are UI-font tabular numerals; the
    sparklines are inline SVG emitted by the R chunk (light chart-blue line,
    white end dot marking the latest observation).
    ========================================================================== */
@@ -1404,6 +1461,7 @@ img.mk-dw-shot {
   grid-template-columns: repeat(4, 1fr);
   gap: 1.75rem;
 }
+.mk-macro__more { display: none; }
 /* Transparent per-observation hit targets carry a data-tip; the script under
    the strip shows that month's date and value as a floating tooltip on hover. */
 .mk-macro__pt { cursor: pointer; }
@@ -1543,6 +1601,31 @@ img.mk-dw-shot {
 @media (max-width: 900px) {
   .mk-macro__cells { grid-template-columns: 1fr 1fr; gap: 1.25rem; }
 }
+@media (max-width: 760px) {
+  .mk-js .mk-macro__cells:not(.is-expanded) > .mk-macro__cell:nth-child(n+4) {
+    display: none;
+  }
+  .mk-js .mk-macro__more {
+    display: block;
+    grid-column: 1 / -1;
+    justify-self: start;
+    min-height: 44px;
+    padding: 0.65rem 0;
+    background: none;
+    border: 0;
+    color: #fff;
+    font-family: var(--mk-font-ui);
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 0.25em;
+    cursor: pointer;
+  }
+  .mk-macro__more:focus-visible {
+    outline: 2px solid var(--mk-blue-300);
+    outline-offset: 3px;
+  }
+}
 @media (max-width: 420px) {
   .mk-macro__cells { grid-template-columns: 1fr; }
 }
@@ -1551,7 +1634,7 @@ img.mk-dw-shot {
    Start here — curated, annotated shortlist (index.qmd #start-here).
    Title-led rows with the impact line carrying the persuasion; the pill
    reuses .mk-recent__type so the two lists share one motif. Row shape and
-   hover mirror the Latest list for cohesion.
+   hover mirror the selected-work list for cohesion.
    ========================================================================== */
 
 .mk-start { margin: 0.5rem 0 0; }
@@ -1569,6 +1652,50 @@ img.mk-dw-shot {
   transition: background 0.18s;
 }
 .mk-start__item:hover { background: rgba(48, 103, 168, 0.07); text-decoration: none; }
+
+.mk-start__item--featured {
+  grid-template-columns: 1fr;
+  row-gap: 0.5rem;
+  margin-bottom: 0.5rem;
+  padding: 1.4rem 1.5rem;
+  background: #eff4f8;
+  border-left: 4px solid var(--mk-chart-blue);
+  border-bottom-color: #d6e2eb;
+}
+.mk-start__item--featured:hover { background: #e6eef5; }
+.mk-start__item--featured .mk-start__meta {
+  grid-column: 1;
+  grid-row: 1;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  text-align: left;
+}
+.mk-start__item--featured .mk-start__title {
+  grid-column: 1;
+  grid-row: 2;
+  font-size: 1.55rem;
+}
+.mk-start__item--featured .mk-start__impact {
+  grid-column: 1;
+  grid-row: 3;
+  margin-top: 0;
+}
+.mk-start__feature-label {
+  display: inline-block;
+  padding: 0.2rem 0.55rem;
+  border-radius: 2px;
+  background: var(--mk-chart-blue);
+  color: #fff;
+  font-family: var(--mk-font-ui);
+  font-size: 0.69rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
 
 .mk-start__title {
   grid-column: 1;
@@ -1617,4 +1744,6 @@ img.mk-dw-shot {
   .mk-start__title { grid-column: 1; grid-row: auto; font-size: 1.2rem; }
   .mk-start__meta { grid-column: 1; grid-row: auto; flex-direction: row; align-items: center; text-align: left; }
   .mk-start__impact { grid-column: 1; grid-row: auto; }
+  .mk-start__item--featured { padding: 1.2rem 1.1rem; }
+  .mk-start__item--featured .mk-start__title { font-size: 1.4rem; }
 }

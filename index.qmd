@@ -16,33 +16,21 @@ image: images/social-card.png
 ---
 
 ```{=html}
-<!-- The page title ("Mike Konczal") is already the sidebar brand, so the
-     Quarto title-block H1 is redundant visually on this page. But it's the
-     only H1 the page has, so it must stay in the accessibility tree rather
-     than being display:none'd out of it entirely: visually-hidden, not
-     removed. Its sibling nodes (the auto-injected description paragraph,
-     the empty title-meta div) are pure duplicates of the hero bio and meta
-     tags, so those are fully hidden instead. -->
+<!-- The hero supplies the visible H1. Hide Quarto's duplicate title block. -->
 <style>
 .mk-content:has(.mk-hero) > #title-block-header {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  margin: -1px;
-  padding: 0;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
-  background: none;
+  display: none;
 }
-#title-block-header .description,
-#title-block-header .quarto-title-meta { display: none; }
 </style>
 ```
 
 ::: {#top .mk-hero tabindex="-1"}
-<img class="mk-hero__photo" src="images/mkonczal_index.jpg" alt="Mike Konczal">
+<div class="mk-hero__intro">
+<h1 class="mk-hero__name">Mike Konczal</h1>
+<p class="mk-hero__role">Vice President of Policy and Research, Economic Security Project · Former White House chief economist</p>
+</div>
+
+<img class="mk-hero__photo" src="images/mkonczal_portrait.jpg" alt="Mike Konczal outdoors">
 
 ::: {.mk-hero__bio}
 Mike Konczal is the Vice-President of Policy and Research at the [Economic Security Project](https://www.economicsecurityproject.org/), where he oversees policy development, research, and strategic analysis to build economic power for all Americans. Previously, he served as a Special Assistant to the President for Economic Policy and Chief Economist at the National Economic Council.
@@ -50,7 +38,94 @@ Mike Konczal is the Vice-President of Policy and Research at the [Economic Secur
 A former software and financial engineer, he was an early hire at the Roosevelt Institute, where he led major projects on financial reform, inequality, economic ideas, and macroeconomics. He is the author of [*Freedom from the Market*](#book) (New Press, 2021), described by the *Financial Times* as "a powerful polemic," and co-author of [*Rewriting the Rules of the American Economy*](https://wwnorton.com/books/rewriting-the-rules-of-the-american-economy/) (W.W. Norton, 2015) with Joseph Stiglitz. He holds a B.A. in math and computer science and an M.S. in finance from the University of Illinois at Urbana-Champaign.
 
 Specializing in economic data analysis and policy research, Mike is a respected voice in U.S. economic discourse, frequently cited in media outlets, and has provided testimony before Congress. The *New York Times Magazine* has described him as having "a cult following among progressives." Born and raised in Chicago, he now lives in Takoma Park, Maryland, with his wife, two daughters, and pit bull.
+
+<nav class="mk-hero__links" aria-label="Biography and booking links">
+  <a href="files/resume_brief.pdf" target="_blank" rel="noopener">Brief résumé</a>
+  <a href="images/mkonczal_headshot.jpg" download="Mike-Konczal-headshot.jpg">Download headshot</a>
+  <a href="mailto:konczal@gmail.com?subject=Media%20or%20event%20inquiry">Media &amp; event inquiries</a>
+</nav>
 :::
+:::
+
+::: {#start-here .mk-home-section}
+<h2>Start Here</h2>
+
+New here? These are the pieces that best explain what I work on.
+
+```{r start_here, echo=FALSE, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(lubridate)
+library(htmltools)
+
+fix_title_case <- function(x) {
+  x <- str_to_title(x)
+  for (w in c(" A "," An "," The "," And "," But "," For "," Of "," In "," On "," To "," With ")) {
+    x <- str_replace_all(x, w, str_to_lower(w))
+  }
+  # ASCII \u escapes, NOT literal smart-quote chars: quarto transliterates
+  # non-ASCII source bytes to "<U+00D4>" text, which would turn this class into
+  # [<U+00D4>...] and silently strip D/U/5/0/4 from every title.
+  str_remove_all(x, "[\\u00d4\\u00d5]")
+}
+
+# Curation lives in data/start_here.csv (an ordered list keyed by Link, managed
+# from the Site Manager app's "Start here" tab). Title/outlet/date/type and the
+# descriptive Excerpt come from the work database so they can't drift; a row may
+# still carry its own values (the book, which isn't in the database). The line
+# under each title is the item's Excerpt.
+blank_na <- function(x) {
+  x <- as.character(x)
+  ifelse(is.na(x) | str_trim(x) %in% c("", "NA"), NA_character_, x)
+}
+
+db <- read_csv("data/work_database.csv", show_col_types = FALSE) %>%
+  transmute(
+    Link,
+    DBTitle   = fix_title_case(`Original Title`),
+    DBOutlet  = Outlet,
+    DBYear    = year(as.Date(Date)),
+    DBExcerpt = Excerpt,
+    DBType    = case_when(
+      str_detect(Outlet, "Testimony") ~ "Testimony",
+      Format == "White Paper"         ~ "Research",
+      TRUE                            ~ Format
+    )
+  )
+
+sh <- read_csv("data/start_here.csv", show_col_types = FALSE) %>%
+  left_join(db, by = "Link") %>%
+  mutate(
+    Title  = coalesce(blank_na(Title),  DBTitle),
+    Outlet = coalesce(blank_na(Outlet), DBOutlet),
+    Year   = coalesce(Year, DBYear),
+    Type   = coalesce(blank_na(Type),   DBType),
+    Desc   = coalesce(blank_na(Excerpt), blank_na(DBExcerpt))
+  ) %>%
+  arrange(Rank)
+
+# Every curated row must resolve to a title; catch broken Links at render time.
+stopifnot(!any(is.na(sh$Title)))
+
+items <- pmap(sh, function(Rank, Link, Title, Outlet, Year, Desc, ...) {
+  internal <- str_starts(Link, "#")
+  featured <- Rank == 1
+  tags$a(
+    class  = if (featured) "mk-start__item mk-start__item--featured" else "mk-start__item",
+    href   = Link,
+    target = if (!internal) "_blank",
+    rel    = if (!internal) "noopener",
+    # Keep one reading order for every item; CSS lifts the featured item's
+    # label above its title while leaving the title first in the markup.
+    tags$div(class = "mk-start__title", Title),
+    tags$div(class = "mk-start__meta",
+      if (featured) tags$span(class = "mk-start__feature-label", "Current focus"),
+      tags$span(class = "mk-start__outlet", paste0(Outlet, ", ", Year))),
+    if (!is.na(Desc)) tags$div(class = "mk-start__impact", HTML(Desc))
+  )
+})
+
+tags$div(class = "mk-start", !!!items)
+```
 :::
 
 <!-- ==========================================================================
@@ -282,7 +357,7 @@ legend_two <- function(n1, c1, n2, c2) tags$div(class = "mk-macro__legend",
             tags$span(class = "mk-macro__swatch", style = paste0("background:", c2)), n2))
 
 cells <- list(
-  list(label = "Unemployed",         value = pct2(tail(u$value, 1)),  dates = u$date,  series = u$value,  fmt = pct2, d = max(u$date),  ref = NULL),
+  list(label = "Unemployment rate",  value = pct2(tail(u$value, 1)),  dates = u$date,  series = u$value,  fmt = pct2, d = max(u$date),  ref = NULL),
   list(label = "Core Non-Housing Services PCE (y/y)", value = pct1(tail(sc$value, 1)), dates = sc$date, series = sc$value, fmt = pct1, d = max(sc$date), ref = NULL),
   # V/U cell: the headline stays the ratio (job openings per unemployed worker),
   # but the graphic plots the two underlying levels — vacancies vs the
@@ -337,8 +412,7 @@ cells <- list(
 # above it, on the page background) and the render caption has been dropped, so
 # the band holds only the graphics. Eight cells flow into the four-column grid
 # as two rows.
-tags$div(class = "mk-macro__cells",
-  !!!map(cells, function(cc) {
+cell_tags <- map(cells, function(cc) {
     win <- spark_window(cc$dates, cc$series)
     tags$div(class = "mk-macro__cell",
       tags$div(class = "mk-macro__label", cc$label),
@@ -363,8 +437,17 @@ tags$div(class = "mk-macro__cells",
         tags$span(class = "mk-macro__date mk-macro__date--start", format(win$start, "%b %Y")),
         tags$span(class = "mk-macro__date mk-macro__date--end",   format(win$end,   "%b %Y")))
     )
-  })
+})
+
+# The control sits after the first two cells in reading order. CSS only shows
+# it on phones; without JS, all eight cells remain visible.
+more_button <- tags$button(
+  type = "button", class = "mk-macro__more",
+  `aria-controls` = "mk-macro-cells", `aria-expanded` = "false",
+  "Show six more indicators"
 )
+tags$div(class = "mk-macro__cells", id = "mk-macro-cells",
+         !!!append(cell_tags, list(more_button), after = 2))
 ```
 
 :::
@@ -378,6 +461,15 @@ tags$div(class = "mk-macro__cells",
 (function () {
   var strip = document.getElementById("macro-strip");
   if (!strip) return;
+  var cells = strip.querySelector(".mk-macro__cells");
+  var more = strip.querySelector(".mk-macro__more");
+  if (cells && more) {
+    more.addEventListener("click", function () {
+      var expanded = cells.classList.toggle("is-expanded");
+      more.setAttribute("aria-expanded", String(expanded));
+      more.textContent = expanded ? "Show fewer indicators" : "Show six more indicators";
+    });
+  }
   var tip = document.createElement("div");
   tip.className = "mk-macro__tip";
   tip.hidden = true;
@@ -424,84 +516,6 @@ tags$div(class = "mk-macro__cells",
   strip.addEventListener("touchend", function () { tip.hidden = true; });
 })();
 </script>
-```
-
-## Start Here {#start-here}
-
-New here? These are the pieces that best explain what I work on.
-
-```{r start_here, echo=FALSE, message=FALSE, warning=FALSE}
-library(tidyverse)
-library(lubridate)
-library(htmltools)
-
-fix_title_case <- function(x) {
-  x <- str_to_title(x)
-  for (w in c(" A "," An "," The "," And "," But "," For "," Of "," In "," On "," To "," With ")) {
-    x <- str_replace_all(x, w, str_to_lower(w))
-  }
-  # ASCII \u escapes, NOT literal smart-quote chars: quarto transliterates
-  # non-ASCII source bytes to "<U+00D4>" text, which would turn this class into
-  # [<U+00D4>...] and silently strip D/U/5/0/4 from every title.
-  str_remove_all(x, "[\\u00d4\\u00d5]")
-}
-
-# Curation lives in data/start_here.csv (an ordered list keyed by Link, managed
-# from the Site Manager app's "Start here" tab). Title/outlet/date/type and the
-# descriptive Excerpt come from the work database so they can't drift; a row may
-# still carry its own values (the book, which isn't in the database). The line
-# under each title is the item's Excerpt.
-blank_na <- function(x) {
-  x <- as.character(x)
-  ifelse(is.na(x) | str_trim(x) %in% c("", "NA"), NA_character_, x)
-}
-
-db <- read_csv("data/work_database.csv", show_col_types = FALSE) %>%
-  transmute(
-    Link,
-    DBTitle   = fix_title_case(`Original Title`),
-    DBOutlet  = Outlet,
-    DBYear    = year(as.Date(Date)),
-    DBExcerpt = Excerpt,
-    DBType    = case_when(
-      str_detect(Outlet, "Testimony") ~ "Testimony",
-      Format == "White Paper"         ~ "Research",
-      TRUE                            ~ Format
-    )
-  )
-
-sh <- read_csv("data/start_here.csv", show_col_types = FALSE) %>%
-  left_join(db, by = "Link") %>%
-  mutate(
-    Title  = coalesce(blank_na(Title),  DBTitle),
-    Outlet = coalesce(blank_na(Outlet), DBOutlet),
-    Year   = coalesce(Year, DBYear),
-    Type   = coalesce(blank_na(Type),   DBType),
-    Desc   = coalesce(blank_na(Excerpt), blank_na(DBExcerpt))
-  ) %>%
-  arrange(Rank)
-
-# Every curated row must resolve to a title; catch broken Links at render time.
-stopifnot(!any(is.na(sh$Title)))
-
-items <- pmap(sh, function(Link, Title, Outlet, Year, Desc, ...) {
-  internal <- str_starts(Link, "#")
-  # No type pill; the outlet and year sit on the right ("Vox, 2015").
-  tags$a(
-    class  = "mk-start__item",
-    href   = Link,
-    target = if (!internal) "_blank",
-    rel    = if (!internal) "noopener",
-    # Direct grid children: title (row 1, col 1) and meta (row 1, col 2) share
-    # the top row; the description spans the full width on row 2 (see CSS).
-    tags$div(class = "mk-start__title", Title),
-    tags$div(class = "mk-start__meta",
-      tags$span(class = "mk-start__outlet", paste0(Outlet, ", ", Year))),
-    if (!is.na(Desc)) tags$div(class = "mk-start__impact", HTML(Desc))
-  )
-})
-
-tags$div(class = "mk-start", !!!items)
 ```
 
 ## The Newsletter {#subscribe}
@@ -556,7 +570,7 @@ tags$div(class = "mk-subscribe__ribbon", !!!rows)
 
 :::
 
-## Latest {#latest}
+## Selected recent research and media {#latest}
 
 A running shortlist of my most recent work.
 
@@ -837,5 +851,3 @@ Open-source tools I build and maintain, for economic data analysis and for writi
 [Medicare and desegregation at The Nation](https://www.thenation.com/article/politics/health-care-freedom-medicare/) ·
 [Eight-hour workday at Boston Review](http://bostonreview.net/class-inequality-law-justice/mike-konczal-time-universal-measure-freedom)
 :::
-
-
