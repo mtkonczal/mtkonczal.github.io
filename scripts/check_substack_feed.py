@@ -6,13 +6,15 @@ import sys
 from datetime import timezone
 from email.utils import parsedate_to_datetime
 from pathlib import Path
-from urllib.request import urlopen
+from urllib.request import Request, urlopen
 from xml.etree import ElementTree
 
 
 FEED_URL = "https://newsletter.mikekonczal.com/feed"
 CACHE_PATH = Path("data/substack_feed.csv")
 POST_PREFIX = "https://newsletter.mikekonczal.com/p/"
+# Substack returns 403 to urllib's default "Python-urllib" user agent.
+USER_AGENT = "Mozilla/5.0 (compatible; mtkonczal-site-rss/1.0; +https://mtkonczal.github.io)"
 
 
 def feed_posts(xml_bytes):
@@ -48,7 +50,8 @@ def has_updates(xml_bytes, cache_path=CACHE_PATH):
 
 
 if __name__ == "__main__":
-    with urlopen(FEED_URL, timeout=20) as response:
+    request = Request(FEED_URL, headers={"User-Agent": USER_AGENT})
+    with urlopen(request, timeout=20) as response:
         changed = has_updates(response.read())
     print(f"changed={'true' if changed else 'false'}")
     if os.environ.get("GITHUB_OUTPUT"):
