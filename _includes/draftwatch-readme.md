@@ -1,3 +1,5 @@
+<img src="https://raw.githubusercontent.com/mtkonczal/Draftwatch/main/draftwatch/assets/icon.png" alt="DraftWatch logo: a white D on blue with equal coral and green revision marks" width="220">
+
 ![Draftwatch reviewing an agent's edits: your working text on the left in a real editor, the word diff against your baseline on the right. Click any change to revert it.](https://raw.githubusercontent.com/mtkonczal/Draftwatch/main/assets/draftwatch_screenshot.png)
 
 It’s difficult for writers to have AI act as an editor, because it’s never clear exactly what it changed. You can’t trust eyeballing it, but making the changes manually yourself means you don’t save much time. So you either ignore this potentially powerful writing helper, or you trust it at the risk that it does far more than you asked.
@@ -60,6 +62,7 @@ Click **terminal** in the toolbar to open a third panel running a real shell in 
 - Switchable baseline: last push, HEAD, or an earlier commit.
 - Jump between changes or collapse to a changes-only view for long documents.
 - Editable markdown preview alongside the raw source.
+- Search as you type with Ctrl/Cmd-F; Enter finds the next match and Shift+Enter finds the previous one.
 - You and the agent can both edit; your unsaved work is never clobbered when the file changes on disk.
 - Embedded terminal panel (macOS/Linux): run your agent next to the diff without leaving the window.
 - Resizable panels: drag the dividers to change the split (double-click to reset).
