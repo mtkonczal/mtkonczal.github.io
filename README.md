@@ -18,3 +18,8 @@ refresh without changing the economic-indicator cache, run:
 ```sh
 MK_MACRO_FROM_CACHE=1 quarto render index.qmd
 ```
+
+Use Quarto **1.6.42**, matching the refresh workflow. Commit rendered HTML
+together with `docs/site_libs/` and `docs/styles.css`: the HTML references
+versioned theme files, so publishing it without those assets can break the layout.
+This render also incorporates saved media hits from `data/work_database.csv`.

@@ -52,6 +52,9 @@ jobs:
 
       - uses: quarto-dev/quarto-actions/setup@v2
         if: steps.refresh.outputs.changed == 'true'
+        with:
+          # Match the local renderer and the existing site's shared assets.
+          version: '1.6.42'
 
       - name: Render homepage using the checked-in economic data
         if: steps.refresh.outputs.changed == 'true'
@@ -62,7 +65,8 @@ jobs:
       - name: Commit the updated feed and homepage
         if: steps.refresh.outputs.changed == 'true'
         run: |
-          git add data/substack_feed.csv docs/index.html docs/search.json docs/sitemap.xml
+          # Quarto's HTML references versioned assets. Publish them together.
+          git add data/substack_feed.csv docs/index.html docs/search.json docs/sitemap.xml docs/styles.css docs/site_libs
           git -c user.name="github-actions[bot]" \
               -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
               commit -m "Refresh newsletter from RSS"
