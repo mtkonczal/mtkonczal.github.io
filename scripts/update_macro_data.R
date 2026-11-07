@@ -19,10 +19,12 @@ cache_path <- file.path("data", "macro_strip.csv")
 out <- build_macro()
 
 # Fail loudly on anything structurally off before overwriting the cache.
-expected <- c("UNRATE_FULL", "SUPERCORE_YOY", "VU", "DIFFUSION")
+expected <- c("UNRATE_FULL", "SUPERCORE_YOY", "VU", "VACANCIES", "UNEMPLOY_LVL",
+              "DIFFUSION", "WOMEN_SHARE", "HEALTH_SHARE", "WOMEN_CHG",
+              "HEALTH_CHG", "TOTAL_CHG", "LABOR_SHARE", "TAYLOR", "FEDFUNDS")
 stopifnot(
   setequal(unique(out$series_id), expected),
-  nrow(out) > 4 * 24,             # each monthly series should have ~48+ obs
+  nrow(out) > length(expected) * 20,  # every series should have a long history
   max(out$date) > Sys.Date() - 120
 )
 
