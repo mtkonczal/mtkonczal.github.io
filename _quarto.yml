@@ -4,6 +4,12 @@ project:
   pre-render:
     - scripts/sync-draftwatch-readme.sh
     - scripts/sync-typst-pdf.sh
+  # Published press photos that no page links to. Quarto only copies files a
+  # page references, so without this a full render deletes them from docs/
+  # and breaks any outside links to mikekonczal.com/images/...
+  resources:
+    - images/mkonczal_headshot.jpg
+    - images/mkonczal_portrait.jpg
 
 website:
   title: "Mike Konczal"

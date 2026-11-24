@@ -913,9 +913,6 @@ main h2 {
    just below, so the table gets symmetric breathing room on both sides
    instead of an arbitrary new value. */
 #portfolio .mk-table + p { margin-top: 1.25rem; }
-/* Portfolio page intro: keep prose at a readable measure while the table
-   below uses the full content width. */
-#portfolio > p { max-width: 54ch; }  /* ~75 characters in this serif */
 /* Same content width as the homepage bands, so the table does not stretch
    across very wide screens now that the page runs flush to the sidebar. */
 #portfolio { max-width: var(--mk-band-max); }

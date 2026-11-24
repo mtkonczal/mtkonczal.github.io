@@ -114,6 +114,7 @@ ul.task-list li input[type="checkbox"] {
   <a class="mk-sidebar__back" href="index.html">← Back to main page</a>
   <ul class="mk-sidebar__nav">
     <li><a href="#top">Home</a></li>
+    <li><a href="#macro-heading">Data I'm Watching</a></li>
     <li><a href="#start-here">Start Here</a></li>
     <li><a href="#subscribe">Newsletter</a></li>
     <li><a href="#projects">Projects</a></li>
@@ -617,22 +618,34 @@ Start Here
     hashLinks.forEach(function (a) { a.classList.toggle('is-active', a === link); });
   }
 
+  // The active section is the last one whose top has scrolled above a line
+  // 25% down the viewport. At the very bottom of the page the last section
+  // wins outright: on tall windows the final band (Book) can't scroll far
+  // enough for its top to reach that line, so it would otherwise never light.
+  // (The previous IntersectionObserver band, 15-25% down, missed Book on any
+  // window taller than ~1300px and kept stale state after long jumps.)
   var current = null;
-  var io = new IntersectionObserver(function (obs) {
-    obs.forEach(function (o) {
-      entries.forEach(function (e) { if (e.el === o.target) e.visible = o.isIntersecting; });
-    });
-    var visible = entries.filter(function (e) { return e.visible; });
-    if (visible.length) {
-      visible.sort(function (a, b) {
-        return a.el.getBoundingClientRect().top - b.el.getBoundingClientRect().top;
+  function update() {
+    var line = window.innerHeight * 0.25;
+    var doc = document.documentElement;
+    var atBottom = window.innerHeight + window.scrollY >= doc.scrollHeight - 2;
+    var pick = entries[0];
+    if (atBottom) {
+      pick = entries[entries.length - 1];
+    } else {
+      entries.forEach(function (e) {
+        if (e.el.getBoundingClientRect().top <= line) pick = e;
       });
-      if (visible[0].link !== current) { current = visible[0].link; setActive(current); }
     }
-  }, { rootMargin: '-15% 0px -75% 0px', threshold: 0 });
+    if (pick.link !== current) { current = pick.link; setActive(current); }
+  }
 
-  entries.forEach(function (e) { io.observe(e.el); });
-  setActive(entries[0].link); // default: Home highlighted at the top
+  // update() reads six bounding boxes, cheap enough to run on every scroll
+  // event without requestAnimationFrame throttling.
+  window.addEventListener('scroll', update, { passive: true });
+  window.addEventListener('resize', update);
+  window.addEventListener('load', update);
+  update();
 })();
 </script>
 <script id="quarto-html-after-body" type="application/javascript">
