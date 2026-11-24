@@ -1,6 +1,6 @@
 ---
 title: "Portfolio"
-pagetitle: "Portfolio | Mike Konczal"
+pagetitle: "Portfolio"
 aliases:
   - writings.html
   - clips.html
