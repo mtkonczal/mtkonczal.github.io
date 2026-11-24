@@ -1,6 +1,6 @@
-# Shared data prep for the Portfolio archive (portfolio.qmd) and the archive
-# counts shown under "Recent work" on the homepage (index.qmd). Both pages
-# source this file so the tab mapping and the counts can't drift apart.
+# Data prep for the Portfolio archive (portfolio.qmd): the work database plus
+# newsletter posts, mapped to tabs, with per-tab counts. Kept in its own file
+# so the tab mapping and the counts live in one place.
 #
 # Logic moved verbatim from the former homepage Portfolio chunk; no change to
 # which rows appear or how they are categorized.

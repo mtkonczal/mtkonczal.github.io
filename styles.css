@@ -812,7 +812,7 @@ main h2 {
    segmented-pill shape it replaced. */
 .mk-tabs {
   display: flex;
-  width: 100%;            /* full-width tab bar: four equal segments span the table */
+  width: 100%;            /* full-width tab bar: five equal segments span the table */
   gap: 0;
   padding: 0;
   margin: 1.5rem 0 0;
@@ -888,6 +888,9 @@ main h2 {
     font-size: 0.9rem;
   }
   .mk-tab::after { bottom: 0; }
+  /* Five tabs in two columns would orphan the last one; give the default
+     Latest tab its own full row so the four categories sit 2x2 below it. */
+  .mk-tab[data-cat="Latest"] { grid-column: 1 / -1; }
 }
 /* Count rendered as a parenthetical so the number reads as a count, not a stray figure */
 .mk-tab__count {
