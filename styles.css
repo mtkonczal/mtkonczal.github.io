@@ -26,7 +26,7 @@
 
   --mk-ink:        #16242a;
   --mk-ink-soft:   #45555b;
-  --mk-mute:       #6a7577;  /* darkened from #7e8a8c: 3.46:1 -> 4.6:1 on --mk-paper */
+  --mk-mute:       #5f6a6c;  /* 5.4:1 on --mk-paper, 4.9-5.0:1 on the tinted bands (#6a7577 was 4.2:1 there) */
   --mk-rule:       #e0e5e6;
   --mk-rule-soft:  #eef1f2;
   --mk-bg-soft:    #f8fafb;
@@ -152,11 +152,22 @@ a:hover { color: var(--mk-blue-900); border-bottom-color: var(--mk-blue-700); }
   font-size: 0.82rem;
   font-weight: 600;
   text-align: center;
-  margin: 1.5rem 0 0;
-  border: none;
+  margin: 0;
+  border: 1px solid var(--mk-accent);
   letter-spacing: 0.01em;
 }
-.mk-sidebar__cta:hover { background: #fff; color: var(--mk-blue-900); }
+.mk-sidebar__cta:hover { background: #fff; border-color: #fff; color: var(--mk-blue-900); }
+/* Newsletter (filled) and Portfolio (outline) stacked at the foot of the rail. */
+.mk-sidebar__ctas {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin: 1.5rem 0 0;
+}
+.mk-sidebar__cta--ghost {
+  background: transparent;
+  border-color: rgba(255, 255, 255, 0.35);
+}
 .mk-sidebar__nav {
   list-style: none;
   padding: 0;
@@ -240,8 +251,8 @@ a:hover { color: var(--mk-blue-900); border-bottom-color: var(--mk-blue-700); }
    gutter is invisible; with colored bands it shows as white space between the
    sidebar and the band. Collapse the grid on the home page so the content runs
    flush to the fixed sidebar on the left and the viewport edge on the right. */
-body:has(.mk-hero) #quarto-content.page-columns { display: block; }
-body:has(.mk-hero) main#quarto-document-content.column-page {
+body:has(.mk-sidebar) #quarto-content.page-columns { display: block; }
+body:has(.mk-sidebar) main#quarto-document-content.column-page {
   width: 100%;
   margin: 0;
   padding: 0;
@@ -293,9 +304,7 @@ body:has(.mk-hero) main#quarto-document-content.column-page {
    The tint is the chart-blue accent at low opacity, the same "blue wash"
    already used for `code` and the active portfolio-tab accent. */
 .mk-content:has(.mk-hero) > #subscribe { background: rgba(48, 103, 168, 0.055); }
-.mk-content:has(.mk-hero) > #latest    { background: var(--mk-band-tint); }
-.mk-content:has(.mk-hero) > #portfolio { background: var(--mk-paper); }
-.mk-content:has(.mk-hero) > #projects  { background: var(--mk-band-tint); }
+.mk-content:has(.mk-hero) > #projects  { background: var(--mk-paper); }  /* paper, so it separates from the newsletter wash above */
 .mk-content:has(.mk-hero) > #book      { background: var(--mk-blue-900); }
 
 /* --- Heading accent: short rule under each section H2 --------------------- */
@@ -325,7 +334,6 @@ body:has(.mk-hero) main#quarto-document-content.column-page {
    (#book sets its own white heading color below for the dark band.) */
 #start-here > h2:first-child,
 #subscribe > h2:first-child,
-#latest > h2:first-child,
 #portfolio > h2:first-child,
 #projects > h2:first-child,
 #book > h2:first-child {
@@ -336,7 +344,6 @@ body:has(.mk-hero) main#quarto-document-content.column-page {
 }
 #start-here > h2:first-child::after,
 #subscribe > h2:first-child::after,
-#latest > h2:first-child::after,
 #portfolio > h2:first-child::after,
 #projects > h2:first-child::after,
 #book > h2:first-child::after {
@@ -403,7 +410,10 @@ body:has(.mk-hero) main#quarto-document-content.column-page {
   border-bottom: none;
   letter-spacing: 0.01em;
 }
-.mk-subscribe__btn:hover { background: var(--mk-accent-dk); border-bottom: none; }
+/* color is restated here because the global a:hover (0,1,1) outranks the
+   base .mk-subscribe__btn color (0,1,0) and would set the text to the same
+   petrol as this hover background. */
+.mk-subscribe__btn:hover { background: var(--mk-accent-dk); color: #fff; border-bottom: none; }
 
 .mk-subscribe__label {
   display: block;
@@ -452,12 +462,16 @@ body:has(.mk-hero) main#quarto-document-content.column-page {
   .mk-content:has(.mk-hero) > #title-block-header,
   .mk-content:has(.mk-hero) > .mk-hero,
   .mk-content:has(.mk-hero) > #macro-strip,
+  .mk-content:has(.mk-hero) > .mk-home-section,
   .mk-content:has(.mk-hero) > section.level2 {
     padding-top: 2.5rem;
     padding-bottom: 2.5rem;
     padding-inline: 1.25rem;
   }
   .mk-content:has(.mk-hero) > #macro-strip { padding-top: 1.15rem; padding-bottom: 1.15rem; }
+  /* The "Data I'm watching" label keeps its own tight top/bottom (it sits
+     right on the strip), so only its side gutter joins the other bands. */
+  .mk-content:has(.mk-hero) > #macro-heading { padding-inline: 1.25rem; }
 }
 
 /* Smooth in-page scrolling for the sidebar section links */
@@ -561,10 +575,12 @@ body { margin: 0; padding-left: 240px; }
 }
 /* Buy CTA: sits under the cover, in the copper that otherwise survives only
    on this band's links. The New Press page is the target rather than a
-   specific retailer, since it lists them. Selectors are #book-scoped so they
-   outrank the "#book a" band override just below and get a self-consistent
-   border/color on all four sides instead of a copper-vs-white mismatch. */
-#book .mk-book__buy {
+   specific retailer, since it lists them. Selectors carry the same
+   ".mk-content:has(.mk-hero) > #book" prefix as the band link override above
+   (styles.css ~357-364) so they outrank it, including on :hover, and get a
+   self-consistent border/color on all four sides instead of a copper-vs-white
+   mismatch. */
+.mk-content:has(.mk-hero) > #book .mk-book__buy {
   display: block;
   text-align: center;
   margin-top: 0.85rem;
@@ -577,7 +593,7 @@ body { margin: 0; padding-left: 240px; }
   letter-spacing: 0.01em;
   color: #e0a06a;
 }
-#book .mk-book__buy:hover {
+.mk-content:has(.mk-hero) > #book .mk-book__buy:hover {
   color: #0e2c33;
   background: #e0a06a;
   border-color: #e0a06a;
@@ -586,6 +602,11 @@ body { margin: 0; padding-left: 240px; }
 @media (max-width: 640px) {
   .mk-book { grid-template-columns: 1fr; gap: 1.25rem; }
   .mk-book__cover { max-width: 240px; }
+  /* Reviews / Media Appearances: Quarto writes style="width:49%" inline on
+     each .column, so only !important can stack them. Side by side at phone
+     width the link lists ran 3-4 words a line. */
+  #book .column { display: block; width: 100% !important; }
+  #book .column + .column { margin-top: 1.5rem; }
 }
 
 /* Content column */
@@ -653,7 +674,7 @@ body { margin: 0; padding-left: 240px; }
     margin: 0.6rem 0 0;
   }
   .mk-sidebar__nav a { font-size: 0.95rem; padding: 0.35rem 0.55rem; margin-left: 0; }
-  .mk-sidebar__cta { grid-area: cta; margin: 0.75rem 0 0; }
+  .mk-sidebar__ctas { grid-area: cta; margin: 0.75rem 0 0; }
 
   /* --- JS present: off-canvas drawer --- */
   .mk-js .mk-sidebar {
@@ -667,6 +688,9 @@ body { margin: 0; padding-left: 240px; }
     overflow-y: auto;
     display: flex;
     flex-direction: column;
+    /* Undo the no-JS row layout's align-items:center, which otherwise
+       shrink-wraps and centers the nav and buttons inside the drawer. */
+    align-items: stretch;
     padding: 1.75rem 1.5rem;
     transform: translateX(-100%);
     transition: transform 0.24s ease, box-shadow 0.24s ease;
@@ -684,7 +708,7 @@ body { margin: 0; padding-left: 240px; }
     margin: 1rem 0 auto;
   }
   .mk-js .mk-sidebar__nav a { font-size: 1.1rem; padding: 0.6rem 0.65rem; margin-left: -0.65rem; }
-  .mk-js .mk-sidebar__cta { margin: 1.5rem 0 0; }
+  .mk-js .mk-sidebar__ctas { margin: 1.5rem 0 0; }
   .mk-js .mk-sidebar__social {
     border-top: 1px solid rgba(255, 255, 255, 0.1);
     padding-top: 1rem;
@@ -780,85 +804,6 @@ main h2 {
 }
 
 /* ==========================================================================
-   Selected recent research and media — homepage highlight reel (index.qmd)
-   3-column grid rows (date · serif title/outlet · kind). The kind stays quiet
-   metadata, matching the Portfolio type column below.
-   ========================================================================== */
-
-.mk-recent { margin: 0.5rem 0 0; }
-
-.mk-recent__item {
-  display: grid;
-  grid-template-columns: 8.5rem 1fr auto;
-  column-gap: 1.75rem;
-  align-items: baseline;
-  padding: 1.25rem 1rem;           /* highlight sits wider than the text via padding, */
-  border-radius: 4px;              /* contained within the row so it never overflows   */
-  border-bottom: 1px solid var(--mk-rule);
-  text-decoration: none;
-  color: inherit;
-  transition: background 0.18s;
-}
-.mk-recent__item:hover { background: rgba(48, 103, 168, 0.07); text-decoration: none; }
-
-.mk-recent__date {
-  font-family: var(--mk-font-ui);
-  font-variant-numeric: tabular-nums;
-  font-size: 0.78rem;
-  letter-spacing: 0.04em;
-  color: var(--mk-mute);
-  white-space: nowrap;
-}
-
-.mk-recent__body { min-width: 0; }
-
-.mk-recent__title {
-  font-family: var(--mk-font-serif);
-  /* Sits a deliberate step above the portfolio table titles (1.18rem) so the
-     curated shortlist reads as the louder list, without overpowering the
-     section heading. */
-  font-size: 1.3rem;
-  font-weight: 600;
-  line-height: 1.25;
-  color: var(--mk-blue-900);
-  display: block;
-  text-wrap: pretty;
-}
-.mk-recent__item:hover .mk-recent__title { color: var(--mk-blue-700); }
-
-.mk-recent__meta {
-  margin-top: 0.25rem;
-  font-size: 0.9rem;
-  color: var(--mk-mute);
-}
-.mk-recent__outlet { font-style: italic; }
-
-/* Kind is quiet metadata, consistent with the portfolio type column below. */
-.mk-recent__type {
-  font-family: var(--mk-font-ui);
-  font-size: 0.78rem;
-  font-weight: 600;
-  letter-spacing: 0.005em;
-  color: var(--mk-ink-soft);
-  white-space: nowrap;
-  align-self: center;
-}
-
-@media (max-width: 640px) {
-  .mk-recent__item {
-    grid-template-columns: 1fr auto;
-    grid-template-areas: "date kind" "body body";
-    row-gap: 0.4rem;
-    column-gap: 1rem;
-    padding: 1rem;
-  }
-  .mk-recent__date { grid-area: date; }
-  .mk-recent__type { grid-area: kind; justify-self: end; }
-  .mk-recent__body { grid-area: body; }
-  .mk-recent__title { font-size: 1.2rem; }
-}
-
-/* ==========================================================================
    Portfolio — segmented tab control above the combined table
    ========================================================================== */
 
@@ -906,6 +851,12 @@ main h2 {
 }
 .mk-tab:hover { color: var(--mk-blue-900); }
 .mk-tab:focus-visible { outline: 2px solid var(--mk-blue-500); outline-offset: 2px; }
+/* Same keyboard ring on the homepage's whole-card links and buttons, which
+   otherwise fell back to the browser default. */
+.mk-start__item:focus-visible,
+.mk-start__more:focus-visible,
+.mk-project:focus-visible,
+.mk-btn:focus-visible { outline: 2px solid var(--mk-blue-500); outline-offset: 2px; }
 .mk-tab.is-active { color: var(--mk-blue-900); }
 /* Active tab carries the full blue rule; hover previews it in a faint grey. */
 .mk-tab::after {
@@ -959,6 +910,12 @@ main h2 {
    just below, so the table gets symmetric breathing room on both sides
    instead of an arbitrary new value. */
 #portfolio .mk-table + p { margin-top: 1.25rem; }
+/* Portfolio page intro: keep prose at a readable measure while the table
+   below uses the full content width. */
+#portfolio > p { max-width: 54ch; }  /* ~75 characters in this serif */
+/* Same content width as the homepage bands, so the table does not stretch
+   across very wide screens now that the page runs flush to the sidebar. */
+#portfolio { max-width: var(--mk-band-max); }
 
 /* ==========================================================================
    Writings & Clips lists — DataTables (DT::datatable) override
@@ -1207,22 +1164,30 @@ main h2 {
 /* Mobile */
 @media (max-width: 720px) {
   .mk-table table.dataTable thead { display: none; }
-  .mk-table table.dataTable tbody td {
-    display: block;
-    width: 100% !important;
-    border-top: none;
-    padding: 0.15rem 0;
-  }
+  /* Each row becomes a two-line card: year, month and type share one meta
+     line (type pushed right), the title spans the full width below. Stacking
+     all four cells made every row ~250px tall at phone width. */
   .mk-table table.dataTable tbody tr {
-    display: block;
+    display: grid;
+    grid-template-columns: auto auto 1fr;
+    column-gap: 0.6rem;
+    align-items: baseline;
     padding: 1rem 0;
     border-top: 1px solid var(--mk-rule);
   }
   .mk-table table.dataTable tbody tr:first-child { border-top: none; }
+  .mk-table table.dataTable tbody td {
+    display: block;
+    width: auto !important;
+    border-top: none;
+    padding: 0;
+  }
   .mk-table td.mk-col-year { font-size: 0.8rem; color: var(--mk-mute); font-weight: 600; }
-  .mk-table td.mk-col-month { padding-top: 0; }
-  .mk-table td.mk-col-type { padding-top: 0.35rem; }
-  .mk-table td.mk-col-title { padding-top: 0.35rem !important; }
+  .mk-table td.mk-col-month { font-size: 0.8rem; }
+  .mk-table td.mk-col-type { justify-self: end; }
+  .mk-table td.mk-col-title,
+  .mk-table td.dataTables_empty { grid-column: 1 / -1; }
+  .mk-table td.mk-col-title { padding-top: 0.4rem !important; }
 }
 
 /* ==========================================================================
@@ -1494,7 +1459,7 @@ img.mk-dw-shot {
   margin: 0 0.35rem;
   font-size: 0.8rem;
   font-weight: 500;
-  color: rgba(255, 255, 255, 0.45);
+  color: rgba(255, 255, 255, 0.6);   /* >=5.6:1 on both strip backgrounds */
 }
 /* Wrapper is the positioning context for the reference-line label; the top
    margin lives here (not on the SVG) so the label's `top` px lines up with the
@@ -1527,10 +1492,10 @@ img.mk-dw-shot {
   transform: translateY(-50%);
   font-family: var(--mk-font-ui);
   font-variant-numeric: tabular-nums;
-  font-size: 0.62rem;
+  font-size: 0.75rem;
   font-weight: 600;
   line-height: 1;
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.6);
   background: var(--mk-blue-900);
   padding: 0 3px 0 1px;
   pointer-events: none;
@@ -1539,9 +1504,9 @@ img.mk-dw-shot {
    the y-axis measures. Sits just below the chart, above the legend. */
 .mk-macro__unit {
   font-family: var(--mk-font-ui);
-  font-size: 0.66rem;
+  font-size: 0.75rem;
   line-height: 1.2;
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.6);
   margin-top: 0.3rem;
 }
 /* Two-line chart legend (Taylor rule vs. fed funds): a short colour bar keyed
@@ -1577,8 +1542,11 @@ img.mk-dw-shot {
   font-size: 0.78rem;
   color: rgba(255, 255, 255, 0.5);
 }
-.mk-macro__date--start { color: rgba(255, 255, 255, 0.4); }
-.mk-macro__date--end   { color: rgba(255, 255, 255, 0.6); font-weight: 600; }
+/* White at 0.6 is the floor for small text on the strip: 5.6:1 on the lighter
+   cell background (#1a373d), 6.2:1 on the band. The end date stays brighter so
+   the latest observation still reads first. */
+.mk-macro__date--start { color: rgba(255, 255, 255, 0.6); }
+.mk-macro__date--end   { color: rgba(255, 255, 255, 0.8); font-weight: 600; }
 @media (max-width: 900px) {
   .mk-macro__cells { grid-template-columns: 1fr 1fr; gap: 1.25rem; }
 }
@@ -1618,6 +1586,14 @@ img.mk-dw-shot {
    ========================================================================== */
 
 .mk-start { margin: 0.5rem 0 0; }
+/* "Click here to see my full portfolio of work." under the Start Here list:
+   the homepage's one route into the full archive (portfolio.html). */
+#start-here p:has(> .mk-start__more) { margin: 1.5rem 0 0; }
+.mk-start__more {
+  font-family: var(--mk-font-ui);
+  font-size: 0.95rem;
+  font-weight: 600;
+}
 
 .mk-start__item {
   display: grid;

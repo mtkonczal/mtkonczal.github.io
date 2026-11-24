@@ -1,0 +1,119 @@
+---
+title: "Portfolio"
+pagetitle: "Portfolio | Mike Konczal"
+aliases:
+  - writings.html
+  - clips.html
+execute:
+  echo: false
+  warning: false
+---
+
+::: {#portfolio}
+
+A combined record of my work: writing, research, media appearances, and press hits. Use the tabs to switch between them, or search within any category. Feel free to contact me if you'd like me to write for you or join you on air.
+
+```{r setup, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(DT)
+source("scripts/fetch_substack.R")
+source("scripts/portfolio_data.R")
+
+posts <- load_substack_posts()
+stopifnot(nrow(posts) >= 1)
+
+combined <- load_portfolio(posts) %>%
+  mutate(
+    Year      = year(Date),
+    Month     = format(Date, "%b"),
+    TitleHTML = paste0(
+      '<a href="', htmlEscape(Link, attribute = TRUE),
+      '" target="_blank" rel="noopener">', htmlEscape(Title), '</a>',
+      '<span class="mk-outlet">', htmlEscape(Outlet), '</span>'
+    ),
+    TypeHTML  = paste0('<span class="mk-type">', TypeLab, '</span>'),
+    # Hidden filter column: every row carries its category; rows flagged
+    # Highlight == "X" (Site Manager's "Highlights") also carry "Latest", so
+    # they show under the Latest tab and their own category tab.
+    Tabs = if_else(Highlight %in% "X", paste(Category, "Latest"), Category)
+  ) %>%
+  select(Tabs, Category, Year, Month, Type = TypeHTML, Title = TitleHTML)
+
+n <- portfolio_counts(combined)
+n_latest <- sum(str_detect(combined$Tabs, "Latest"))
+combined <- select(combined, -Category)
+```
+
+```{r tabs, results='asis'}
+cat(sprintf('
+<div id="mk-portfolio-tabs" class="mk-tabs" role="tablist" aria-label="Filter portfolio by type">
+  <button type="button" class="mk-tab is-active" role="tab" data-cat="Latest" aria-selected="true">Latest<span class="mk-tab__count">%d</span></button>
+  <button type="button" class="mk-tab" role="tab" data-cat="Research" aria-selected="false">Research<span class="mk-tab__count">%d</span></button>
+  <button type="button" class="mk-tab" role="tab" data-cat="Writing" aria-selected="false">Writing<span class="mk-tab__count">%d</span></button>
+  <button type="button" class="mk-tab" role="tab" data-cat="Media" aria-selected="false">Media<span class="mk-tab__count">%d</span></button>
+  <button type="button" class="mk-tab" role="tab" data-cat="Press" aria-selected="false">Press<span class="mk-tab__count">%d</span></button>
+</div>
+', n_latest, n[["Research"]], n[["Writing"]], n[["Media"]], n[["Press"]]))
+```
+
+::: {.mk-table}
+
+```{r portfolio_table, message=FALSE, warning=FALSE}
+datatable(
+  combined,
+  rownames = FALSE,
+  escape   = FALSE,
+  class    = "row-border compact",
+  # Ellipsis/dash below are \u-escaped, not literal bytes: quarto transliterates
+  # non-ASCII source bytes in an R chunk into visible "<U+2026>"-style text (see
+  # the fix_title_case note in scripts/portfolio_data.R), so writing the literal
+  # character here would corrupt it the same way "Search writing\u2026" was
+  # showing up as literal text.
+  callback = JS("
+    var labels = { Latest: 'Search latest\u2026', Writing: 'Search writing\u2026', Research: 'Search research\u2026', Media: 'Search media\u2026', Press: 'Search press\u2026' };
+    var box = $(table.table().container()).find('input[type=search]');
+    function activate(cat) {
+      $('#mk-portfolio-tabs .mk-tab').each(function() {
+        var on = this.getAttribute('data-cat') === cat;
+        this.classList.toggle('is-active', on);
+        this.setAttribute('aria-selected', on ? 'true' : 'false');
+      });
+      box.attr('placeholder', labels[cat] || '').attr('aria-label', labels[cat] || '');
+      table.column(0).search(cat).draw();
+    }
+    $('#mk-portfolio-tabs .mk-tab').on('click', function() {
+      activate(this.getAttribute('data-cat'));
+    });
+    activate('Latest');
+  "),
+  options  = list(
+    pageLength   = 10,
+    lengthMenu   = c(10, 25, 50, 100),
+    dom          = "<'top'fl>rt<'bottom'ip>",
+    autoWidth    = FALSE,
+    order        = list(list(1, 'desc')),
+    columnDefs   = list(
+      list(targets = 0, visible = FALSE, searchable = TRUE),
+      list(targets = 1, className = "mk-col-year"),
+      list(targets = 2, className = "mk-col-month"),
+      list(targets = 3, className = "mk-col-type", orderable = FALSE),
+      list(targets = 4, className = "mk-col-title")
+    ),
+    language = list(
+      search       = "",
+      searchPlaceholder = "Search latest\u2026",
+      lengthMenu   = "Show _MENU_",
+      info         = "_START_\u2013_END_ of _TOTAL_",
+      infoEmpty    = "No results",
+      infoFiltered = "",
+      paginate     = list(previous = "\u2039 Prev", `next` = "Next \u203a")
+    )
+  )
+)
+```
+
+:::
+
+You can [read my brief résumé here](files/resume_brief.pdf){target="_blank" rel="noopener"}.
+
+:::

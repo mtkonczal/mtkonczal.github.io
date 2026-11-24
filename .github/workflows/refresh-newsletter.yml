@@ -62,11 +62,16 @@ jobs:
           MK_MACRO_FROM_CACHE: "1"
         run: quarto render index.qmd
 
-      - name: Commit the updated feed and homepage
+      # The Portfolio archive lists newsletter posts in its Writing tab.
+      - name: Render portfolio archive
+        if: steps.refresh.outputs.changed == 'true'
+        run: quarto render portfolio.qmd
+
+      - name: Commit the updated feed, homepage, and portfolio
         if: steps.refresh.outputs.changed == 'true'
         run: |
           # Quarto's HTML references versioned assets. Publish them together.
-          git add data/substack_feed.csv docs/index.html docs/search.json docs/sitemap.xml docs/styles.css docs/site_libs
+          git add data/substack_feed.csv docs/index.html docs/portfolio.html docs/search.json docs/sitemap.xml docs/styles.css docs/site_libs
           git -c user.name="github-actions[bot]" \
               -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
               commit -m "Refresh newsletter from RSS"

@@ -5,9 +5,6 @@ title-prefix: ""
 description: "Mike Konczal is VP of Policy and Research at the Economic Security Project, a former White House chief economist, and author of Freedom from the Market."
 aliases:
   - about.html
-  - portfolio.html
-  - writings.html
-  - clips.html
   - freedom_from_the_market.html
 execute:
   echo: false
@@ -45,87 +42,6 @@ Specializing in economic data analysis and policy research, Mike is a respected 
   <a href="mailto:konczal@gmail.com?subject=Media%20or%20event%20inquiry">Media &amp; event inquiries</a>
 </nav>
 :::
-:::
-
-::: {#start-here .mk-home-section}
-<h2>Start Here</h2>
-
-New here? These are the pieces that best explain what I work on.
-
-```{r start_here, echo=FALSE, message=FALSE, warning=FALSE}
-library(tidyverse)
-library(lubridate)
-library(htmltools)
-
-fix_title_case <- function(x) {
-  x <- str_to_title(x)
-  for (w in c(" A "," An "," The "," And "," But "," For "," Of "," In "," On "," To "," With ")) {
-    x <- str_replace_all(x, w, str_to_lower(w))
-  }
-  # ASCII \u escapes, NOT literal smart-quote chars: quarto transliterates
-  # non-ASCII source bytes to "<U+00D4>" text, which would turn this class into
-  # [<U+00D4>...] and silently strip D/U/5/0/4 from every title.
-  str_remove_all(x, "[\\u00d4\\u00d5]")
-}
-
-# Curation lives in data/start_here.csv (an ordered list keyed by Link, managed
-# from the Site Manager app's "Start here" tab). Title/outlet/date/type and the
-# descriptive Excerpt come from the work database so they can't drift; a row may
-# still carry its own values (the book, which isn't in the database). The line
-# under each title is the item's Excerpt.
-blank_na <- function(x) {
-  x <- as.character(x)
-  ifelse(is.na(x) | str_trim(x) %in% c("", "NA"), NA_character_, x)
-}
-
-db <- read_csv("data/work_database.csv", show_col_types = FALSE) %>%
-  transmute(
-    Link,
-    DBTitle   = fix_title_case(`Original Title`),
-    DBOutlet  = Outlet,
-    DBYear    = year(as.Date(Date)),
-    DBExcerpt = Excerpt,
-    DBType    = case_when(
-      str_detect(Outlet, "Testimony") ~ "Testimony",
-      Format == "White Paper"         ~ "Research",
-      TRUE                            ~ Format
-    )
-  )
-
-sh <- read_csv("data/start_here.csv", show_col_types = FALSE) %>%
-  left_join(db, by = "Link") %>%
-  mutate(
-    Title  = coalesce(blank_na(Title),  DBTitle),
-    Outlet = coalesce(blank_na(Outlet), DBOutlet),
-    Year   = coalesce(Year, DBYear),
-    Type   = coalesce(blank_na(Type),   DBType),
-    Desc   = coalesce(blank_na(Excerpt), blank_na(DBExcerpt))
-  ) %>%
-  arrange(Rank)
-
-# Every curated row must resolve to a title; catch broken Links at render time.
-stopifnot(!any(is.na(sh$Title)))
-
-items <- pmap(sh, function(Rank, Link, Title, Outlet, Year, Desc, ...) {
-  internal <- str_starts(Link, "#")
-  featured <- Rank == 1
-  tags$a(
-    class  = if (featured) "mk-start__item mk-start__item--featured" else "mk-start__item",
-    href   = Link,
-    target = if (!internal) "_blank",
-    rel    = if (!internal) "noopener",
-    # Keep one reading order for every item; CSS lifts the featured item's
-    # label above its title while leaving the title first in the markup.
-    tags$div(class = "mk-start__title", Title),
-    tags$div(class = "mk-start__meta",
-      if (featured) tags$span(class = "mk-start__feature-label", "Current focus"),
-      tags$span(class = "mk-start__outlet", paste0(Outlet, ", ", Year))),
-    if (!is.na(Desc)) tags$div(class = "mk-start__impact", HTML(Desc))
-  )
-})
-
-tags$div(class = "mk-start", !!!items)
-```
 :::
 
 <!-- ==========================================================================
@@ -183,11 +99,11 @@ va <- series_of("VACANCIES")      # job openings level (thousands) — numerator
 ul <- series_of("UNEMPLOY_LVL")   # unemployment level (thousands) — denominator of VU
 di <- series_of("DIFFUSION")      # 1-month payroll diffusion index (0-100)
 ws <- series_of("WOMEN_SHARE")    # women's share of trailing-12m net job gains (%)
-hs <- series_of("HEALTH_SHARE")   # ed & health share of trailing-12m net gains (%)
+hs <- series_of("HEALTH_SHARE")   # health care (CES6562000101) share of trailing-12m net gains (%)
 wc <- series_of("WOMEN_CHG")      # 12-month change in women's jobs (thousands)
 hc <- series_of("HEALTH_CHG")     # 12-month change in health care jobs (thousands)
 tc <- series_of("TOTAL_CHG")      # 12-month change in total nonfarm (thousands)
-ls <- series_of("LABOR_SHARE")    # nonfarm business labor share (index 2017=100)
+ls <- series_of("LABOR_SHARE")    # nonfarm business labor share, percent (index rescaled in build_macro.R)
 ty <- series_of("TAYLOR")         # Taylor-rule policy rate estimate (percent)
 ff <- series_of("FEDFUNDS")       # effective federal funds rate (percent)
 
@@ -270,7 +186,7 @@ spark_slice <- function(dates, v, v2 = NULL) {
 # Taylor-rule/fed-funds chart; `lab`/`lab2` prefix each line's hover tips.
 spark_svg <- function(dates, v, fmt, ref = NULL, ref_fmt = NULL, v2 = NULL,
                       col = "#7fb3d8", col2 = "#ef9a9a", dot = "#ffffff",
-                      lab = NULL, lab2 = NULL, w = 150, h = 100) {
+                      lab = NULL, lab2 = NULL, aria = NULL, w = 150, h = 100) {
   s <- spark_slice(dates, v, v2); dates <- s$dates; v <- s$v; v2 <- s$v2
   # Shared vertical domain across both lines and the reference value.
   rng <- range(c(v, v2, ref), na.rm = TRUE); if (diff(rng) == 0) rng <- rng + c(-1, 1)
@@ -314,10 +230,14 @@ spark_svg <- function(dates, v, fmt, ref = NULL, ref_fmt = NULL, v2 = NULL,
   }
   y <- scale_y(v)
 
+  # role="img" makes screen readers treat the chart as one image, so it needs
+  # an accessible name; without aria-label it is announced as just "image".
+  aria_attr <- if (is.null(aria)) "" else
+    sprintf(' aria-label="%s"', htmlEscape(aria, attribute = TRUE))
   svg <- sprintf(
-    paste0('<svg class="mk-macro__spark" viewBox="0 0 %d %d" width="%d" height="%d" role="img" preserveAspectRatio="none">',
+    paste0('<svg class="mk-macro__spark" viewBox="0 0 %d %d" width="%d" height="%d" role="img"%s preserveAspectRatio="none">',
            '%s%s%s%s%s</svg>'),
-    w, h, w, h, ref_line, line2, poly(y, col), enddot(y, dot), hits(y, v, pref(lab)))
+    w, h, w, h, aria_attr, ref_line, line2, poly(y, col), enddot(y, dot), hits(y, v, pref(lab)))
   sprintf('<div class="mk-macro__spark-wrap">%s%s</div>', svg, ref_label)
 }
 
@@ -402,6 +322,9 @@ cells <- list(
          tags$span(style = paste0("color:", tay_col), pct1(tail(ty$value, 1))),
          tags$span(class = "mk-macro__vs", "vs"),
          tags$span(style = paste0("color:", fed_col), pct1(tail(ff$value, 1)))),
+       # Plain-text twin of the coloured headline, for the chart's aria-label.
+       aria_value = paste0("Taylor rule ", pct1(tail(ty$value, 1)),
+                           " vs. fed funds ", pct1(tail(ff$value, 1))),
        dates = ff$date, series = ff$value, fmt = pct1, d = max(ff$date),
        v2 = ty$value, col = fed_col, col2 = tay_col, dot = fed_col, lab = "Fed funds", lab2 = "Taylor",
        legend = tags$div(class = "mk-macro__legend",
@@ -417,6 +340,14 @@ cells <- list(
 # as two rows.
 cell_tags <- map(cells, function(cc) {
     win <- spark_window(cc$dates, cc$series)
+    # Accessible name for the sparkline: title, the span drawn, the headline
+    # value, and (for two-line charts) what the two lines are.
+    aria <- paste0(
+      cc$label, ", ", format(win$start, "%b %Y"), " to ", format(win$end, "%b %Y"),
+      ", latest ", or_default(cc[["aria_value"]], cc$value),
+      # (The dual Taylor cell's headline already names both lines.)
+      if (!is.null(cc[["lab2"]]) && !isTRUE(cc$dual))
+        paste0(". Chart: ", cc[["lab"]], " vs. ", cc[["lab2"]]) else "")
     tags$div(class = "mk-macro__cell",
       tags$div(class = "mk-macro__label", cc$label),
       tags$div(class = if (isTRUE(cc$dual)) "mk-macro__value mk-macro__value--dual" else "mk-macro__value",
@@ -429,7 +360,7 @@ cell_tags <- map(cells, function(cc) {
                      col  = or_default(cc[["col"]],  "#7fb3d8"),
                      col2 = or_default(cc[["col2"]], "#ef9a9a"),
                      dot  = or_default(cc[["dot"]],  "#ffffff"),
-                     lab  = cc[["lab"]], lab2 = cc[["lab2"]])),
+                     lab  = cc[["lab"]], lab2 = cc[["lab2"]], aria = aria)),
       # Axis unit caption (only cells that set `unit`, e.g. the two job-change
       # charts): names what the y-axis measures. htmltools drops NULL children.
       if (!is.null(cc[["unit"]])) tags$div(class = "mk-macro__unit", cc[["unit"]]),
@@ -521,6 +452,90 @@ tags$div(class = "mk-macro__cells", id = "mk-macro-cells",
 </script>
 ```
 
+::: {#start-here .mk-home-section}
+<h2>Start Here</h2>
+
+New here? These are the pieces that best explain what I work on.
+
+```{r start_here, echo=FALSE, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(lubridate)
+library(htmltools)
+
+fix_title_case <- function(x) {
+  x <- str_to_title(x)
+  for (w in c(" A "," An "," The "," And "," But "," For "," Of "," In "," On "," To "," With ")) {
+    x <- str_replace_all(x, w, str_to_lower(w))
+  }
+  # ASCII \u escapes, NOT literal smart-quote chars: quarto transliterates
+  # non-ASCII source bytes to "<U+00D4>" text, which would turn this class into
+  # [<U+00D4>...] and silently strip D/U/5/0/4 from every title.
+  str_remove_all(x, "[\\u00d4\\u00d5]")
+}
+
+# Curation lives in data/start_here.csv (an ordered list keyed by Link, managed
+# from the Site Manager app's "Start here" tab). Title/outlet/date/type and the
+# descriptive Excerpt come from the work database so they can't drift; a row may
+# still carry its own values (the book, which isn't in the database). The line
+# under each title is the item's Excerpt.
+blank_na <- function(x) {
+  x <- as.character(x)
+  ifelse(is.na(x) | str_trim(x) %in% c("", "NA"), NA_character_, x)
+}
+
+db <- read_csv("data/work_database.csv", show_col_types = FALSE) %>%
+  transmute(
+    Link,
+    DBTitle   = fix_title_case(`Original Title`),
+    DBOutlet  = Outlet,
+    DBYear    = year(as.Date(Date)),
+    DBExcerpt = Excerpt,
+    DBType    = case_when(
+      str_detect(Outlet, "Testimony") ~ "Testimony",
+      Format == "White Paper"         ~ "Research",
+      TRUE                            ~ Format
+    )
+  )
+
+sh <- read_csv("data/start_here.csv", show_col_types = FALSE) %>%
+  left_join(db, by = "Link") %>%
+  mutate(
+    Title  = coalesce(blank_na(Title),  DBTitle),
+    Outlet = coalesce(blank_na(Outlet), DBOutlet),
+    Year   = coalesce(Year, DBYear),
+    Type   = coalesce(blank_na(Type),   DBType),
+    Desc   = coalesce(blank_na(Excerpt), blank_na(DBExcerpt))
+  ) %>%
+  arrange(Rank)
+
+# Every curated row must resolve to a title; catch broken Links at render time.
+stopifnot(!any(is.na(sh$Title)))
+
+items <- pmap(sh, function(Rank, Link, Title, Outlet, Year, Desc, ...) {
+  internal <- str_starts(Link, "#")
+  featured <- Rank == 1
+  tags$a(
+    class  = if (featured) "mk-start__item mk-start__item--featured" else "mk-start__item",
+    href   = Link,
+    target = if (!internal) "_blank",
+    rel    = if (!internal) "noopener",
+    # Keep one reading order for every item; CSS lifts the featured item's
+    # label above its title while leaving the title first in the markup.
+    tags$div(class = "mk-start__title", Title),
+    tags$div(class = "mk-start__meta",
+      if (featured) tags$span(class = "mk-start__feature-label", "Current focus"),
+      tags$span(class = "mk-start__outlet", paste0(Outlet, ", ", Year))),
+    if (!is.na(Desc)) tags$div(class = "mk-start__impact", HTML(Desc))
+  )
+})
+
+tags$div(class = "mk-start", !!!items)
+```
+
+[Click here to see my full portfolio of work.](portfolio.html){.mk-start__more}
+:::
+
+
 ## The Newsletter {#subscribe}
 
 ::: {.mk-subscribe}
@@ -539,7 +554,7 @@ library(htmltools)
 source("scripts/fetch_substack.R")
 
 # Fetch at render time and retain older RSS items in the committed cache.
-# The newsletter ribbon shows three; the Portfolio below uses the full cache.
+# The newsletter ribbon shows three posts.
 posts <- load_substack_posts()
 stopifnot(nrow(posts) >= 1)
 
@@ -554,216 +569,6 @@ tags$div(class = "mk-subscribe__ribbon", !!!rows)
 ```
 
 :::
-
-## Selected recent research and media {#latest}
-
-A running shortlist of my most recent work.
-
-```{r recent_work, echo=FALSE, message=FALSE, warning=FALSE}
-library(tidyverse)
-library(lubridate)
-library(htmltools)
-
-fix_title_case <- function(x) {
-  x <- str_to_title(x)
-  for (w in c(" A "," An "," The "," And "," But "," For "," Of "," In "," On "," To "," With ")) {
-    x <- str_replace_all(x, w, str_to_lower(w))
-  }
-  # strip stray smart-quote bytes that snuck into the CSV
-  x <- str_remove_all(x, "[\u00d4\u00d5]")
-  x
-}
-
-recent <- read_csv("data/work_database.csv", show_col_types = FALSE) %>%
-  mutate(
-    Title = fix_title_case(`Original Title`),
-    Date  = as.Date(Date),  # ISO YYYY-MM-DD in the CSV
-    Type  = str_replace_all(Format, "White Paper", "Research")
-  ) %>%
-  filter(Highlight == "X") %>%
-  arrange(desc(Date)) %>%
-  head(5)   # five most recent highlighted items
-
-items <- pmap(recent, function(Date, Title, Outlet, Type, Link, ...) {
-  tags$a(
-    class = "mk-recent__item",
-    href  = Link,
-    target = "_blank",
-    rel = "noopener",
-    tags$div(class = "mk-recent__date",
-             format(Date, "%b %d, %Y")),
-    tags$div(class = "mk-recent__body",
-             tags$div(class = "mk-recent__title", Title),
-             tags$div(class = "mk-recent__meta",
-                      tags$span(class = "mk-recent__outlet", Outlet))),
-    tags$div(class = "mk-recent__type", Type)
-  )
-})
-
-# Make the whole row a link by switching the wrapper element
-htmltools::tagList(
-  tags$div(class = "mk-recent", !!!items)
-)
-```
-
-## Portfolio {#portfolio}
-
-A combined record of my work: writing, research, media appearances, and press hits. Use the tabs to switch between them, or search within any category. Feel free to contact me if you'd like me to write for you or join you on air.
-
-```{r setup, message=FALSE, warning=FALSE}
-library(tidyverse)
-library(lubridate)
-library(DT)
-library(htmltools)
-
-fix_title_case <- function(x) {
-  x <- str_to_title(x)
-  for (w in c(" A "," An "," The "," And "," But "," For "," Of "," In "," On "," To "," With ")) {
-    x <- str_replace_all(x, w, str_to_lower(w))
-  }
-  # ASCII \u escapes, NOT literal smart-quote chars: quarto transliterates
-  # non-ASCII source bytes to "<U+00D4>" text, which would turn this class into
-  # [<U+00D4>...] and silently strip D/U/5/0/4 from every title.
-  str_remove_all(x, "[\\u00d4\\u00d5]")
-}
-
-work <- read_csv("data/work_database.csv", show_col_types = FALSE)
-
-# New newsletter posts appear in Writing without going through the Site
-# Manager review queue. Database entries win when a link is already curated.
-link_key <- function(x) str_remove(str_remove(x, "[?#].*$"), "/$")
-newsletter_work <- posts %>%
-  filter(!link_key(link) %in% link_key(work$Link)) %>%
-  transmute(
-    Date = date, `Original Title` = title, Outlet = "Substack",
-    Format = "Article", Link = link, Highlight = NA_character_,
-    Author = NA_character_, Excerpt = NA_character_
-  )
-
-raw <- bind_rows(work, newsletter_work) %>%
-  mutate(
-    Title = if_else(Link %in% newsletter_work$Link,
-                    `Original Title`, fix_title_case(`Original Title`)),
-    Date  = as.Date(Date)  # ISO YYYY-MM-DD in the CSV
-  ) %>%
-  arrange(desc(Date))
-
-# Map each Format to a top-level tab. To add a tab later, extend this mapping
-# and add a matching <button> in the `tabs` chunk below.
-cat_for <- function(format) {
-  case_when(
-    format %in% c("Article", "Book Review")          ~ "Writing",
-    format == "White Paper"                          ~ "Research",
-    format %in% c("TV", "Radio", "Podcast", "Panel") ~ "Media",
-    format == "Quote"                                ~ "Press",
-    TRUE                                             ~ NA_character_
-  )
-}
-
-# Label shown in the Type column (distinct from the tab/Category above).
-type_label <- function(format) {
-  case_when(
-    format == "White Paper" ~ "Research",
-    format == "Quote"       ~ "Press",
-    TRUE                    ~ format
-  )
-}
-
-combined <- raw %>%
-  mutate(
-    Category = cat_for(Format),
-    TypeLab  = type_label(Format)
-  ) %>%
-  filter(!is.na(Category)) %>%
-  mutate(
-    Year      = year(Date),
-    Month     = format(Date, "%b"),
-    TitleHTML = paste0(
-      '<a href="', htmlEscape(Link, attribute = TRUE),
-      '" target="_blank" rel="noopener">', htmlEscape(Title), '</a>',
-      '<span class="mk-outlet">', htmlEscape(Outlet), '</span>'
-    ),
-    TypeHTML  = paste0('<span class="mk-type">', TypeLab, '</span>')
-  ) %>%
-  select(Category, Year, Month, Type = TypeHTML, Title = TitleHTML)
-
-# Counts per tab, in display order.
-tab_n      <- function(cat) sum(combined$Category == cat)
-n_writing  <- tab_n("Writing")
-n_research <- tab_n("Research")
-n_media    <- tab_n("Media")
-n_press    <- tab_n("Press")
-```
-
-```{r tabs, results='asis'}
-cat(sprintf('
-<div id="mk-portfolio-tabs" class="mk-tabs" role="tablist" aria-label="Filter portfolio by type">
-  <button type="button" class="mk-tab is-active" role="tab" data-cat="Research" aria-selected="true">Research<span class="mk-tab__count">%d</span></button>
-  <button type="button" class="mk-tab" role="tab" data-cat="Writing" aria-selected="false">Writing<span class="mk-tab__count">%d</span></button>
-  <button type="button" class="mk-tab" role="tab" data-cat="Media" aria-selected="false">Media<span class="mk-tab__count">%d</span></button>
-  <button type="button" class="mk-tab" role="tab" data-cat="Press" aria-selected="false">Press<span class="mk-tab__count">%d</span></button>
-</div>
-', n_research, n_writing, n_media, n_press))
-```
-
-::: {.mk-table}
-
-```{r portfolio_table, message=FALSE, warning=FALSE}
-datatable(
-  combined,
-  rownames = FALSE,
-  escape   = FALSE,
-  class    = "row-border compact",
-  # Ellipsis/dash below are \u-escaped, not literal bytes: quarto transliterates
-  # non-ASCII source bytes in an R chunk into visible "<U+2026>"-style text (see
-  # the fix_title_case note above), so writing the literal character here would
-  # corrupt it the same way "Search writing\u2026" was showing up as literal text.
-  callback = JS("
-    var labels = { Writing: 'Search writing\u2026', Research: 'Search research\u2026', Media: 'Search media\u2026', Press: 'Search press\u2026' };
-    var box = $(table.table().container()).find('input[type=search]');
-    function activate(cat) {
-      $('#mk-portfolio-tabs .mk-tab').each(function() {
-        var on = this.getAttribute('data-cat') === cat;
-        this.classList.toggle('is-active', on);
-        this.setAttribute('aria-selected', on ? 'true' : 'false');
-      });
-      box.attr('placeholder', labels[cat] || '').attr('aria-label', labels[cat] || '');
-      table.column(0).search(cat).draw();
-    }
-    $('#mk-portfolio-tabs .mk-tab').on('click', function() {
-      activate(this.getAttribute('data-cat'));
-    });
-    activate('Research');
-  "),
-  options  = list(
-    pageLength   = 5,
-    lengthMenu   = c(5, 10, 25, 50, 100),
-    dom          = "<'top'fl>rt<'bottom'ip>",
-    autoWidth    = FALSE,
-    order        = list(list(1, 'desc')),
-    columnDefs   = list(
-      list(targets = 0, visible = FALSE, searchable = TRUE),
-      list(targets = 1, className = "mk-col-year"),
-      list(targets = 2, className = "mk-col-month"),
-      list(targets = 3, className = "mk-col-type", orderable = FALSE),
-      list(targets = 4, className = "mk-col-title")
-    ),
-    language = list(
-      search       = "",
-      searchPlaceholder = "Search writing\u2026",
-      lengthMenu   = "Show _MENU_",
-      info         = "_START_\u2013_END_ of _TOTAL_",
-      infoEmpty    = "No results",
-      infoFiltered = "",
-      paginate     = list(previous = "\u2039 Prev", `next` = "Next \u203a")
-    )
-  )
-)
-```
-
-:::
-
-You can [check out my brief resume here](files/resume_brief.pdf){target="_blank" rel="noopener"}.
 
 ## Projects {#projects}
 
