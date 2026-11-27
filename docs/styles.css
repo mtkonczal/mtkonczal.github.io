@@ -622,8 +622,8 @@ body { margin: 0; padding-left: 240px; }
   color: #fff;
   margin: 0 0 0.75rem;
 }
-.mk-book__press-col h3:not(:first-child) {
-  margin-top: 1.6rem;
+.mk-book__press-col > section + section {
+  margin-top: 1.85rem;
 }
 .mk-book__list ul {
   list-style: none;
