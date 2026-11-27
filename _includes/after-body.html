@@ -51,6 +51,13 @@
     toggle.addEventListener('click', function () {
       setNavOpen(!document.body.classList.contains('mk-nav-open'));
     });
+    var closeBtn = sb.querySelector('.mk-sidebar__close');
+    if (closeBtn) {
+      closeBtn.addEventListener('click', function () {
+        setNavOpen(false);
+        toggle.focus();
+      });
+    }
     scrim.addEventListener('click', function () { setNavOpen(false); });
     document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape') setNavOpen(false);
@@ -70,13 +77,17 @@
   var hashLinks = Array.prototype.slice.call(nav.querySelectorAll('a[href^="#"]'));
 
   // On pages other than the index, the in-page section links can't resolve,
-  // so repoint them at the index and just highlight the current page.
+  // so repoint them at the index and highlight the current page (including
+  // CTA links like Portfolio).
   if (!isIndex) {
     hashLinks.forEach(function (a) {
       a.setAttribute('href', 'index.html' + a.getAttribute('href'));
     });
-    nav.querySelectorAll('a').forEach(function (a) {
-      if (a.getAttribute('href') === path) a.classList.add('is-active');
+    sb.querySelectorAll('.mk-sidebar__nav a, .mk-sidebar__ctas a').forEach(function (a) {
+      if (a.getAttribute('href') === path) {
+        a.classList.add('is-active');
+        a.setAttribute('aria-current', 'page');
+      }
     });
     return;
   }

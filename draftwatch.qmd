@@ -23,7 +23,7 @@ format:
 :::
 
 ```{=html}
-<p class="mk-readme__source">This section is the project <a href="https://github.com/mtkonczal/Draftwatch#readme">README</a>, synced from GitHub — run <code>scripts/sync-draftwatch-readme.sh</code> to refresh it.</p>
+<p class="mk-readme__source">Synced from the <a href="https://github.com/mtkonczal/Draftwatch#readme" target="_blank" rel="noopener">Draftwatch README on GitHub</a>.</p>
 ```
 
 :::

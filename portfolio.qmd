@@ -79,6 +79,10 @@ datatable(
         this.setAttribute('aria-selected', on ? 'true' : 'false');
       });
       box.attr('placeholder', labels[cat] || '').attr('aria-label', labels[cat] || '');
+      if (table.search()) {
+        table.search('');
+        box.val('');
+      }
       table.column(0).search(cat).draw();
     }
     $('#mk-portfolio-tabs .mk-tab').on('click', function() {

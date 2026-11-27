@@ -27,4 +27,4 @@ See write-up on my Substack newsletter [here](https://newsletter.mikekonczal.com
 ```
 :::
 
-Source: CPS Fertility Supplement via IPUMS (Version 13.0). Completed fertility is the weighted (FRSUPPWT) mean of children ever born (FREVER), by year and age. Calculations by Mike Konczal. </content> </invoke>
+Source: CPS Fertility Supplement via IPUMS (Version 13.0). Completed fertility is the weighted (FRSUPPWT) mean of children ever born (FREVER), by year and age. Calculations by Mike Konczal.

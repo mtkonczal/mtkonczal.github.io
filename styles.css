@@ -168,6 +168,12 @@ a:hover { color: var(--mk-blue-900); border-bottom-color: var(--mk-blue-700); }
   background: transparent;
   border-color: rgba(255, 255, 255, 0.35);
 }
+.mk-sidebar__cta--ghost.is-active {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.72);
+  color: #fff;
+}
+.mk-sidebar__close { display: none; }
 .mk-sidebar__nav {
   list-style: none;
   padding: 0;
@@ -203,7 +209,8 @@ a:hover { color: var(--mk-blue-900); border-bottom-color: var(--mk-blue-700); }
 }
 .mk-sidebar__social {
   display: flex;
-  gap: 0.85rem;
+  flex-wrap: wrap;
+  gap: 0.65rem;
   padding-top: 1rem;
   margin-top: 0.75rem;
 }
@@ -217,8 +224,8 @@ a:hover { color: var(--mk-blue-900); border-bottom-color: var(--mk-blue-700); }
 }
 .mk-sidebar__social a:hover { color: #fff; }
 .mk-sidebar__social svg {
-  width: 19px;
-  height: 19px;
+  width: 17px;
+  height: 17px;
   fill: currentColor;
   display: block;
 }
@@ -490,7 +497,7 @@ body { margin: 0; padding-left: 240px; }
 .mk-hero__intro { grid-column: 1 / -1; }
 .mk-hero__name {
   margin: 0;
-  font-family: Georgia, "Iowan Old Style", "Times New Roman", serif;
+  font-family: var(--mk-font-serif);
   font-size: clamp(2.75rem, 4.5vw, 3.75rem);
   font-weight: 700;
   line-height: 1.06;
@@ -599,14 +606,48 @@ body { margin: 0; padding-left: 240px; }
   border-color: #e0a06a;
 }
 .mk-book__praise > :first-child { margin-top: 0; }
+/* Press, reviews, and excerpts below the cover/praise row */
+.mk-book__press {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  gap: 2.5rem;
+  margin-top: 2.25rem;
+  padding-top: 1.75rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+.mk-book__press-col h3 {
+  font-family: var(--mk-font-serif);
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+  margin: 0 0 0.75rem;
+}
+.mk-book__press-col h3:not(:first-child) {
+  margin-top: 1.6rem;
+}
+.mk-book__list ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.45rem 1.5rem;
+  font-family: var(--mk-font-ui);
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+.mk-book__list--two ul {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.mk-book__list li {
+  margin: 0;
+}
+@media (max-width: 820px) {
+  .mk-book__press { grid-template-columns: 1fr; gap: 1.75rem; }
+}
 @media (max-width: 640px) {
   .mk-book { grid-template-columns: 1fr; gap: 1.25rem; }
   .mk-book__cover { max-width: 240px; }
-  /* Reviews / Media Appearances: Quarto writes style="width:49%" inline on
-     each .column, so only !important can stack them. Side by side at phone
-     width the link lists ran 3-4 words a line. */
-  #book .column { display: block; width: 100% !important; }
-  #book .column + .column { margin-top: 1.5rem; }
+  .mk-book__list--two ul { grid-template-columns: 1fr; }
 }
 
 /* Content column */
@@ -717,6 +758,37 @@ body { margin: 0; padding-left: 240px; }
   .mk-js.mk-nav-open .mk-sidebar {
     transform: translateX(0);
     box-shadow: 3px 0 26px rgba(6, 20, 24, 0.45);
+  }
+  .mk-js .mk-sidebar__close {
+    display: grid;
+    place-items: center;
+    position: absolute;
+    top: 1.35rem;
+    right: 1rem;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    background: transparent;
+    border: none;
+    border-radius: 4px;
+    color: rgba(255, 255, 255, 0.75);
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+  }
+  .mk-js .mk-sidebar__close:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+  }
+  .mk-js .mk-sidebar__close:focus-visible {
+    outline: 2px solid var(--mk-blue-300);
+    outline-offset: 2px;
+  }
+  .mk-js .mk-sidebar__close svg {
+    width: 20px;
+    height: 20px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2;
   }
 
   .mk-js #mk-nav-scrim {
@@ -834,7 +906,7 @@ main h2 {
   font-size: 0.95rem;
   font-weight: 600;
   letter-spacing: 0;
-  padding: 0.5rem 0 0.65rem;
+  padding: 0.5rem 0.4rem 0.65rem;
   border-radius: 0;
   cursor: pointer;
   display: inline-flex;
@@ -845,6 +917,7 @@ main h2 {
   justify-content: center; /* centered label within each segment */
   align-items: baseline;
   gap: 0.3rem;              /* tight: binds the count to its own label */
+  white-space: nowrap;
   position: relative;
   margin-bottom: -1px;      /* overlap the container's bottom rule */
   transition: color 0.18s;
@@ -872,6 +945,12 @@ main h2 {
 }
 .mk-tab:hover:not(.is-active)::after { background: var(--mk-rule); }
 .mk-tab.is-active::after { background: var(--mk-accent); }
+/* Narrow desktop / tablet: scale tab text slightly so five equal segments
+   keep breathing room next to the 240px sidebar. */
+@media (max-width: 960px) and (min-width: 641px) {
+  .mk-tab { font-size: 0.84rem; padding: 0.5rem 0.25rem 0.65rem; gap: 0.2rem; }
+  .mk-tab__count { font-size: 0.74rem; }
+}
 /* Give each phone-sized tab a distinct, comfortably tappable cell. */
 @media (max-width: 640px) {
   .mk-tabs {
@@ -1179,7 +1258,7 @@ main h2 {
   .mk-table table.dataTable tbody td {
     display: block;
     width: auto !important;
-    border-top: none;
+    border-top: none !important;
     padding: 0;
   }
   .mk-table td.mk-col-year { font-size: 0.8rem; color: var(--mk-mute); font-weight: 600; }
@@ -1272,13 +1351,13 @@ main h2 {
   font-size: 0.82rem;
   font-weight: 600;
   color: var(--mk-chart-blue-dk);
+  transition: color 0.15s;
 }
-.mk-project__cta::after {
-  content: "\2192";             /* → */
-  margin-left: 0.35em;
-  transition: margin-left 0.18s;
+.mk-project:hover .mk-project__cta {
+  color: var(--mk-blue-900);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
 }
-.mk-project:hover .mk-project__cta::after { margin-left: 0.6em; }
 
 @media (max-width: 720px) {
   .mk-projects { grid-template-columns: 1fr; gap: 1.25rem; }
@@ -1444,6 +1523,19 @@ img.mk-dw-shot {
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.6);
 }
+.mk-macro__label-link {
+  color: inherit;
+  border-bottom: 1px solid transparent;
+  transition: color 0.15s, border-color 0.15s;
+}
+.mk-macro__label-link:hover {
+  color: #fff;
+  border-bottom-color: rgba(255, 255, 255, 0.55);
+}
+.mk-macro__label-link:focus-visible {
+  outline: 2px solid var(--mk-blue-300);
+  outline-offset: 2px;
+}
 .mk-macro__value {
   font-family: var(--mk-font-ui);
   font-variant-numeric: tabular-nums;
@@ -1472,6 +1564,16 @@ img.mk-dw-shot {
   display: block;
   width: 100%;
   height: 100px;
+}
+/* Crisp circular endpoint dots placed in HTML so preserveAspectRatio="none"
+   on the sparkline SVG does not stretch them into horizontal ovals. */
+.mk-macro__enddot {
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
 }
 /* Muted dotted horizontal reference line (v/u = 1, diffusion = 50). The dots
    are kept crisp under the SVG's non-uniform horizontal stretch by
